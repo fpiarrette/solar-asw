@@ -1,0 +1,3 @@
+[submodule "tools/arm-poky-linux-gnueabi"]
+	path = tools/arm-poky-linux-gnueabi
+	url = /home/obsw/workspace/obsw/solar/solar-tools
