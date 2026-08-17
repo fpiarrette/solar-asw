@@ -1,10 +1,13 @@
 # Makefile for cleaning and building
 
+OUTPUT?=./build
+SRC?=./src
+
 .PHONY: clean
 
 clean:
-	rm -rf ./build
-	mkdir ./build
+	rm -rf $(OUTPUT)
+	mkdir $(OUTPUT)
 
-all: ./src/main.c ./src/module.c
-	${CC} -o ./build/main ./src/main.c ./src/module.c -I./src
+all: $(SRC)/main.c $(SRC)/module.c
+	${CC} -o $(OUTPUT)/main $(SRC)/main.c $(SRC)/module.c -I$(SRC)
