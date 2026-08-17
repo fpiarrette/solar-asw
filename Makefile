@@ -9,5 +9,5 @@ clean:
 	rm -rf $(OUTPUT)
 	mkdir $(OUTPUT)
 
-all: $(SRC)/main.c $(SRC)/module.c
-	${CC} -o $(OUTPUT)/main $(SRC)/main.c $(SRC)/module.c -I$(SRC)
+all: $(SRC)/main.c $(SRC)/tmtc_spi.c $(SRC)/tmtc_socket.c
+	${CC} -o $(OUTPUT)/main $(SRC)/main.c $(SRC)/tmtc_spi.c $(SRC)/tmtc_socket.c -I$(SRC)
