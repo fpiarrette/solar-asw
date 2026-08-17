@@ -12,10 +12,12 @@ flags="-t"
 cmd="make clean all"
 
 # create source dir
-source_dir=${project_dir}/src
+workspace_dir="/ws"
+
+source_dir=/src
 
 # create output dir
-output_dir=${project_dir}/build
+output_dir=/build
 
 show_help()
 {
@@ -33,10 +35,10 @@ while getopts "h?is:o:" opt; do
       cmd=""
       ;;
     s)
-      source_dir="${project_dir}${OPTARG}"
+      source_dir="${OPTARG}"
       ;;
     o)
-      output_dir="${project_dir}${OPTARG}"
+      output_dir="${OPTARG}"
       ;;
   esac
 done
@@ -46,16 +48,18 @@ shift $((OPTIND-1))
 [ "${1:-}" = "--" ] && shift
 
 # info
-echo "Source: ${source_dir}"
-echo "Output: ${output_dir}"
+echo "Source: ${project_dir}${source_dir}"
+echo "Output: ${project_dir}${output_dir}"
 echo "Command: ${cmd}"
 
 # create output dir just in case make clean is not executed
-mkdir -p ${output_dir}
+mkdir -p ${project_dir}${output_dir}
 
 # launch make process
 podman run ${flags} \
     -v "${project_dir}:/ws" \
-    -w "/ws" \
+    -w "${workspace_dir}" \
+    -e "SRC=${workspace_dir}${source_dir}" \
+    -e "OUTPUT=${workspace_dir}${output_dir}" \
     arm-poky-linux-gnueabi:latest \
     ${cmd}
