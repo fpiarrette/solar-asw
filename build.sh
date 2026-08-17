@@ -48,9 +48,12 @@ shift $((OPTIND-1))
 [ "${1:-}" = "--" ] && shift
 
 # info
+echo "--------------------------------------------------------------------------------"
+echo "Solar build system"
 echo "Source: ${project_dir}${source_dir}"
 echo "Output: ${project_dir}${output_dir}"
 echo "Command: ${cmd}"
+echo "--------------------------------------------------------------------------------"
 
 # create output dir just in case make clean is not executed
 mkdir -p ${project_dir}${output_dir}
