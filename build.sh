@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # get positional arguments
-iteractive=$1
+interactive=$1
 
 # obtain project base dir
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
@@ -15,16 +15,16 @@ output_dir=${project_dir}/build
 mkdir -p ${output_dir}
 
 # set flags and command depending on execution mode
-if [[ "$iteractive" == "y" ]]; then
-    echo "Iteractive"
+if [[ "$interactive" == "y" ]]; then
+    echo "Interactive"
     flags=-it
     cmd=""
-elif [[ "$iteractive" == "n" ]]; then
-    echo "Non iteractive"
+elif [[ "$interactive" == "n" ]]; then
+    echo "Non interactive"
     flags=-t
     cmd="make clean all"
 else
-    echo "Non iteractive"
+    echo "Non interactive"
     flags=-t
     cmd="make clean all"
 fi
