@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # get positional arguments
 interactive=$1
@@ -15,11 +15,11 @@ output_dir=${project_dir}/build
 mkdir -p ${output_dir}
 
 # set flags and command depending on execution mode
-if [[ "$interactive" == "y" ]]; then
+if [ "$interactive" = y ]; then
     echo "Interactive"
     flags=-it
     cmd=""
-elif [[ "$interactive" == "n" ]]; then
+elif [ "$interactive" = n ]; then
     echo "Non interactive"
     flags=-t
     cmd="make clean all"
