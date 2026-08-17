@@ -1,33 +1,57 @@
 #!/bin/sh
 
-# get positional arguments
-interactive=$1
-
 # obtain project base dir
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
 project_dir=$script_dir
+
+# reset getopts
+OPTIND=1
+
+# initialize varaibles
+flags="-t"
+cmd="make clean all"
 
 # create source dir
 source_dir=${project_dir}/src
 
 # create output dir
 output_dir=${project_dir}/build
-mkdir -p ${output_dir}
 
-# set flags and command depending on execution mode
-if [ "$interactive" = y ]; then
-    echo "Interactive"
-    flags=-it
-    cmd=""
-elif [ "$interactive" = n ]; then
-    echo "Non interactive"
-    flags=-t
-    cmd="make clean all"
-else
-    echo "Non interactive"
-    flags=-t
-    cmd="make clean all"
-fi
+show_help()
+{
+    echo "$0 [-i] [-s {/src}] [-o {/build}] [-h]"
+}
+
+while getopts "h?is:o:" opt; do
+  case "$opt" in
+    h|\?)
+      show_help
+      exit 0
+      ;;
+    i)
+      flags="${flags} -i"
+      cmd=""
+      ;;
+    s)
+      source_dir="${project_dir}${OPTARG}"
+      ;;
+    o)
+      output_dir="${project_dir}${OPTARG}"
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+[ "${1:-}" = "--" ] && shift
+
+# info
+echo "Source: ${source_dir}"
+echo "Output: ${output_dir}"
+echo "Command: ${cmd}"
+
+# create output dir
+mkdir -p ${output_dir}
 
 # launch make process
 podman run ${flags} \
