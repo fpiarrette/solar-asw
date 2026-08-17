@@ -24,4 +24,3 @@ int tmtc_stop_socket(void *data, int size)
 {
     return TMTC_E_OK;
 }
-

@@ -11,23 +11,26 @@ tmtc_ctx_spi_t tmtc_ctx_spi;
 int stopped;
 int terminated;
 
-static void signal_handler(int signal) {
-    switch (signal) {
-        case SIGINT:
+static void signal_handler(int signal)
+{
+    switch (signal)
+    {
+    case SIGINT:
         terminated = 1;
         break;
-        case SIGTSTP:
+    case SIGTSTP:
         stopped = 1;
         break;
-        case SIGCONT:
+    case SIGCONT:
         stopped = 0;
         break;
-        default:
+    default:
         break;
     }
 }
 
-int main(void) {
+int main(void)
+{
 
     /* Initialization */
     tmtc_ctx_socket.port = 2000;
@@ -41,11 +44,14 @@ int main(void) {
     sigaction(SIGCONT, &psa, NULL);
 
     /* Main loop */
-    while (!terminated) {
-        if (!stopped) {
+    while (!terminated)
+    {
+        if (!stopped)
+        {
             /* do the job */
         }
-        else {
+        else
+        {
             /* sleep for 100mS */
             utils_sleep(100);
         }

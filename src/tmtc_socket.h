@@ -4,7 +4,8 @@
 #ifndef TMTC_SOCKET_H
 #define TMTC_SOCKET_H
 
-typedef struct tmtc_ctx_socket_s {
+typedef struct tmtc_ctx_socket_s
+{
     int port;
 } tmtc_ctx_socket_t;
 

@@ -4,7 +4,8 @@
 #ifndef TMTC_SPI_H
 #define TMTC_SPI_H
 
-typedef struct tmtc_ctx_spi_s {
+typedef struct tmtc_ctx_spi_s
+{
     int port;
 } tmtc_ctx_spi_t;
 
