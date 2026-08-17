@@ -50,7 +50,7 @@ echo "Source: ${source_dir}"
 echo "Output: ${output_dir}"
 echo "Command: ${cmd}"
 
-# create output dir
+# create output dir just in case make clean is not executed
 mkdir -p ${output_dir}
 
 # launch make process
