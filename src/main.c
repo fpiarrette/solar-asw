@@ -4,14 +4,9 @@
 #include "ProcessFromModem.h"
 
 #include "utils.h"
-#include "tmtc_socket.h"
-#include "tmtc_spi.h"
 
 #include <signal.h>
 #include <stdlib.h>
-
-tmtc_ctx_socket_t tmtc_ctx_socket;
-tmtc_ctx_spi_t tmtc_ctx_spi;
 
 int stopped;
 int terminated;
@@ -36,16 +31,11 @@ static void signal_handler(int signal)
 
 int main(void)
 {
-
+    /* Initialization */
     ChannelSpi c1;
     c1.init(NULL);
     ChannelSocket c2;
     c2.init(NULL);
-
-    /* Initialization */
-    tmtc_ctx_socket.port = 2000;
-    tmtc_init_socket(&tmtc_ctx_socket, 0);
-    tmtc_init_spi(&tmtc_ctx_spi, 0);
 
     struct sigaction psa;
     psa.sa_handler = signal_handler;
@@ -72,8 +62,6 @@ int main(void)
     }
 
     /* stop/deallocate componets */
-    tmtc_stop_socket(&tmtc_ctx_socket, 0);
-    tmtc_stop_spi(&tmtc_ctx_spi, 0);
 
     return 0;
 }
