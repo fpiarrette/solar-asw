@@ -6,11 +6,11 @@
 class ChannelSocket : public Channel
 {
 public:
-    void init(void *data);
-    void start(void *data);
+    void init(void);
+    void start(void);
     void send(char *data, int size);
     void receive(char *data, int *size);
-    void stop(void *data);
+    void stop(void);
 };
 
 #endif
