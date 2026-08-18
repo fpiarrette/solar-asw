@@ -1,13 +1,22 @@
+#include "ChannelSpi.h"
+#include "ChannelSocket.h"
 
 #ifndef PROCESS_H
 #define PROCESS_H
 
 class Process
 {
+protected:
+    ChannelSocket channelSocket;
+    ChannelSpi channelSpi;
+
 public:
-    virtual void init(void) = 0;
+    void init(void);
+    void start(void);
+    void stop(void);
+
+public:
     virtual void run(void) = 0;
-    virtual void stop(void) = 0;
 };
 
 #endif
