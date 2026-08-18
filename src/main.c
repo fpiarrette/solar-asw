@@ -1,3 +1,8 @@
+#include "ChannelSpi.h"
+#include "ChannelSocket.h"
+#include "ProcessToModem.h"
+#include "ProcessFromModem.h"
+
 #include "utils.h"
 #include "tmtc_socket.h"
 #include "tmtc_spi.h"
@@ -32,6 +37,11 @@ static void signal_handler(int signal)
 int main(void)
 {
 
+    ChannelSpi c1;
+    c1.init(NULL);
+    ChannelSocket c2;
+    c2.init(NULL);
+
     /* Initialization */
     tmtc_ctx_socket.port = 2000;
     tmtc_init_socket(&tmtc_ctx_socket, 0);
@@ -48,7 +58,11 @@ int main(void)
     {
         if (!stopped)
         {
-            /* do the job */
+#ifdef TO_MODEM
+
+#else
+
+#endif
         }
         else
         {
