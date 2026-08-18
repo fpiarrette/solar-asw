@@ -37,6 +37,9 @@ int main(void)
     ChannelSocket c2;
     c2.init(NULL);
 
+    ProcessToModem processToModem;
+    ProcessFromModem processFromModem;
+
     struct sigaction psa;
     psa.sa_handler = signal_handler;
     sigaction(SIGINT, &psa, NULL);
@@ -48,10 +51,10 @@ int main(void)
     {
         if (!stopped)
         {
-#ifdef TO_MODEM
-
+#ifdef PROCESS_TO_MODEM
+            processToModem.run();
 #else
-
+            processFromModem.run();
 #endif
         }
         else
