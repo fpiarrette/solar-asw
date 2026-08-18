@@ -12,7 +12,7 @@ void ChannelSpi::send(char *data, int size)
 {
 }
 
-void ChannelSpi::receive(char *data, int *size)
+void ChannelSpi::receive(char *data, int size, int *received)
 {
 }
 

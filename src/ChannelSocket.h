@@ -9,7 +9,7 @@ public:
     void init(void);
     void start(void);
     void send(char *data, int size);
-    void receive(char *data, int *size);
+    void receive(char *data, int size, int *received);
     void stop(void);
 };
 

@@ -12,7 +12,7 @@ void ChannelSocket::send(char *data, int size)
 {
 }
 
-void ChannelSocket::receive(char *data, int *size)
+void ChannelSocket::receive(char *data, int size, int *received)
 {
 }
 
