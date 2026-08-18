@@ -1,3 +1,4 @@
+#include "Logger.h"
 #include "ProcessToModem.h"
 #include "ProcessFromModem.h"
 
@@ -6,6 +7,7 @@
 int main(void)
 {
     /* Initialization */
+    Logger::config(LOGGER_ID_STDOUT);
 
 #ifdef PROCESS_TO_MODEM
     ProcessToModem process;

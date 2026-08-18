@@ -3,7 +3,7 @@
 OUTPUT?=./build
 SRC?=./src
 
-FILES=$(SRC)/main.c $(SRC)/utils.c $(SRC)/ChannelSpi.cpp $(SRC)/ChannelSocket.cpp $(SRC)/Process.cpp $(SRC)/ProcessToModem.cpp $(SRC)/ProcessFromModem.cpp $(SRC)/Signals.cpp
+FILES=$(SRC)/main.c $(SRC)/utils.c $(SRC)/ChannelSpi.cpp $(SRC)/ChannelSocket.cpp $(SRC)/Process.cpp $(SRC)/ProcessToModem.cpp $(SRC)/ProcessFromModem.cpp $(SRC)/Signals.cpp $(SRC)/Logger.cpp $(SRC)/LoggerStdout.cpp $(SRC)/LoggerSyslog.cpp
 
 .PHONY: clean
 
