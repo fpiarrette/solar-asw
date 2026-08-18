@@ -6,8 +6,13 @@
 void Process::execute(void)
 {
     /* perform process initialization */
+    Signals::getInstance()->init();
+    channelSocket.init();
+    channelSpi.init();
     init();
     /* start process components */
+    channelSocket.start();
+    channelSpi.start();
     start();
 
     /* process main loop */
@@ -27,23 +32,18 @@ void Process::execute(void)
 
     /* stop process components */
     stop();
+    channelSocket.stop();
+    channelSpi.stop();
 }
 
 void Process::init(void)
 {
-    Signals::getInstance()->init();
-    channelSocket.init();
-    channelSpi.init();
 }
 
 void Process::start(void)
 {
-    channelSocket.start();
-    channelSpi.start();
 }
 
 void Process::stop(void)
 {
-    channelSocket.stop();
-    channelSpi.stop();
 }
