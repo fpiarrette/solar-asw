@@ -6,7 +6,7 @@
 class ProcessToModem : public Process
 {
 public:
-    void run(void);
+    void run(long int time);
 };
 
 #endif

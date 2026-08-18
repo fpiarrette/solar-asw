@@ -1,6 +1,6 @@
 #include "ProcessToModem.h"
 
-void ProcessToModem::run(void)
+void ProcessToModem::run(long int time)
 {
     char b[1024];
     int r;

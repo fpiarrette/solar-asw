@@ -18,7 +18,7 @@ public:
     void execute(void);
 
 protected:
-    virtual void run(void) = 0;
+    virtual void run(long int time) = 0;
 };
 
 #endif

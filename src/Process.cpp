@@ -5,6 +5,8 @@
 
 void Process::execute(void)
 {
+    long int start_time, now;
+
     /* perform process initialization */
     Signals::getInstance()->init();
     channelSocket.init();
@@ -15,13 +17,18 @@ void Process::execute(void)
     channelSpi.start();
     start();
 
+    /* get start time in ms */
+    start_time = utils_curr_time_in_ms();
+
     /* process main loop */
     while (!Signals::getInstance()->isTerminated())
     {
         if (!Signals::getInstance()->isStopped())
         {
+            /* obtain current time in ms */
+            now = utils_curr_time_in_ms();
             /* run process and return */
-            run();
+            run(now - start_time);
         }
         else
         {
