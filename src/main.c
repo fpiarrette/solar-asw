@@ -33,12 +33,21 @@ int main(void)
 {
     /* Initialization */
     ChannelSpi c1;
-    c1.init(NULL);
     ChannelSocket c2;
-    c2.init(NULL);
 
-    ProcessToModem processToModem;
-    ProcessFromModem processFromModem;
+    c1.init();
+    c2.init();
+
+    c1.start();
+    c2.start();
+
+#ifdef PROCESS_TO_MODEM
+    ProcessToModem process;
+#else
+    ProcessFromModem process;
+#endif
+
+    process.init();
 
     struct sigaction psa;
     psa.sa_handler = signal_handler;
@@ -51,11 +60,7 @@ int main(void)
     {
         if (!stopped)
         {
-#ifdef PROCESS_TO_MODEM
-            processToModem.run();
-#else
-            processFromModem.run();
-#endif
+            process.run();
         }
         else
         {
@@ -65,6 +70,10 @@ int main(void)
     }
 
     /* stop/deallocate componets */
+    c1.stop();
+    c2.stop();
+
+    process.stop();
 
     return 0;
 }
