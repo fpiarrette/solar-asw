@@ -10,12 +10,14 @@ protected:
     ChannelSocket channelSocket;
     ChannelSpi channelSpi;
 
-public:
     void init(void);
     void start(void);
     void stop(void);
 
 public:
+    void execute(void);
+
+protected:
     virtual void run(void) = 0;
 };
 
