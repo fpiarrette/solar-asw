@@ -1,13 +1,21 @@
+#include "Config.h"
 #include "Logger.h"
 #include "ProcessToModem.h"
 #include "ProcessFromModem.h"
 
 #include <stdlib.h>
 
-int main(void)
+int main(int argc, char *argv[])
 {
-    /* Initialization */
-    Logger::config(LOGGER_ID_STDOUT);
+    /* parse arguments */
+    Config::getInstance()->init(argc, argv);
+
+    /* initialization */
+    if (Config::getInstance()->isUseStdout())
+        Logger::config(LOGGER_ID_STDOUT);
+    else
+        Logger::config(LOGGER_ID_SYSLOG);
+
     Logger::instance->init();
     Logger::instance->start("Modem TCP converter");
 
