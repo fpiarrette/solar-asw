@@ -1,7 +1,5 @@
 #include "Signals.h"
 
-#include <signal.h>
-
 Signals Signals::instance;
 
 Signals *Signals::getInstance(void)
