@@ -20,7 +20,7 @@ void ProcessFromModem::run(long int time)
         memcpy(&buffer[write], b, r);
         write += r;
         /* send packet in case amount of bytes are sufficient */
-        if (write > PROCESS_FROM_MODEM_LIMIT)
+        if (write > bufferSizeLimit)
         {
             sendPacket = 1;
         }
@@ -31,6 +31,16 @@ void ProcessFromModem::run(long int time)
     {
         channelSocket.send(buffer, write);
         write = 0;
-        timeBarrier = time + PROCESS_FROM_MODEM_NEXT_BARRIER;
+        timeBarrier = time + timeDeliveryLimit;
     }
+}
+
+void ProcessFromModem::setTimeDeliveryLimit(int value)
+{
+    timeDeliveryLimit = value;
+}
+
+void ProcessFromModem::setBufferSizeLimit(int value)
+{
+    bufferSizeLimit = value;
 }
