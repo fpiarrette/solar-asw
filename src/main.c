@@ -8,30 +8,43 @@
 int main(int argc, char *argv[])
 {
     /* parse arguments */
-    Config::getInstance()->init(argc, argv);
+    if (Config::getInstance()->init(argc, argv) == CONFIG_E_OK)
+    {
 
-    /* initialization */
-    if (Config::getInstance()->isUseStdout())
-        Logger::config(LOGGER_ID_STDOUT);
-    else
-        Logger::config(LOGGER_ID_SYSLOG);
+        /* initialization */
+        if (Config::getInstance()->isUseStdout())
+            Logger::config(LOGGER_ID_STDOUT);
+        else
+            Logger::config(LOGGER_ID_SYSLOG);
 
-    Logger::instance->init();
-    Logger::instance->start("Modem TCP converter");
+        Logger::instance->init();
+        Logger::instance->start("Modem TCP converter");
 
-    Logger::instance->info("Starting...");
+        Logger::instance->info("Starting...");
+
+        if (Config::getInstance()->isShowHelp())
+        {
+            Config::getInstance()->help(argc, argv);
+        }
+        else
+        {
 
 #ifdef PROCESS_TO_MODEM
-    ProcessToModem process;
+            ProcessToModem process;
 #else
-    ProcessFromModem process;
+            ProcessFromModem process;
 #endif
+            /* execute process includling initialization, start, running and stop */
+            process.execute();
+        }
 
-    /* execute process includling initialization, start, running and stop */
-    process.execute();
-
-    Logger::instance->info("Finishing...");
-    Logger::instance->stop();
+        Logger::instance->info("Finishing...");
+        Logger::instance->stop();
+    }
+    else
+    {
+        Config::getInstance()->help(argc, argv);
+    }
 
     return EXIT_SUCCESS;
 }
