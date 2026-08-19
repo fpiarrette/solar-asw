@@ -11,7 +11,7 @@ void Process::execute(void)
     Signals::getInstance()->init();
     channelSocket.init();
     channelSpi.init();
-    init();
+
     /* start process components */
     channelSocket.start();
     channelSpi.start();
