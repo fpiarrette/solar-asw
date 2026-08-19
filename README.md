@@ -11,11 +11,11 @@ host$ ./build.sh
 
 Result will be availble in ```<project root>/build```.
 
-In case iteractive shell is needed ```build.sh``` offers positional argument ```interactive```. By giving ```y``` value and interactive shell is started in which user can manage building process, step by step, by hand.
+In case iteractive shell is needed ```build.sh``` offers ````-i``` option to run interactive mode. When Docker image is started interactive shell is allows to make, and manage, step by step, by hand.
 
 ```
 host$ cd <project root>
-host$ ./build.sh y
+host$ ./build.sh -i
 docker$ make clean
 docker$ make all
 docker$ ls ./build
@@ -34,3 +34,11 @@ TBW
 
 ## How to deploy binaries?
 TBW
+
+## Implementation details
+
+[Linux kernel documentation about GPIO](https://docs.kernel.org/driver-api/gpio/using-gpio.html)
+
+[Linux kernel documentation about SPI](https://docs.kernel.org/spi/spidev.html)
+
+
