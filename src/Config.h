@@ -12,6 +12,8 @@ public:
     static Config *getInstance(void);
     int isUseStdout(void);
     int isUseSyslog(void);
+    int isShowHelp(void);
+    void help(int argc, char *argv[]);
 private:
     static Config instance;
     int logLevel;

@@ -71,7 +71,22 @@ int Config::isUseStdout(void)
 {
     return useStdout;
 }
+
 int Config::isUseSyslog(void)
 {
     return useSyslog;
+}
+
+int Config::isShowHelp(void)
+{
+    return showHelp;
+}
+
+void Config::help(int argc, char *argv[])
+{
+    printf("%s [-h] [-l {0}] [-s] [-d]\n", argv[0]);
+    printf("\t-h: show help\n");
+    printf("\t-l <log level>: set log level\n");
+    printf("\t-s: set logger to use syslog\n");
+    printf("\t-d: set logger to use stdout\n");
 }
