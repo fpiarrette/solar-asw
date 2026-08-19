@@ -9,12 +9,9 @@ void Process::execute(void)
 
     /* perform process initialization */
     Signals::getInstance()->init();
-    channelSocket.init();
-    channelSpi.init();
+    init();
 
     /* start process components */
-    channelSocket.start();
-    channelSpi.start();
     start();
 
     /* get start time in ms */
@@ -39,18 +36,4 @@ void Process::execute(void)
 
     /* stop process components */
     stop();
-    channelSocket.stop();
-    channelSpi.stop();
-}
-
-void Process::init(void)
-{
-}
-
-void Process::start(void)
-{
-}
-
-void Process::stop(void)
-{
 }
