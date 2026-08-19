@@ -14,12 +14,17 @@ public:
     int isUseSyslog(void);
     int isShowHelp(void);
     void help(int argc, char *argv[]);
+    int getTimeDeliveryLimit(void);
+    int getBufferSizeLimit(void);
+
 private:
     static Config instance;
     int logLevel;
     int useSyslog;
     int useStdout;
     int showHelp;
+    int timeDeliveryLimit;
+    int bufferSizeLimit;
 };
 
 #endif
