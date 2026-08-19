@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
             process.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
             process.setBufferSizeLimit(Config::getInstance()->getBufferSizeLimit());
 #endif
-            process.init();
 
             /* execute process includling initialization, start, running and stop */
             process.execute();
