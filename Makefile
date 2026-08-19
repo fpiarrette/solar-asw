@@ -13,7 +13,8 @@ FILES=$(SRC)/main.c \
 	$(SRC)/Signals.cpp \
 	$(SRC)/Logger.cpp \
 	$(SRC)/LoggerStdout.cpp \
-	$(SRC)/LoggerSyslog.cpp
+	$(SRC)/LoggerSyslog.cpp \
+	$(SRC)/Config.cpp
 
 .PHONY: clean
 
