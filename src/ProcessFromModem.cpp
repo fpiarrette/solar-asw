@@ -13,6 +13,8 @@ void ProcessFromModem::run(long int time)
     char b[256];
     int r;
     channelSpi.receive(b, sizeof(b), &r);
+    int sendPacket = 0;
+
     if (r > 0)
     {
         memcpy(&buffer[write], b, r);
@@ -20,14 +22,12 @@ void ProcessFromModem::run(long int time)
         /* send packet in case amount of bytes are sufficient */
         if (write > PROCESS_FROM_MODEM_LIMIT)
         {
-            channelSocket.send(buffer, write);
-            write = 0;
-            timeBarrier = time + PROCESS_FROM_MODEM_NEXT_BARRIER;
+            sendPacket = 1;
         }
     }
 
     /* send packet even when there is no enough bytes in case time barrier is reached */
-    if ((write > 0) && (timeBarrier < time))
+    if ((sendPacket == 1) || ((write > 0) && (timeBarrier < time)))
     {
         channelSocket.send(buffer, write);
         write = 0;
