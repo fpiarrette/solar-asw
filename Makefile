@@ -7,6 +7,8 @@ FILES=$(SRC)/main.c \
 	$(SRC)/utils.c \
 	$(SRC)/ChannelSpi.cpp \
 	$(SRC)/ChannelSocket.cpp \
+	$(SRC)/ChannelSocketServer.cpp \
+	$(SRC)/ChannelSocketClient.cpp \
 	$(SRC)/Process.cpp \
 	$(SRC)/ProcessToModem.cpp \
 	$(SRC)/ProcessFromModem.cpp \
