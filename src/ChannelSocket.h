@@ -5,6 +5,11 @@
 
 class ChannelSocket : public Channel
 {
+public:
+protected:
+    int fd;
+
+private:
 };
 
 #endif
