@@ -15,7 +15,7 @@ public:
 
     virtual Error init(void) = 0;
     virtual Error start(void) = 0;
-    virtual Error tx(char *data, int size) = 0;
+    virtual Error tx(char *data, int size, int *transmited) = 0;
     virtual Error rx(char *data, int size, int *received) = 0;
     virtual Error stop(void) = 0;
 

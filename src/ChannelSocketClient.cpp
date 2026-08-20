@@ -42,13 +42,10 @@ Channel::Error ChannelSocketClient::start(void)
     }
 }
 
-/* FIXME modify this function to return transmitted bytes */
-Channel::Error ChannelSocketClient::tx(char *data, int size)
+Channel::Error ChannelSocketClient::tx(char *data, int size, int *transmited)
 {
-    int tansmitted;
-
     if (fd > 0)
-        return secureTx(fd, data, size, &tansmitted);
+        return secureTx(fd, data, size, transmited);
     else
         return Channel::Error::E_STA;
 }

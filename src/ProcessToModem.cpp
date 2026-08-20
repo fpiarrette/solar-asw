@@ -15,10 +15,11 @@ void ProcessToModem::start(void)
 void ProcessToModem::run(long int time)
 {
     char b[1024];
-    int r;
+    int r, t;
     channelSocketServer.rx(b, sizeof(b), &r);
     if (r > 0) {
-        channelSpi.tx(b, r);
+        /* FIXME manage retries */
+        channelSpi.tx(b, r, &t);
     }
 }
 

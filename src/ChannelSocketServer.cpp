@@ -86,19 +86,16 @@ Channel::Error ChannelSocketServer::checkClientConnection(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSocketServer::tx(char *data, int size)
+Channel::Error ChannelSocketServer::tx(char *data, int size, int *transmited)
 {
     if (clientSocket > 0)
     {
-        /* FIXME manage errors */
-        send(clientSocket, data, size, 0);
+        return secureTx(clientSocket, data, size, transmited);
     }
     else
     {
-        checkClientConnection();
+        return checkClientConnection();
     }
-    /* FIXME manage errors in a better way, unify the function send to be available for client and server */
-    return Channel::Error::E_OK;
 }
 
 Channel::Error ChannelSocketServer::rx(char *data, int size, int *received)
