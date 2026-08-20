@@ -19,12 +19,12 @@ void ChannelSocketClient::start(void)
     connect(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
 }
 
-void ChannelSocketClient::send(char *data, int size)
+void ChannelSocketClient::tx(char *data, int size)
 {
     /* send(fd, data, size, 0); */
 }
 
-void ChannelSocketClient::receive(char *data, int size, int *received)
+void ChannelSocketClient::rx(char *data, int size, int *received)
 {
 }
 

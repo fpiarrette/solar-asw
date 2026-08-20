@@ -20,7 +20,7 @@ void ProcessFromModem::run(long int time)
 {
     char b[256];
     int r;
-    channelSpi.receive(b, sizeof(b), &r);
+    channelSpi.rx(b, sizeof(b), &r);
     int sendPacket = 0;
 
     if (r > 0)
@@ -37,7 +37,7 @@ void ProcessFromModem::run(long int time)
     /* send packet even when there is no enough bytes in case time barrier is reached */
     if ((sendPacket == 1) || ((write > 0) && (timeBarrier < time)))
     {
-        channelSocketClient.send(buffer, write);
+        channelSocketClient.tx(buffer, write);
         write = 0;
         timeBarrier = time + timeDeliveryLimit;
     }

@@ -8,11 +8,11 @@ void ChannelSpi::start(void)
 {
 }
 
-void ChannelSpi::send(char *data, int size)
+void ChannelSpi::tx(char *data, int size)
 {
 }
 
-void ChannelSpi::receive(char *data, int size, int *received)
+void ChannelSpi::rx(char *data, int size, int *received)
 {
 }
 

@@ -20,11 +20,11 @@ void ChannelSocketServer::start(void)
     listen(fd, 5);
 }
 
-void ChannelSocketServer::send(char *data, int size)
+void ChannelSocketServer::tx(char *data, int size)
 {
 }
 
-void ChannelSocketServer::receive(char *data, int size, int *received)
+void ChannelSocketServer::rx(char *data, int size, int *received)
 {
     int clientSocket = accept(fd, nullptr, nullptr);
     /* FIXME is blocking */

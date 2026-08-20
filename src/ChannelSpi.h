@@ -8,8 +8,8 @@ class ChannelSpi : public Channel
 public:
     void init(void);
     void start(void);
-    void send(char *data, int size);
-    void receive(char *data, int size, int *received);
+    void tx(char *data, int size);
+    void rx(char *data, int size, int *received);
     void stop(void);
 };
 
