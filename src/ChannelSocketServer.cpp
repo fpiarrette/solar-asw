@@ -43,7 +43,6 @@ Channel::Error ChannelSocketServer::start(void)
         return Channel::Error::E_INT;
     }
 
-    /* Fixme check errors */
     if ((r = setNonBlock(fd)) != Channel::Error::E_OK)
     {
         return r;
@@ -106,7 +105,6 @@ Channel::Error ChannelSocketServer::rx(char *data, int size, int *received)
 {
     if (clientSocket > 0)
     {
-        /* FIXME manage errors */
         return secureRx(clientSocket, data, size, received);
     }
     else
@@ -117,13 +115,14 @@ Channel::Error ChannelSocketServer::rx(char *data, int size, int *received)
 
 Channel::Error ChannelSocketServer::stop(void)
 {
+    Channel::Error r1 = Channel::Error::E_OK;
+    Channel::Error r2 = Channel::Error::E_OK;
+
     if (clientSocket > 0)
-    {
-        shutdown(clientSocket, SHUT_RDWR);
-        close(clientSocket);
-    }
-    shutdown(fd, SHUT_RDWR);
-    close(fd);
-    /* reuse stop for client and server */
-    return Channel::Error::E_OK;
+        r1 = secureStop(clientSocket);
+
+    if (fd > 0)
+        r2 = secureStop(fd);
+
+    return r1 == Channel::Error::E_OK && r2 == Channel::Error::E_OK ? Channel::Error::E_OK : Channel::Error::E_INT;
 }

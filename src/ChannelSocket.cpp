@@ -48,3 +48,25 @@ Channel::Error ChannelSocket::secureRx(int f, void *b, int s, int *r)
         }
     }
 }
+
+Channel::Error ChannelSocket::secureStop(int f)
+{
+    int r;
+
+    if (f < 0)
+    {
+        return Channel::Error::E_ARG;
+    }
+
+    r = shutdown(f, SHUT_RDWR);
+
+    if (errno == ENOTCONN)
+    {
+        /* not really an error */
+        r = 0;
+    }
+
+    close(f);
+
+    return r != 0 ? Channel::Error::E_INT : Channel::Error::E_OK;
+}

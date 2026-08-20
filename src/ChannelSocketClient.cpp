@@ -79,22 +79,14 @@ Channel::Error ChannelSocketClient::tx(char *data, int size)
 
 Channel::Error ChannelSocketClient::rx(char *data, int size, int *received)
 {
+    /* FIXME check fd is configure or return STA error */
     return secureRx(fd, data, size, received);
 }
 
 Channel::Error ChannelSocketClient::stop(void)
 {
-    int r;
-
-    r = shutdown(fd, SHUT_RDWR);
-
-    if (errno == ENOTCONN)
-    {
-        /* not really an error */
-        r = 0;
-    }
-
-    close(fd);
-
-    return r != 0 ? Channel::Error::E_INT : Channel::Error::E_OK;
+    if (fd > 0)
+        return secureStop(fd);
+    else
+        return Channel::Error::E_OK;
 }

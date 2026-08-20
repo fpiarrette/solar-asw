@@ -9,6 +9,7 @@ public:
 protected:
     Channel::Error setNonBlock(int fd);
     Channel::Error secureRx(int f, void *b, int s, int *r);
+    Channel::Error secureStop(int f);
     int fd;
 
 private:
