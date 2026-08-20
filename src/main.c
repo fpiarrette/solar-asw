@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         Logger::getInstance()->init();
         Logger::getInstance()->start("Modem TCP converter");
 
-        Logger::getInstance()->info("Starting...");
+        L_INFO("Starting...");
 
         if (Config::getInstance()->isShowHelp())
         {
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
             process->execute(context);
         }
 
-        Logger::getInstance()->info("Finishing...");
+        L_INFO("Finishing...");
         Logger::getInstance()->stop();
     }
     else
