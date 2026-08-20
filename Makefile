@@ -3,6 +3,12 @@
 OUTPUT?=./build
 SRC?=./src
 
+ifndef PLATFORM
+$(error PLATFORM is not defined!)
+endif
+
+ARTIFACTS=${OUTPUT}/${PLATFORM}
+
 FILES=$(SRC)/main.c \
 	$(SRC)/utils.c \
 	$(SRC)/ChannelSpi.cpp \
@@ -24,8 +30,8 @@ FILES=$(SRC)/main.c \
 .PHONY: clean
 
 clean:
-	rm -rf $(OUTPUT)
-	mkdir $(OUTPUT)
+	rm -rf $(ARTIFACTS)
+	mkdir -p $(ARTIFACTS)
 
 all: $(FILES)
-	${CXX} -o $(OUTPUT)/main $(FILES) -I$(SRC)
+	${CXX} -o $(ARTIFACTS)/main $(FILES) -I$(SRC)
