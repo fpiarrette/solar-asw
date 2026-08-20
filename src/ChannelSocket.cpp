@@ -70,3 +70,38 @@ Channel::Error ChannelSocket::secureStop(int f)
 
     return r != 0 ? Channel::Error::E_INT : Channel::Error::E_OK;
 }
+
+Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmited)
+{
+    int r;
+
+    r = send(f, data, size, 0);
+
+    if (r == size)
+    {
+        /* block fully sent */
+        return Channel::Error::E_OK;
+    }
+    else if (r >= 0 && r < size)
+    {
+        *transmited = r;
+        return Channel::Error::E_TRY;
+    }
+    else if (r < 0)
+    {
+        *transmited = 0;
+        if (errno == EAGAIN || errno == EWOULDBLOCK)
+        {
+            return Channel::Error::E_TRY;
+        }
+        else
+        {
+            return Channel::Error::E_INT;
+        }
+    }
+    else
+    {
+        *transmited = 0;
+        return Channel::Error::E_INT;
+    }
+}

@@ -42,45 +42,23 @@ Channel::Error ChannelSocketClient::start(void)
     }
 }
 
-/* FIXME consider refactoring this function in a upper implementation */
+/* FIXME modify this function to return transmitted bytes */
 Channel::Error ChannelSocketClient::tx(char *data, int size)
 {
-    int r;
+    int tansmitted;
 
-    r = send(fd, data, size, 0);
-
-    if (r == size)
-    {
-        /* block fully sent */
-        return Channel::Error::E_OK;
-    }
-    else if (r >= 0 && r < size)
-    {
-        /* FIXME return number of bytres transmited */
-        return Channel::Error::E_TRY;
-    }
-    else if (r < 0)
-    {
-        if (errno == EAGAIN || errno == EWOULDBLOCK)
-        {
-            /* FIXME return number of bytres transmited */
-            return Channel::Error::E_TRY;
-        }
-        else
-        {
-            return Channel::Error::E_INT;
-        }
-    }
+    if (fd > 0)
+        return secureTx(fd, data, size, &tansmitted);
     else
-    {
-        return Channel::Error::E_INT;
-    }
+        return Channel::Error::E_STA;
 }
 
 Channel::Error ChannelSocketClient::rx(char *data, int size, int *received)
 {
-    /* FIXME check fd is configure or return STA error */
-    return secureRx(fd, data, size, received);
+    if (fd > 0)
+        return secureRx(fd, data, size, received);
+    else
+        return Channel::Error::E_STA;
 }
 
 Channel::Error ChannelSocketClient::stop(void)
@@ -88,5 +66,5 @@ Channel::Error ChannelSocketClient::stop(void)
     if (fd > 0)
         return secureStop(fd);
     else
-        return Channel::Error::E_OK;
+        return Channel::Error::E_STA;
 }
