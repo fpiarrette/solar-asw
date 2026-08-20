@@ -2,6 +2,8 @@
 #include "Logger.h"
 #include "ProcessToModem.h"
 #include "ProcessFromModem.h"
+#include "ContextToModem.h"
+#include "ContextFromModem.h"
 
 #include <stdlib.h>
 
@@ -37,8 +39,14 @@ int main(int argc, char *argv[])
             process.setBufferSizeLimit(Config::getInstance()->getBufferSizeLimit());
 #endif
 
+#ifdef PROCESS_TO_MODEM
+            ContextToModem context;
+#else
+            ContextFromModem context;
+#endif
+
             /* execute process includling initialization, start, running and stop */
-            process.execute();
+            process.execute(&context);
         }
 
         Logger::instance->info("Finishing...");
