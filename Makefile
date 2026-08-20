@@ -16,7 +16,9 @@ FILES=$(SRC)/main.c \
 	$(SRC)/Logger.cpp \
 	$(SRC)/LoggerStdout.cpp \
 	$(SRC)/LoggerSyslog.cpp \
-	$(SRC)/Config.cpp
+	$(SRC)/Config.cpp \
+	$(SRC)/ContextFromModem.cpp \
+	$(SRC)/ContextToModem.cpp
 
 .PHONY: clean
 
