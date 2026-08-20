@@ -2,6 +2,11 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
+#define CHANNEL_E_OK (0)
+#define CHANNEL_E_ARG (-1)
+#define CHANNEL_E_STA (-2)
+#define CHANNEL_E_INT (-3)
+
 class Channel
 {
 public:
