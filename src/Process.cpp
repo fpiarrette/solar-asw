@@ -3,16 +3,16 @@
 
 #include "utils.h"
 
-void Process::execute(void)
+void Process::execute(Context *context)
 {
     long int start_time, now;
 
     /* perform process initialization */
     Signals::getInstance()->init();
-    init();
+    init(context);
 
     /* start process components */
-    start();
+    start(context);
 
     /* get start time in ms */
     start_time = utils_curr_time_in_ms();
@@ -25,7 +25,7 @@ void Process::execute(void)
             /* obtain current time in ms */
             now = utils_curr_time_in_ms();
             /* run process and return */
-            run(now - start_time);
+            run(context, now - start_time);
         }
         else
         {
@@ -35,5 +35,5 @@ void Process::execute(void)
     }
 
     /* stop process components */
-    stop();
+    stop(context);
 }

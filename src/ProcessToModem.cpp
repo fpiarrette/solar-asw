@@ -1,31 +1,31 @@
 #include "ProcessToModem.h"
 
-void ProcessToModem::init(void)
+void ProcessToModem::init(Context *context)
 {
-    channelSocketServer.init();
-    channelSpi.init();
+    context->getSource()->init();
+    context->getSink()->init();
 }
 
-void ProcessToModem::start(void)
+void ProcessToModem::start(Context *context)
 {
-    channelSocketServer.start();
-    channelSpi.start();
+    context->getSource()->start();
+    context->getSink()->start();
 }
 
-void ProcessToModem::run(long int time)
+void ProcessToModem::run(Context *context, long int time)
 {
     char b[1024];
     int r, t;
-    channelSocketServer.rx(b, sizeof(b), &r);
+    context->getSource()->rx(b, sizeof(b), &r);
     if (r > 0) {
         /* FIXME manage retries */
-        channelSpi.tx(b, r, &t);
+        context->getSink()->tx(b, r, &t);
     }
 }
 
-void ProcessToModem::stop(void)
+void ProcessToModem::stop(Context *context)
 {
-    channelSocketServer.stop();
-    channelSpi.stop();
+    context->getSource()->stop();
+    context->getSink()->stop();
 }
 

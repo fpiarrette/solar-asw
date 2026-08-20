@@ -2,25 +2,25 @@
 
 #include <string.h>
 
-void ProcessFromModem::init(void)
+void ProcessFromModem::init(Context *context)
 {
-    channelSocketClient.init();
-    channelSpi.init();
+    context->getSource()->init();
+    context->getSink()->init();
 }
 
-void ProcessFromModem::start(void)
+void ProcessFromModem::start(Context *context)
 {
-    channelSocketClient.start();
-    channelSpi.start();
+    context->getSource()->start();
+    context->getSink()->start();
     write = 0;
     timeBarrier = 0;
 }
 
-void ProcessFromModem::run(long int time)
+void ProcessFromModem::run(Context *context, long int time)
 {
     char b[256];
     int r, t;
-    channelSpi.rx(b, sizeof(b), &r);
+    context->getSource()->rx(b, sizeof(b), &r);
     int sendPacket = 0;
 
     if (r > 0)
@@ -38,16 +38,16 @@ void ProcessFromModem::run(long int time)
     if ((sendPacket == 1) || ((write > 0) && (timeBarrier < time)))
     {
         /* FIXME manage retries */
-        channelSocketClient.tx(buffer, write, &t);
+        context->getSink()->tx(buffer, write, &t);
         write = 0;
         timeBarrier = time + timeDeliveryLimit;
     }
 }
 
-void ProcessFromModem::stop(void)
+void ProcessFromModem::stop(Context *context)
 {
-    channelSocketClient.stop();
-    channelSpi.stop();
+    context->getSource()->stop();
+    context->getSink()->stop();
 }
 
 void ProcessFromModem::setTimeDeliveryLimit(int value)
