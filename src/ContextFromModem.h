@@ -6,7 +6,7 @@
 #ifndef CONTEXT_FROM_MODEM_H
 #define CONTEXT_FROM_MODEM_H
 
-class ContextFromModem
+class ContextFromModem : public Context
 {
 public:
     Channel *getSource(void);
