@@ -7,8 +7,8 @@ class ChannelSocket : public Channel
 {
 public:
 protected:
-    int setNonBlock(int fd);
-    int secureRx(int f, void *b, int s, int *r);
+    Channel::Error setNonBlock(int fd);
+    Channel::Error secureRx(int f, void *b, int s, int *r);
     int fd;
 
 private:

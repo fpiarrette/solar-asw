@@ -6,14 +6,14 @@
 class ChannelSocketServer : public ChannelSocket
 {
 public:
-    void init(void);
-    void start(void);
-    void tx(char *data, int size);
-    void rx(char *data, int size, int *received);
-    void stop(void);
+    Channel::Error init(void);
+    Channel::Error start(void);
+    Channel::Error tx(char *data, int size);
+    Channel::Error rx(char *data, int size, int *received);
+    Channel::Error stop(void);
 
 protected:
-    int checkClientConnection(void);
+    Channel::Error checkClientConnection(void);
     int clientSocket;
 private:
 };

@@ -1,21 +1,26 @@
 #include "ChannelSpi.h"
 
-void ChannelSpi::init(void)
+Channel::Error ChannelSpi::init(void)
 {
+    return Channel::Error::E_OK;
 }
 
-void ChannelSpi::start(void)
+Channel::Error ChannelSpi::start(void)
 {
+    return Channel::Error::E_OK;
 }
 
-void ChannelSpi::tx(char *data, int size)
+Channel::Error ChannelSpi::tx(char *data, int size)
 {
+    return Channel::Error::E_OK;
 }
 
-void ChannelSpi::rx(char *data, int size, int *received)
+Channel::Error ChannelSpi::rx(char *data, int size, int *received)
 {
+    return Channel::Error::E_OK;
 }
 
-void ChannelSpi::stop(void)
+Channel::Error ChannelSpi::stop(void)
 {
+    return Channel::Error::E_OK;
 }

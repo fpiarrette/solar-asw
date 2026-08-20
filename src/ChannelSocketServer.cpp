@@ -1,33 +1,63 @@
 #include "ChannelSocketServer.h"
+#include "Logger.h"
 
 #include <errno.h>
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <string.h>
 #include <unistd.h>
 
-void ChannelSocketServer::init(void)
+Channel::Error ChannelSocketServer::init(void)
 {
     /* protocol AF_NET -> IPv4, SOCK_STREAM -> TCP socket */
     fd = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (fd < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+        return Channel::Error::E_INT;
+    }
+
     /* bind to the address */
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_port = htons(8080);
     serverAddress.sin_addr.s_addr = INADDR_ANY;
-    bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
+    if (bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+        return Channel::Error::E_INT;
+    }
+
+    return Channel::Error::E_OK;
 }
 
-void ChannelSocketServer::start(void)
+Channel::Error ChannelSocketServer::start(void)
 {
-    listen(fd, 5);
+    Channel::Error r;
+
+    if (listen(fd, 5) < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+        return Channel::Error::E_INT;
+    }
+
     /* Fixme check errors */
-    setNonBlock(fd);
+    if ((r = setNonBlock(fd)) != Channel::Error::E_OK)
+    {
+        return r;
+    }
+    /* fix value of client socket */
     clientSocket = -1;
-    checkClientConnection();
+
+    /* try to accept a client connection */
+    r = checkClientConnection();
+
+    return r == Channel::Error::E_OK || r == Channel::Error::E_TRY ? Channel::Error::E_OK : r;
 }
 
-int ChannelSocketServer::checkClientConnection(void)
+Channel::Error ChannelSocketServer::checkClientConnection(void)
 {
     if (clientSocket < 0)
     {
@@ -35,32 +65,30 @@ int ChannelSocketServer::checkClientConnection(void)
         if (clientSocket > 0)
         {
             /* set client socket NON BLOCKING */
-            setNonBlock(clientSocket);
-            return CHANNEL_E_OK;
+            return setNonBlock(clientSocket);
         }
         else if (clientSocket < 0)
         {
             if (errno == EAGAIN || errno == EWOULDBLOCK)
             {
-                return CHANNEL_E_OK;
+                return Channel::Error::E_TRY;
             }
             else
             {
-                return CHANNEL_E_INT;
+                return Channel::Error::E_INT;
             }
         }
         else
         {
             /* should no happend, fd 0 should be already used */
-            return CHANNEL_E_INT;
+            return Channel::Error::E_INT;
         }
     }
-    return CHANNEL_E_OK;
+    return Channel::Error::E_OK;
 }
 
-void ChannelSocketServer::tx(char *data, int size)
+Channel::Error ChannelSocketServer::tx(char *data, int size)
 {
-
     if (clientSocket > 0)
     {
         /* FIXME manage errors */
@@ -69,26 +97,25 @@ void ChannelSocketServer::tx(char *data, int size)
     else
     {
         checkClientConnection();
-        /* return CHANNEL_E_OK; */
     }
+    /* FIXME manage errors in a better way, unify the function send to be available for client and server */
+    return Channel::Error::E_OK;
 }
 
-void ChannelSocketServer::rx(char *data, int size, int *received)
+Channel::Error ChannelSocketServer::rx(char *data, int size, int *received)
 {
-
     if (clientSocket > 0)
     {
         /* FIXME manage errors */
-        secureRx(clientSocket, data, size, received);
+        return secureRx(clientSocket, data, size, received);
     }
     else
     {
-        checkClientConnection();
-        /* return CHANNEL_E_OK; */
+        return checkClientConnection();
     }
 }
 
-void ChannelSocketServer::stop(void)
+Channel::Error ChannelSocketServer::stop(void)
 {
     if (clientSocket > 0)
     {
@@ -97,4 +124,6 @@ void ChannelSocketServer::stop(void)
     }
     shutdown(fd, SHUT_RDWR);
     close(fd);
+    /* reuse stop for client and server */
+    return Channel::Error::E_OK;
 }
