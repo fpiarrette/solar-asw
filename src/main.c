@@ -3,6 +3,7 @@
 #include "ProcessToModem.h"
 #include "ProcessFromModem.h"
 #include "ContextToModem.h"
+#include "ContextHost.h"
 #include "ContextFromModem.h"
 
 #include <stdlib.h>
@@ -31,22 +32,35 @@ int main(int argc, char *argv[])
         else
         {
 
-#ifdef PROCESS_TO_MODEM
-            ProcessToModem process;
-#else
-            ProcessFromModem process;
-            process.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
-            process.setBufferSizeLimit(Config::getInstance()->getBufferSizeLimit());
-#endif
+            Process *process;
+            Context *context;
+            ProcessFromModem processFromModem;
+            ContextFromModem contextFromModem;
+            ProcessToModem processToModem;
+            ContextToModem contextToModem;
 
-#ifdef PROCESS_TO_MODEM
-            ContextToModem context;
-#else
-            ContextFromModem context;
+            ContextHost contextHost;
+
+            if (Config::getInstance()->isFromModem())
+            {
+                processFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
+                processFromModem.setBufferSizeLimit(Config::getInstance()->getBufferSizeLimit());
+                process = &processFromModem;
+                context = &contextFromModem;
+            }
+            else
+            {
+                process = &processToModem;
+                context = &contextToModem;
+            }
+
+#ifdef PLAT_HOST
+            /* This compile time option allows to overwrite proper context and configure the process with a test context just for host platform and debug purpose */
+            context = &contextHost;
 #endif
 
             /* execute process includling initialization, start, running and stop */
-            process.execute(&context);
+            process->execute(context);
         }
 
         Logger::instance->info("Finishing...");
