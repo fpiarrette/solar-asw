@@ -20,10 +20,10 @@ int main(int argc, char *argv[])
         else
             Logger::config(LOGGER_ID_SYSLOG);
 
-        Logger::instance->init();
-        Logger::instance->start("Modem TCP converter");
+        Logger::getInstance()->init();
+        Logger::getInstance()->start("Modem TCP converter");
 
-        Logger::instance->info("Starting...");
+        Logger::getInstance()->info("Starting...");
 
         if (Config::getInstance()->isShowHelp())
         {
@@ -63,8 +63,8 @@ int main(int argc, char *argv[])
             process->execute(context);
         }
 
-        Logger::instance->info("Finishing...");
-        Logger::instance->stop();
+        Logger::getInstance()->info("Finishing...");
+        Logger::getInstance()->stop();
     }
     else
     {

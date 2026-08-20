@@ -13,20 +13,21 @@
 #define LOGGER_ID_STDOUT (1U)
 #define LOGGER_ID_SYSLOG (2U)
 
-#define LOGGER_DEBUG_ERRNO                                                \
-    do                                                                    \
-    {                                                                     \
-        Logger::instance->debug("errno: %d, %s", errno, strerror(errno)); \
+#define LOGGER_DEBUG_ERRNO                                                     \
+    do                                                                         \
+    {                                                                          \
+        Logger::getInstance()->debug("errno: %d, %s", errno, strerror(errno)); \
     } while (0)
 
 class Logger
 {
 public:
+    static LoggerAbstract *getInstance(void);
     static void config(int loggerId);
-    static LoggerAbstract *instance;
 
 protected:
 private:
+    static LoggerAbstract *instance;
     static LoggerStdout loggerStdout;
     static LoggerSyslog loggerSyslog;
 };

@@ -7,6 +7,11 @@ LoggerAbstract *Logger::instance = NULL;
 LoggerStdout Logger::loggerStdout;
 LoggerSyslog Logger::loggerSyslog;
 
+LoggerAbstract *Logger::getInstance(void)
+{
+    return instance;
+}
+
 void Logger::config(int loggerId)
 {
     if (instance == NULL)
