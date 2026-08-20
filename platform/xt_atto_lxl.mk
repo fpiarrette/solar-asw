@@ -1,0 +1,5 @@
+
+CC = $(TARGET_PREFIX)gcc
+CXX = $(TARGET_PREFIX)g++
+CFLAGS = $(DEFAULT_CC_FLAGS_WO_OPT) -Wfatal-errors -Wall
+CXXFLAGS = $(DEFAULT_CXX_FLAGS_WO_OPT) -Wfatal-errors -Wall
