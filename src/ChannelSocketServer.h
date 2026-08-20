@@ -13,6 +13,8 @@ public:
     void stop(void);
 
 protected:
+    int checkClientConnection(void);
+    int clientSocket;
 private:
 };
 
