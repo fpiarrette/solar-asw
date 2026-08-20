@@ -24,12 +24,16 @@ platform_xt_atto_lxl=xt_atto_lxl
 platform_host=host
 platform="${platform_xt_atto_lxl}"
 
+optimization=0
+
+debug=0
+
 show_help()
 {
-    echo "$0 [-i] [-s {/src}] [-o {/build}] [-p {$platform_xt_atto_lxl/$platform_host}] [-c {\"make clean all\"}] [-h]"
+    echo "$0 [-i] [-s {/src}] [-o {/build}] [-p {$platform_xt_atto_lxl/$platform_host}] [-c {\"make clean all\"}] [-z] [-d] [-h]"
 }
 
-while getopts "h?is:o:c:p:" opt; do
+while getopts "h?is:o:c:p:zd" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -50,6 +54,12 @@ while getopts "h?is:o:c:p:" opt; do
       ;;
     p)
       platform="${OPTARG}"
+      ;;
+    z)
+      optimization=1
+      ;;
+    d)
+      debug=1
       ;;
   esac
 done
@@ -85,11 +95,13 @@ then
     -e "SRC=${workspace_dir}${source_dir}" \
     -e "OUTPUT=${workspace_dir}${output_dir}" \
     -e "PLATFORM=${platform}" \
+    -e "DEBUG=${debug}" \
+    -e "OPTIMIZATION=${optimization}" \
     arm-poky-linux-gnueabi:latest \
     ${cmd}
 elif [ "$platform" = "$platform_host" ]
 then
-  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" ${cmd}
+  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" DEBUG="${debug}" OPTIMIZATION="${optimization}" ${cmd}
 
 fi
 

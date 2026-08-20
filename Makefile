@@ -2,12 +2,31 @@
 
 OUTPUT?=./build
 SRC?=./src
+DEBUG?=1
+OPTIMIZATION?=1
 
 ifndef PLATFORM
 $(error PLATFORM is not defined!)
 endif
 
-ARTIFACTS=${OUTPUT}/${PLATFORM}
+# refine variables depending on platform
+include platform/$(PLATFORM).mk
+
+ifeq ($(DEBUG),1)
+	ARTIFACTS = ${OUTPUT}/${PLATFORM}/debug
+	CFLAGS += -g
+	CXXFLAGS += -g
+else
+	ARTIFACTS = ${OUTPUT}/${PLATFORM}/release
+endif
+
+ifeq ($(OPTIMIZATION),1)
+	CFLAGS += -O2
+	CXXFLAGS += -O2
+else
+	CFLAGS += -O0
+	CXXFLAGS += -O0
+endif
 
 FILES=$(SRC)/main.c \
 	$(SRC)/utils.c \
@@ -34,4 +53,4 @@ clean:
 	mkdir -p $(ARTIFACTS)
 
 all: $(FILES)
-	${CXX} -o $(ARTIFACTS)/main $(FILES) -I$(SRC)
+	$(CXX) $(CXXFLAGS) -o $(ARTIFACTS)/main $(FILES) -I$(SRC)
