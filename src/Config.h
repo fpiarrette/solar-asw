@@ -16,6 +16,8 @@ public:
     void help(int argc, char *argv[]);
     int getTimeDeliveryLimit(void);
     int getBufferSizeLimit(void);
+    int isFromModem(void);
+    int isToModem(void);
 
 protected:
 private:
@@ -26,6 +28,8 @@ private:
     int showHelp;
     int timeDeliveryLimit;
     int bufferSizeLimit;
+    int toModem;
+    int fromModem;
 };
 
 #endif
