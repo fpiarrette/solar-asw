@@ -10,7 +10,7 @@ Channel::Error ChannelSpi::start(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSpi::tx(char *data, int size, int *tranmited)
+Channel::Error ChannelSpi::tx(char *data, int size, int *tranmitted)
 {
     return Channel::Error::E_OK;
 }

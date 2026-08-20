@@ -71,7 +71,7 @@ Channel::Error ChannelSocket::secureStop(int f)
     return r != 0 ? Channel::Error::E_INT : Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmited)
+Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmitted)
 {
     int r;
 
@@ -84,12 +84,12 @@ Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmi
     }
     else if (r >= 0 && r < size)
     {
-        *transmited = r;
+        *transmitted = r;
         return Channel::Error::E_TRY;
     }
     else if (r < 0)
     {
-        *transmited = 0;
+        *transmitted = 0;
         if (errno == EAGAIN || errno == EWOULDBLOCK)
         {
             return Channel::Error::E_TRY;
@@ -101,7 +101,7 @@ Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmi
     }
     else
     {
-        *transmited = 0;
+        *transmitted = 0;
         return Channel::Error::E_INT;
     }
 }

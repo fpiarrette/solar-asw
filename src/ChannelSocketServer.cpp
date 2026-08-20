@@ -86,11 +86,11 @@ Channel::Error ChannelSocketServer::checkClientConnection(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSocketServer::tx(char *data, int size, int *transmited)
+Channel::Error ChannelSocketServer::tx(char *data, int size, int *transmitted)
 {
     if (clientSocket > 0)
     {
-        return secureTx(clientSocket, data, size, transmited);
+        return secureTx(clientSocket, data, size, transmitted);
     }
     else
     {

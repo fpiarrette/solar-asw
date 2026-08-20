@@ -42,10 +42,10 @@ Channel::Error ChannelSocketClient::start(void)
     }
 }
 
-Channel::Error ChannelSocketClient::tx(char *data, int size, int *transmited)
+Channel::Error ChannelSocketClient::tx(char *data, int size, int *transmitted)
 {
     if (fd > 0)
-        return secureTx(fd, data, size, transmited);
+        return secureTx(fd, data, size, transmitted);
     else
         return Channel::Error::E_STA;
 }
