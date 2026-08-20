@@ -19,12 +19,17 @@ source_dir=/src
 # create output dir
 output_dir=/build
 
+# default platform
+platform_xt_atto_lxl=xt_atto_lxl
+platform_host=host
+platform="${platform_xt_atto_lxl}"
+
 show_help()
 {
-    echo "$0 [-i] [-s {/src}] [-o {/build}] [-h]"
+    echo "$0 [-i] [-s {/src}] [-o {/build}] [-p {$platform_xt_atto_lxl/$platform_host}] [-c {\"make clean all\"}] [-h]"
 }
 
-while getopts "h?is:o:" opt; do
+while getopts "h?is:o:c:p:" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -32,13 +37,19 @@ while getopts "h?is:o:" opt; do
       ;;
     i)
       flags="${flags} -i"
-      cmd=""
+      cmd="bash"
       ;;
     s)
       source_dir="${OPTARG}"
       ;;
     o)
       output_dir="${OPTARG}"
+      ;;
+    c)
+      cmd="${OPTARG}"
+      ;;
+    p)
+      platform="${OPTARG}"
       ;;
   esac
 done
@@ -50,19 +61,35 @@ shift $((OPTIND-1))
 # info
 echo "--------------------------------------------------------------------------------"
 echo "Solar build system"
-echo "Source: ${project_dir}${source_dir}"
-echo "Output: ${project_dir}${output_dir}"
+#echo "Source: ${project_dir}${source_dir}"
+#echo "Output: ${project_dir}${output_dir}"
 echo "Command: ${cmd}"
+echo "Platform: ${platform}"
 echo "--------------------------------------------------------------------------------"
+
+if [ "$platform" != "$platform_xt_atto_lxl" ] && [ "$platform" != "$platform_host" ]
+then
+  show_help
+  exit 0
+fi
 
 # create output dir just in case make clean is not executed
 mkdir -p ${project_dir}${output_dir}
 
-# launch make process
-podman run ${flags} \
+if [ "$platform" = "$platform_xt_atto_lxl" ]
+then
+  # launch make process
+  podman run ${flags} \
     -v "${project_dir}:/ws" \
     -w "${workspace_dir}" \
     -e "SRC=${workspace_dir}${source_dir}" \
     -e "OUTPUT=${workspace_dir}${output_dir}" \
+    -e "PLATFORM=${platform}" \
     arm-poky-linux-gnueabi:latest \
     ${cmd}
+elif [ "$platform" = "$platform_host" ]
+then
+  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" ${cmd}
+
+fi
+
