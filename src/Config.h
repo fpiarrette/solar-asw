@@ -17,6 +17,7 @@ public:
     int getTimeDeliveryLimit(void);
     int getBufferSizeLimit(void);
 
+protected:
 private:
     static Config instance;
     int logLevel;

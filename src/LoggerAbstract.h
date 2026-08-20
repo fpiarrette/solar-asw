@@ -14,6 +14,9 @@ public:
     virtual void info(const char *format, ...) = 0;
     virtual void notice(const char *format, ...) = 0;
     virtual void debug(const char *format, ...) = 0;
+
+protected:
+private:
 };
 
 #endif

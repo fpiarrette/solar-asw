@@ -12,6 +12,8 @@ public:
     void stop(void);
     void setTimeDeliveryLimit(int value);
     void setBufferSizeLimit(int value);
+
+protected:
 private:
     char buffer[8 * 1024];
     int write;

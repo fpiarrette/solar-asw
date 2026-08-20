@@ -10,6 +10,9 @@ public:
     void start(void);
     void run(long int time);
     void stop(void);
+
+protected:
+private:
 };
 
 #endif

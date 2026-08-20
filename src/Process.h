@@ -7,11 +7,6 @@
 
 class Process
 {
-protected:
-    ChannelSocketClient channelSocketClient;
-    ChannelSocketServer channelSocketServer;
-    ChannelSpi channelSpi;
-
 public:
     void execute(void);
 
@@ -20,6 +15,10 @@ protected:
     virtual void run(long int time) = 0;
     virtual void start(void) = 0;
     virtual void stop(void) = 0;
+
+    ChannelSocketClient channelSocketClient;
+    ChannelSocketServer channelSocketServer;
+    ChannelSpi channelSpi;
 };
 
 #endif

@@ -17,6 +17,7 @@ public:
     static void config(int loggerId);
     static LoggerAbstract *instance;
 
+protected:
 private:
     static LoggerStdout loggerStdout;
     static LoggerSyslog loggerSyslog;

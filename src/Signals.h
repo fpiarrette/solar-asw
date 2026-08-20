@@ -13,6 +13,7 @@ public:
     int isTerminated(void);
     static void handler(int signal);
 
+protected:
 private:
     static Signals instance;
 

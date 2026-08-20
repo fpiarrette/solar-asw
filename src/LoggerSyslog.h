@@ -16,6 +16,9 @@ public:
     void info(const char *format, ...);
     void notice(const char *format, ...);
     void debug(const char *format, ...);
+
+protected:
+private:
 };
 
 #endif
