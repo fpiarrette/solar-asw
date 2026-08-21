@@ -11,7 +11,7 @@
 int main(int argc, char *argv[])
 {
     /* parse arguments */
-    if (Config::getInstance()->init(argc, argv) == CONFIG_E_OK)
+    if (Config::getInstance()->init(argc, argv) == Config::Error::E_OK)
     {
 
         /* initialization */

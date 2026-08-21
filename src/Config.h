@@ -8,7 +8,15 @@
 class Config
 {
 public:
-    int init(int argc, char *argv[]);
+    enum Error {
+        E_OK = 0,
+        E_TRY = -1,
+        E_ARG = -2,
+        E_STA = -3,
+        E_INT = 4
+    };
+
+    Config::Error init(int argc, char *argv[]);
     static Config *getInstance(void);
     int isUseStdout(void);
     int isUseSyslog(void);

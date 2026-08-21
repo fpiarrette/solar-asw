@@ -10,11 +10,11 @@ Config *Config::getInstance(void)
     return &instance;
 }
 
-int Config::init(int argc, char *argv[])
+Config::Error Config::init(int argc, char *argv[])
 {
-    int returnValue;
+    Config::Error returnValue;
 
-    returnValue = CONFIG_E_OK;
+    returnValue = Config::Error::E_OK;
 
     /* give default values */
     logLevel = 0;
@@ -43,7 +43,7 @@ int Config::init(int argc, char *argv[])
             else
             {
                 /* not parsed correctly */
-                returnValue = CONFIG_E_INVALID;
+                returnValue = Config::Error::E_ARG;
                 break;
             }
         case 't':
@@ -56,7 +56,7 @@ int Config::init(int argc, char *argv[])
             else
             {
                 /* not parsed correctly */
-                returnValue = CONFIG_E_INVALID;
+                returnValue = Config::Error::E_ARG;
                 break;
             }
         case 'b':
@@ -69,7 +69,7 @@ int Config::init(int argc, char *argv[])
             else
             {
                 /* not parsed correctly */
-                returnValue = CONFIG_E_INVALID;
+                returnValue = Config::Error::E_ARG;
                 break;
             }
         case 's':
@@ -94,7 +94,7 @@ int Config::init(int argc, char *argv[])
             continue;
         case '?':
         case ':':
-            returnValue = CONFIG_E_INVALID;
+            returnValue = Config::Error::E_ARG;
             break;
         case 'h':
             showHelp = 1;
