@@ -5,6 +5,18 @@
 
 Config Config::instance;
 
+#define CONFIG_OPTION_LOG_LEVEL "l"
+#define CONFIG_OPTION_LOG_SYSLOG "s"
+#define CONFIG_OPTION_LOG_STDOUT "d"
+
+#define CONFIG_OPTION_TIME_DELIVERY_LIMIT "t"
+#define CONFIG_OPTION_SIZE_DELIVERY_LIMIT "b"
+
+#define CONFIG_OPTION_MODE_TO_MODEM "u"
+#define CONFIG_OPTION_MODE_FROM_MODEM "f"
+
+#define CONFIG_OPTION_HELP "h"
+
 Config *Config::getInstance(void)
 {
     return &instance;
@@ -31,9 +43,9 @@ Config::Error Config::init(int argc, char *argv[])
 
     for (;;)
     {
-        switch (getopt(argc, argv, "hl:sdt:b:uf"))
+        switch (getopt(argc, argv, CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" CONFIG_OPTION_LOG_SYSLOG CONFIG_OPTION_LOG_STDOUT CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" CONFIG_OPTION_MODE_TO_MODEM CONFIG_OPTION_MODE_FROM_MODEM))
         {
-        case 'l':
+        case CONFIG_OPTION_LOG_LEVEL[0]:
             /* log level */
             if (sscanf(optarg, "%d", &logLevel) == 1)
             {
@@ -46,7 +58,7 @@ Config::Error Config::init(int argc, char *argv[])
                 returnValue = Config::Error::E_ARG;
                 break;
             }
-        case 't':
+        case CONFIG_OPTION_TIME_DELIVERY_LIMIT[0]:
             /* time delivery limit */
             if (sscanf(optarg, "%d", &timeDeliveryLimit) == 1)
             {
@@ -59,7 +71,7 @@ Config::Error Config::init(int argc, char *argv[])
                 returnValue = Config::Error::E_ARG;
                 break;
             }
-        case 'b':
+        case CONFIG_OPTION_SIZE_DELIVERY_LIMIT[0]:
             /* buffer size delivery limit */
             if (sscanf(optarg, "%d", &bufferSizeLimit) == 1)
             {
@@ -72,22 +84,22 @@ Config::Error Config::init(int argc, char *argv[])
                 returnValue = Config::Error::E_ARG;
                 break;
             }
-        case 's':
+        case CONFIG_OPTION_LOG_SYSLOG[0]:
             /* log to syslog */
             useSyslog = 1;
             useStdout = 0;
             continue;
-        case 'd':
+        case CONFIG_OPTION_LOG_STDOUT[0]:
             /* log to stdout */
             useStdout = 1;
             useSyslog = 0;
             continue;
-        case 'u':
+        case CONFIG_OPTION_MODE_TO_MODEM[0]:
             /* to MODEM */
             toModem = 1;
             fromModem = 0;
             continue;
-        case 'm':
+        case CONFIG_OPTION_MODE_FROM_MODEM[0]:
             /* from MODEM */
             toModem = 0;
             fromModem = 1;
@@ -96,7 +108,7 @@ Config::Error Config::init(int argc, char *argv[])
         case ':':
             returnValue = Config::Error::E_ARG;
             break;
-        case 'h':
+        case CONFIG_OPTION_HELP[0]:
             showHelp = 1;
             break;
         default:
@@ -147,13 +159,13 @@ int Config::isToModem(void)
 
 void Config::help(int argc, char *argv[])
 {
-    printf("%s [-h] [-l {0}] [-s] [-d] [-t {500}] [-b {256}] [-u] [-m]\n", argv[0]);
-    printf("\t-h: show help\n");
-    printf("\t-l <log level>: set log level\n");
-    printf("\t-s: set logger to use syslog\n");
-    printf("\t-d: set logger to use stdout\n");
-    printf("\t-t: time delivery limit in ms\n");
-    printf("\t-b: buffer size delivery limit in bytes\n");
-    printf("\t-u: to modem\n");
-    printf("\t-m: from modem\n");
+    printf("%s [-" CONFIG_OPTION_HELP "] [-" CONFIG_OPTION_LOG_LEVEL " {0}] [-" CONFIG_OPTION_LOG_SYSLOG "] [-" CONFIG_OPTION_LOG_STDOUT "] [-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {500}] [-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {256}] [-" CONFIG_OPTION_MODE_TO_MODEM "] [-" CONFIG_OPTION_MODE_FROM_MODEM "]\n", argv[0]);
+    printf("\t-" CONFIG_OPTION_HELP ": show help\n");
+    printf("\t-" CONFIG_OPTION_LOG_LEVEL " <log level>: set log level\n");
+    printf("\t-" CONFIG_OPTION_LOG_SYSLOG ": set logger to use syslog\n");
+    printf("\t-" CONFIG_OPTION_LOG_STDOUT ": set logger to use stdout\n");
+    printf("\t-" CONFIG_OPTION_TIME_DELIVERY_LIMIT ": time delivery limit in ms\n");
+    printf("\t-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ": buffer size delivery limit in bytes\n");
+    printf("\t-" CONFIG_OPTION_MODE_TO_MODEM ": to modem\n");
+    printf("\t-" CONFIG_OPTION_MODE_FROM_MODEM ": from modem\n");
 }
