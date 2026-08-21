@@ -36,14 +36,15 @@ Config Config::instance;
         CONFIG_OPTION_MODE_FROM_MODEM
 
 /* Command line help line */
-#define HELP_COMMAND "[-" CONFIG_OPTION_HELP "] "                                                               \
+#define HELP_COMMAND                                                                                            \
+                     "[-" CONFIG_OPTION_MODE_TO_MODEM "] "                                                      \
+                     "[-" CONFIG_OPTION_MODE_FROM_MODEM "] "                                                    \
+                     "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_TIME_DELIVERY_LIMIT) "}] " \
+                     "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT) "}] " \
                      "[-" CONFIG_OPTION_LOG_LEVEL " {" xstr(CONFIG_DEFAULT_LOG_LEVEL) "}] "                     \
                      "[-" CONFIG_OPTION_LOG_SYSLOG "] "                                                         \
                      "[-" CONFIG_OPTION_LOG_STDOUT "] "                                                         \
-                     "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_TIME_DELIVERY_LIMIT) "}] " \
-                     "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT) "}] " \
-                     "[-" CONFIG_OPTION_MODE_TO_MODEM "] "                                                      \
-                     "[-" CONFIG_OPTION_MODE_FROM_MODEM "]\n"
+                     "[-" CONFIG_OPTION_HELP "]\n"                                                              \
 
 Config *Config::getInstance(void)
 {
@@ -172,12 +173,12 @@ int Config::isToModem(void)
 void Config::help(int argc, char *argv[])
 {
     printf("%s " HELP_COMMAND, argv[0]);
-    printf("\t-" CONFIG_OPTION_HELP ": show help\n");
+    printf("\t-" CONFIG_OPTION_MODE_TO_MODEM ": to modem\n");
+    printf("\t-" CONFIG_OPTION_MODE_FROM_MODEM ": from modem\n");
+    printf("\t-" CONFIG_OPTION_TIME_DELIVERY_LIMIT ": time delivery limit in ms\n");
+    printf("\t-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ": buffer size delivery limit in bytes\n");
     printf("\t-" CONFIG_OPTION_LOG_LEVEL " <log level>: set log level\n");
     printf("\t-" CONFIG_OPTION_LOG_SYSLOG ": set logger to use syslog\n");
     printf("\t-" CONFIG_OPTION_LOG_STDOUT ": set logger to use stdout\n");
-    printf("\t-" CONFIG_OPTION_TIME_DELIVERY_LIMIT ": time delivery limit in ms\n");
-    printf("\t-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ": buffer size delivery limit in bytes\n");
-    printf("\t-" CONFIG_OPTION_MODE_TO_MODEM ": to modem\n");
-    printf("\t-" CONFIG_OPTION_MODE_FROM_MODEM ": from modem\n");
+    printf("\t-" CONFIG_OPTION_HELP ": show help\n");
 }
