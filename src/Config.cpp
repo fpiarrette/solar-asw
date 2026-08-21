@@ -1,10 +1,13 @@
 #include "Config.h"
 
+#include "utils.h"
+
 #include <getopt.h>
 #include <stdio.h>
 
 Config Config::instance;
 
+/* Configuration options */
 #define CONFIG_OPTION_LOG_LEVEL "l"
 #define CONFIG_OPTION_LOG_SYSLOG "y"
 #define CONFIG_OPTION_LOG_STDOUT "o"
@@ -17,22 +20,30 @@ Config Config::instance;
 
 #define CONFIG_OPTION_HELP "h"
 
-#define GETOPT_LINE CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" \
-                    CONFIG_OPTION_LOG_SYSLOG \
-                    CONFIG_OPTION_LOG_STDOUT \
-                    CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" \
-                    CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" \
-                    CONFIG_OPTION_MODE_TO_MODEM \
-                    CONFIG_OPTION_MODE_FROM_MODEM
+/* Configuration default values */
+#define CONFIG_DEFAULT_LOG_LEVEL 0
+#define CONFIG_DEFAULT_LOG_SYSLOG 0
+#define CONFIG_DEFAULT_LOG_STDOUT 1
+#define CONFIG_DEFAULT_TIME_DELIVERY_LIMIT 500
+#define CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT 256
+#define CONFIG_DEFAULT_MODE_TO_MODEM 0
+#define CONFIG_DEFAULT_MODE_FROM_MODEM 1
+#define CONFIG_DEFAULT_SHOW_HELP 0
 
-#define HELP_COMMAND    "[-" CONFIG_OPTION_HELP "] " \
-                        "[-" CONFIG_OPTION_LOG_LEVEL " {0}] " \
-                        "[-" CONFIG_OPTION_LOG_SYSLOG "] " \
-                        "[-" CONFIG_OPTION_LOG_STDOUT "] " \
-                        "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {500}] " \
-                        "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {256}] " \
-                        "[-" CONFIG_OPTION_MODE_TO_MODEM "] " \
-                        "[-" CONFIG_OPTION_MODE_FROM_MODEM "]\n"
+/* GETOPT configuration line */
+#define GETOPT_LINE CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" CONFIG_OPTION_LOG_SYSLOG                                          \
+    CONFIG_OPTION_LOG_STDOUT CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" CONFIG_OPTION_MODE_TO_MODEM \
+        CONFIG_OPTION_MODE_FROM_MODEM
+
+/* Command line help line */
+#define HELP_COMMAND "[-" CONFIG_OPTION_HELP "] "                                                               \
+                     "[-" CONFIG_OPTION_LOG_LEVEL " {" xstr(CONFIG_DEFAULT_LOG_LEVEL) "}] "                     \
+                     "[-" CONFIG_OPTION_LOG_SYSLOG "] "                                                         \
+                     "[-" CONFIG_OPTION_LOG_STDOUT "] "                                                         \
+                     "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_TIME_DELIVERY_LIMIT) "}] " \
+                     "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT) "}] " \
+                     "[-" CONFIG_OPTION_MODE_TO_MODEM "] "                                                      \
+                     "[-" CONFIG_OPTION_MODE_FROM_MODEM "]\n"
 
 Config *Config::getInstance(void)
 {
@@ -47,17 +58,17 @@ Config::Error Config::init(int argc, char *argv[])
     returnValue = Config::Error::E_OK;
 
     /* give default values */
-    logLevel = 0;
-    useSyslog = 0;
-    useStdout = 1;
-    showHelp = 0;
+    logLevel = CONFIG_DEFAULT_LOG_LEVEL;
+    useSyslog = CONFIG_DEFAULT_LOG_SYSLOG;
+    useStdout = CONFIG_DEFAULT_LOG_STDOUT;
+    showHelp = CONFIG_DEFAULT_SHOW_HELP;
     /* 500 ms is default time delivey limit */
-    timeDeliveryLimit = 500;
+    timeDeliveryLimit = CONFIG_DEFAULT_TIME_DELIVERY_LIMIT;
     /* 256 bytes is default buffer size limit */
-    bufferSizeLimit = 256;
+    bufferSizeLimit = CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT;
     /* From or to MODEM, by default direction is from modem */
-    fromModem = 1;
-    toModem = 0;
+    fromModem = CONFIG_DEFAULT_MODE_FROM_MODEM;
+    toModem = CONFIG_DEFAULT_MODE_TO_MODEM;
 
     while ((c = getopt(argc, argv, GETOPT_LINE)) != -1)
     {
