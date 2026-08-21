@@ -28,12 +28,23 @@ optimization=0
 
 debug=0
 
+hardening=0
+
 show_help()
 {
-    echo "$0 [-i] [-s {/src}] [-o {/build}] [-p {$platform_xt_atto_lxl/$platform_host}] [-c {\"make clean all\"}] [-z] [-d] [-h]"
+    echo "$0 [-i] [-s {/src}] [-o {/build}] [-p {$platform_xt_atto_lxl/$platform_host}] [-c {\"make clean all\"}] [-z] [-d] [-e] [-h]"
+    echo "\t[-i] interactive"
+    echo "\t[-s {/src}] define source directory"
+    echo "\t[-o {/build}] define output directory"
+    echo "\t[-p {$platform_xt_atto_lxl/$platform_host}] define platform"
+    echo "\t[-c {\"make clean all\"}] define command"
+    echo "\t[-z] activate optimization"
+    echo "\t[-d] compile with debug symbols"
+    echo "\t[-e] include GCC hardening options"
+    echo "\t[-h] show this help"
 }
 
-while getopts "h?is:o:c:p:zd" opt; do
+while getopts "h?is:o:c:p:zde" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -60,6 +71,9 @@ while getopts "h?is:o:c:p:zd" opt; do
       ;;
     d)
       debug=1
+      ;;
+    e)
+      hardening=1
       ;;
   esac
 done
@@ -97,11 +111,12 @@ then
     -e "PLATFORM=${platform}" \
     -e "DEBUG=${debug}" \
     -e "OPTIMIZATION=${optimization}" \
+    -e "HARDENING=${hardening}" \
     arm-poky-linux-gnueabi:latest \
     ${cmd}
 elif [ "$platform" = "$platform_host" ]
 then
-  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" DEBUG="${debug}" OPTIMIZATION="${optimization}" ${cmd}
+  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" DEBUG="${debug}" OPTIMIZATION="${optimization}" HARDENING="${hardening}" ${cmd}
 
 fi
 
