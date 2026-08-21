@@ -25,6 +25,7 @@ Config *Config::getInstance(void)
 Config::Error Config::init(int argc, char *argv[])
 {
     Config::Error returnValue;
+    char c;
 
     returnValue = Config::Error::E_OK;
 
@@ -41,69 +42,54 @@ Config::Error Config::init(int argc, char *argv[])
     fromModem = 1;
     toModem = 0;
 
-    for (;;)
+    while ((c = getopt(argc, argv, CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" CONFIG_OPTION_LOG_SYSLOG CONFIG_OPTION_LOG_STDOUT CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" CONFIG_OPTION_MODE_TO_MODEM CONFIG_OPTION_MODE_FROM_MODEM)) != -1)
     {
-        switch (getopt(argc, argv, CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" CONFIG_OPTION_LOG_SYSLOG CONFIG_OPTION_LOG_STDOUT CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" CONFIG_OPTION_MODE_TO_MODEM CONFIG_OPTION_MODE_FROM_MODEM))
+        switch (c)
         {
         case CONFIG_OPTION_LOG_LEVEL[0]:
             /* log level */
-            if (sscanf(optarg, "%d", &logLevel) == 1)
-            {
-                /* parsed correctly */
-                continue;
-            }
-            else
+            if (sscanf(optarg, "%d", &logLevel) != 1)
             {
                 /* not parsed correctly */
                 returnValue = Config::Error::E_ARG;
-                break;
             }
+            break;
         case CONFIG_OPTION_TIME_DELIVERY_LIMIT[0]:
             /* time delivery limit */
-            if (sscanf(optarg, "%d", &timeDeliveryLimit) == 1)
-            {
-                /* parsed correctly */
-                continue;
-            }
-            else
+            if (sscanf(optarg, "%d", &timeDeliveryLimit) != 1)
             {
                 /* not parsed correctly */
                 returnValue = Config::Error::E_ARG;
-                break;
             }
+            break;
         case CONFIG_OPTION_SIZE_DELIVERY_LIMIT[0]:
             /* buffer size delivery limit */
-            if (sscanf(optarg, "%d", &bufferSizeLimit) == 1)
-            {
-                /* parsed correctly */
-                continue;
-            }
-            else
+            if (sscanf(optarg, "%d", &bufferSizeLimit) != 1)
             {
                 /* not parsed correctly */
                 returnValue = Config::Error::E_ARG;
-                break;
             }
+            break;
         case CONFIG_OPTION_LOG_SYSLOG[0]:
             /* log to syslog */
             useSyslog = 1;
             useStdout = 0;
-            continue;
+            break;
         case CONFIG_OPTION_LOG_STDOUT[0]:
             /* log to stdout */
             useStdout = 1;
             useSyslog = 0;
-            continue;
+            break;
         case CONFIG_OPTION_MODE_TO_MODEM[0]:
             /* to MODEM */
             toModem = 1;
             fromModem = 0;
-            continue;
+            break;
         case CONFIG_OPTION_MODE_FROM_MODEM[0]:
             /* from MODEM */
             toModem = 0;
             fromModem = 1;
-            continue;
+            break;
         case '?':
         case ':':
             returnValue = Config::Error::E_ARG;
@@ -112,9 +98,7 @@ Config::Error Config::init(int argc, char *argv[])
             showHelp = 1;
             break;
         default:
-
-            break;
-        case -1:
+            returnValue = Config::Error::E_ARG;
             break;
         }
     }
