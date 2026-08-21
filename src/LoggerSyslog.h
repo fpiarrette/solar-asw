@@ -11,11 +11,11 @@ public:
     void start(const char *name);
     void stop(void);
 
-    void error(const char *format, ...);
-    void warning(const char *format, ...);
-    void info(const char *format, ...);
-    void notice(const char *format, ...);
-    void debug(const char *format, ...);
+    void logError(const char *format, ...);
+    void logWarning(const char *format, ...);
+    void logInfo(const char *format, ...);
+    void logNotice(const char *format, ...);
+    void logDebug(const char *format, ...);
 
 protected:
 private:

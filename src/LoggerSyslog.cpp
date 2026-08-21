@@ -18,7 +18,7 @@ void LoggerSyslog::stop(void)
     closelog();
 }
 
-void LoggerSyslog::error(const char *format, ...)
+void LoggerSyslog::logError(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -26,7 +26,7 @@ void LoggerSyslog::error(const char *format, ...)
     va_end(args);
 }
 
-void LoggerSyslog::warning(const char *format, ...)
+void LoggerSyslog::logWarning(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -34,7 +34,7 @@ void LoggerSyslog::warning(const char *format, ...)
     va_end(args);
 }
 
-void LoggerSyslog::info(const char *format, ...)
+void LoggerSyslog::logInfo(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -42,7 +42,7 @@ void LoggerSyslog::info(const char *format, ...)
     va_end(args);
 }
 
-void LoggerSyslog::notice(const char *format, ...)
+void LoggerSyslog::logNotice(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -50,7 +50,7 @@ void LoggerSyslog::notice(const char *format, ...)
     va_end(args);
 }
 
-void LoggerSyslog::debug(const char *format, ...)
+void LoggerSyslog::logDebug(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
