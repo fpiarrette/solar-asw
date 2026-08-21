@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
             Logger::config(LOGGER_ID_SYSLOG);
 
         Logger::getInstance()->init();
+        Logger::getInstance()->setLevel(Config::getInstance()->getLogLevel());
         Logger::getInstance()->start("Modem TCP converter");
 
         L_INFO("Starting...");
