@@ -26,6 +26,7 @@ public:
     int getBufferSizeLimit(void);
     int isFromModem(void);
     int isToModem(void);
+    int getLogLevel();
 
 protected:
 private:

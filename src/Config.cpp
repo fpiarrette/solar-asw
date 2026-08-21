@@ -1,5 +1,6 @@
 #include "Config.h"
 
+#include "LoggerAbstract.h"
 #include "utils.h"
 
 #include <getopt.h>
@@ -140,6 +141,11 @@ int Config::isUseStdout(void)
     return useStdout;
 }
 
+int Config::getLogLevel(void)
+{
+    return logLevel;
+}
+
 int Config::isUseSyslog(void)
 {
     return useSyslog;
@@ -177,7 +183,7 @@ void Config::help(int argc, char *argv[])
     printf("\t-" CONFIG_OPTION_MODE_FROM_MODEM ": from modem\n");
     printf("\t-" CONFIG_OPTION_TIME_DELIVERY_LIMIT ": time delivery limit in ms\n");
     printf("\t-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ": buffer size delivery limit in bytes\n");
-    printf("\t-" CONFIG_OPTION_LOG_LEVEL " <log level>: set log level\n");
+    printf("\t-" CONFIG_OPTION_LOG_LEVEL " <log level>: set minimum loggeable level [DBG %d - ERROR %d], to suppress logging use %d\n", LoggerAbstract::Level::DBG, LoggerAbstract::Level::ERROR, LoggerAbstract::Level::NO_LOG);
     printf("\t-" CONFIG_OPTION_LOG_SYSLOG ": set logger to use syslog\n");
     printf("\t-" CONFIG_OPTION_LOG_STDOUT ": set logger to use stdout\n");
     printf("\t-" CONFIG_OPTION_HELP ": show help\n");
