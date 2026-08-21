@@ -12,19 +12,19 @@ LoggerAbstract *Logger::getInstance(void)
     return instance;
 }
 
-void Logger::config(int loggerId)
+void Logger::config(Type loggerType)
 {
     if (instance == NULL)
-        switch (loggerId)
+        switch (loggerType)
         {
-        case LOGGER_ID_STDOUT:
+        case Logger::Type::STDOUT:
             instance = &loggerStdout;
             break;
-        case LOGGER_ID_SYSLOG:
+        case Logger::Type::SYSLOG:
             instance = &loggerSyslog;
             break;
         default:
-            fprintf(stderr, "Error configuring Logger with id %d\n", loggerId);
+            fprintf(stderr, "Error configuring Logger with id %d\n", loggerType);
             break;
         }
 }

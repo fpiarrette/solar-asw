@@ -16,9 +16,9 @@ int main(int argc, char *argv[])
 
         /* initialization */
         if (Config::getInstance()->isUseStdout())
-            Logger::config(LOGGER_ID_STDOUT);
+            Logger::config(Logger::Type::STDOUT);
         else
-            Logger::config(LOGGER_ID_SYSLOG);
+            Logger::config(Logger::Type::SYSLOG);
 
         Logger::getInstance()->init();
         Logger::getInstance()->setLevel(Config::getInstance()->getLogLevel());

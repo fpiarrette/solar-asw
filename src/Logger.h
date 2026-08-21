@@ -10,9 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define LOGGER_ID_STDOUT (1U)
-#define LOGGER_ID_SYSLOG (2U)
-
 #define L_ERROR(m, ...)                                 \
     do                                                  \
     {                                                   \
@@ -52,8 +49,13 @@
 class Logger
 {
 public:
+    enum Type
+    {
+        STDOUT = 1,
+        SYSLOG = 2
+    };
     static LoggerAbstract *getInstance(void);
-    static void config(int loggerId);
+    static void config(Type loggerType);
 
 protected:
 private:
