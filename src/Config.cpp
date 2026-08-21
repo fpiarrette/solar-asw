@@ -25,6 +25,15 @@ Config Config::instance;
                     CONFIG_OPTION_MODE_TO_MODEM \
                     CONFIG_OPTION_MODE_FROM_MODEM
 
+#define HELP_COMMAND    "[-" CONFIG_OPTION_HELP "] " \
+                        "[-" CONFIG_OPTION_LOG_LEVEL " {0}] " \
+                        "[-" CONFIG_OPTION_LOG_SYSLOG "] " \
+                        "[-" CONFIG_OPTION_LOG_STDOUT "] " \
+                        "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {500}] " \
+                        "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {256}] " \
+                        "[-" CONFIG_OPTION_MODE_TO_MODEM "] " \
+                        "[-" CONFIG_OPTION_MODE_FROM_MODEM "]\n"
+
 Config *Config::getInstance(void)
 {
     return &instance;
@@ -151,7 +160,7 @@ int Config::isToModem(void)
 
 void Config::help(int argc, char *argv[])
 {
-    printf("%s [-" CONFIG_OPTION_HELP "] [-" CONFIG_OPTION_LOG_LEVEL " {0}] [-" CONFIG_OPTION_LOG_SYSLOG "] [-" CONFIG_OPTION_LOG_STDOUT "] [-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {500}] [-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {256}] [-" CONFIG_OPTION_MODE_TO_MODEM "] [-" CONFIG_OPTION_MODE_FROM_MODEM "]\n", argv[0]);
+    printf("%s " HELP_COMMAND, argv[0]);
     printf("\t-" CONFIG_OPTION_HELP ": show help\n");
     printf("\t-" CONFIG_OPTION_LOG_LEVEL " <log level>: set log level\n");
     printf("\t-" CONFIG_OPTION_LOG_SYSLOG ": set logger to use syslog\n");
