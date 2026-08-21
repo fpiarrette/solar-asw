@@ -2,17 +2,24 @@
 #ifndef LOGGER_ABSTRACT_H
 #define LOGGER_ABSTRACT_H
 
+#define LOGGER_LEVEL_VALUE_NO_LOG 6
+#define LOGGER_LEVEL_VALUE_ERROR 5
+#define LOGGER_LEVEL_VALUE_WARN 4
+#define LOGGER_LEVEL_VALUE_INFO 3
+#define LOGGER_LEVEL_VALUE_NOTICE 2
+#define LOGGER_LEVEL_VALUE_DBG 1
+
 class LoggerAbstract
 {
 public:
     enum Level
     {
-        NO_LOG = 6,
-        ERROR = 5,
-        WARN = 4,
-        INFO = 3,
-        NOTICE = 2,
-        DBG = 1
+        NO_LOG = LOGGER_LEVEL_VALUE_NO_LOG,
+        ERROR = LOGGER_LEVEL_VALUE_ERROR,
+        WARN = LOGGER_LEVEL_VALUE_WARN,
+        INFO = LOGGER_LEVEL_VALUE_INFO,
+        NOTICE = LOGGER_LEVEL_VALUE_NOTICE,
+        DBG = LOGGER_LEVEL_VALUE_DBG
     };
 
     virtual void init(void) = 0;
