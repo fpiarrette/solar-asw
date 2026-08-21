@@ -17,6 +17,14 @@ Config Config::instance;
 
 #define CONFIG_OPTION_HELP "h"
 
+#define GETOPT_LINE CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" \
+                    CONFIG_OPTION_LOG_SYSLOG \
+                    CONFIG_OPTION_LOG_STDOUT \
+                    CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" \
+                    CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" \
+                    CONFIG_OPTION_MODE_TO_MODEM \
+                    CONFIG_OPTION_MODE_FROM_MODEM
+
 Config *Config::getInstance(void)
 {
     return &instance;
@@ -42,7 +50,7 @@ Config::Error Config::init(int argc, char *argv[])
     fromModem = 1;
     toModem = 0;
 
-    while ((c = getopt(argc, argv, CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" CONFIG_OPTION_LOG_SYSLOG CONFIG_OPTION_LOG_STDOUT CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" CONFIG_OPTION_MODE_TO_MODEM CONFIG_OPTION_MODE_FROM_MODEM)) != -1)
+    while ((c = getopt(argc, argv, GETOPT_LINE)) != -1)
     {
         switch (c)
         {
