@@ -61,6 +61,7 @@ FILES=$(SRC)/main.c \
 	$(SRC)/ProcessFromModem.cpp \
 	$(SRC)/Signals.cpp \
 	$(SRC)/Logger.cpp \
+	$(SRC)/LoggerAbstract.cpp \
 	$(SRC)/LoggerStdout.cpp \
 	$(SRC)/LoggerSyslog.cpp \
 	$(SRC)/Config.cpp \
