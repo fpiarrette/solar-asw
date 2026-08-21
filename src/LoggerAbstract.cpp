@@ -60,7 +60,12 @@ void LoggerAbstract::debug(const char *format, ...)
 
 void LoggerAbstract::setLevel(int l)
 {
-    level = l;
+    if (l <= Level::NO_LOG && l >= Level::DBG)
+        level = l;
+    else
+    {
+        /* any other level is discarded */
+    }
 }
 
 int LoggerAbstract::isAllowed(Level l)
