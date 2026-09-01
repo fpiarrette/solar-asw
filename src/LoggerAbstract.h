@@ -2,6 +2,8 @@
 #ifndef LOGGER_ABSTRACT_H
 #define LOGGER_ABSTRACT_H
 
+#include <stdarg.h>
+
 #define LOGGER_LEVEL_VALUE_NO_LOG 6
 #define LOGGER_LEVEL_VALUE_ERROR 5
 #define LOGGER_LEVEL_VALUE_WARN 4
@@ -24,23 +26,15 @@ public:
 
     virtual void init(void) = 0;
     virtual void start(const char *name) = 0;
+    void log(LoggerAbstract::Level level, const char *format, ...);
     virtual void stop(void) = 0;
-
-    void error(const char *format, ...);
-    void warning(const char *format, ...);
-    void info(const char *format, ...);
-    void notice(const char *format, ...);
-    void debug(const char *format, ...);
 
     void setLevel(int l);
     int isAllowed(Level l);
 
 protected:
-    virtual void logError(const char *format, ...) = 0;
-    virtual void logWarning(const char *format, ...) = 0;
-    virtual void logInfo(const char *format, ...) = 0;
-    virtual void logNotice(const char *format, ...) = 0;
-    virtual void logDebug(const char *format, ...) = 0;
+    void compose(LoggerAbstract::Level level, const char *format, va_list args);
+    virtual void print(LoggerAbstract::Level level, const char *buffer) = 0;
     int level;
 
 private:

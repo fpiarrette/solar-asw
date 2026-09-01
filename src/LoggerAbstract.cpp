@@ -3,59 +3,25 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-void LoggerAbstract::error(const char *format, ...)
+void LoggerAbstract::log(LoggerAbstract::Level level, const char *format, ...)
 {
-    if (isAllowed(Level::ERROR))
+    if (isAllowed(level))
     {
         va_list args;
         va_start(args, format);
-        logError(format, args);
+        compose(level, format, args);
         va_end(args);
     }
 }
 
-void LoggerAbstract::warning(const char *format, ...)
+void LoggerAbstract::compose(LoggerAbstract::Level level, const char *format, va_list args)
 {
-    if (isAllowed(Level::WARN))
-    {
-        va_list args;
-        va_start(args, format);
-        logWarning(format, args);
-        va_end(args);
-    }
-}
-
-void LoggerAbstract::info(const char *format, ...)
-{
-    if (isAllowed(Level::INFO))
-    {
-        va_list args;
-        va_start(args, format);
-        logInfo(format, args);
-        va_end(args);
-    }
-}
-
-void LoggerAbstract::notice(const char *format, ...)
-{
-    if (isAllowed(Level::NOTICE))
-    {
-        va_list args;
-        va_start(args, format);
-        logNotice(format, args);
-        va_end(args);
-    }
-}
-
-void LoggerAbstract::debug(const char *format, ...)
-{
-    if (isAllowed(Level::DBG))
-    {
-        va_list args;
-        va_start(args, format);
-        logDebug(format, args);
-        va_end(args);
-    }
+    char buffer[4096];
+    int rc;
+    rc = vsnprintf(buffer, sizeof(buffer), format, args);
+    (void) rc;
+    /* FIXME check return */
+    print(level, buffer);
 }
 
 void LoggerAbstract::setLevel(int l)

@@ -13,47 +13,32 @@ void LoggerSyslog::start(const char *name)
     openlog(name, LOG_PID, LOG_USER);
 }
 
+void LoggerSyslog::print(LoggerAbstract::Level level, const char *buffer)
+{
+    switch (level)
+    {
+    case LoggerAbstract::Level::ERROR:
+        syslog(LOG_ERR, " %s", buffer);
+        break;
+    case LoggerAbstract::Level::WARN:
+        syslog(LOG_WARNING, " %s", buffer);
+        break;
+    case LoggerAbstract::Level::INFO:
+        syslog(LOG_INFO, " %s", buffer);
+        break;
+    case LoggerAbstract::Level::NOTICE:
+        syslog(LOG_NOTICE, " %s", buffer);
+        break;
+    case LoggerAbstract::Level::DBG:
+        syslog(LOG_DEBUG, " %s", buffer);
+        break;
+
+    default:
+        break;
+    }
+}
+
 void LoggerSyslog::stop(void)
 {
     closelog();
-}
-
-void LoggerSyslog::logError(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    syslog(LOG_ERR, format, args);
-    va_end(args);
-}
-
-void LoggerSyslog::logWarning(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    syslog(LOG_WARNING, format, args);
-    va_end(args);
-}
-
-void LoggerSyslog::logInfo(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    syslog(LOG_INFO, format, args);
-    va_end(args);
-}
-
-void LoggerSyslog::logNotice(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    syslog(LOG_NOTICE, format, args);
-    va_end(args);
-}
-
-void LoggerSyslog::logDebug(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    syslog(LOG_DEBUG, format, args);
-    va_end(args);
 }

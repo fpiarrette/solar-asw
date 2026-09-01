@@ -11,61 +11,32 @@ void LoggerStdout::start(const char *name)
 {
 }
 
+void LoggerStdout::print(LoggerAbstract::Level level, const char *buffer)
+{
+    switch (level)
+    {
+    case LoggerAbstract::Level::ERROR:
+        printf("ERR: %s\n", buffer);
+        break;
+    case LoggerAbstract::Level::WARN:
+        printf("WARN: %s\n", buffer);
+        break;
+    case LoggerAbstract::Level::INFO:
+        printf("INFO: %s\n", buffer);
+        break;
+    case LoggerAbstract::Level::NOTICE:
+        printf("NOTICE: %s\n", buffer);
+        break;
+    case LoggerAbstract::Level::DBG:
+        printf("DBG: %s\n", buffer);
+        break;
+
+    default:
+        break;
+    }
+}
+
 void LoggerStdout::stop(void)
 {
 }
 
-void LoggerStdout::logError(const char *format, ...)
-{
-    char buffer[4096];
-    va_list args;
-    va_start(args, format);
-    int rc = vsnprintf(buffer, sizeof(buffer), format, args);
-    (void)rc;
-    va_end(args);
-    printf("ERR: %s\n", buffer);
-}
-
-void LoggerStdout::logWarning(const char *format, ...)
-{
-    char buffer[4096];
-    va_list args;
-    va_start(args, format);
-    int rc = vsnprintf(buffer, sizeof(buffer), format, args);
-    (void)rc;
-    va_end(args);
-    printf("WARN: %s\n", buffer);
-}
-
-void LoggerStdout::logInfo(const char *format, ...)
-{
-    char buffer[4096];
-    va_list args;
-    va_start(args, format);
-    int rc = vsnprintf(buffer, sizeof(buffer), format, args);
-    (void)rc;
-    va_end(args);
-    printf("INFO: %s\n", buffer);
-}
-
-void LoggerStdout::logNotice(const char *format, ...)
-{
-    char buffer[4096];
-    va_list args;
-    va_start(args, format);
-    int rc = vsnprintf(buffer, sizeof(buffer), format, args);
-    (void)rc;
-    va_end(args);
-    printf("NOTICE: %s\n", buffer);
-}
-
-void LoggerStdout::logDebug(const char *format, ...)
-{
-    char buffer[4096];
-    va_list args;
-    va_start(args, format);
-    int rc = vsnprintf(buffer, sizeof(buffer), format, args);
-    (void)rc;
-    va_end(args);
-    printf("DBG: %s\n", buffer);
-}
