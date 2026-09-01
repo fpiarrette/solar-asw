@@ -27,6 +27,9 @@ public:
     int isFromModem(void);
     int isToModem(void);
     int getLogLevel();
+    const char * getDestinationIpAddress(void);
+    int getDestinationPort(void);
+    int getListeningPort(void);
 
 protected:
 private:
@@ -39,6 +42,10 @@ private:
     int bufferSizeLimit;
     int toModem;
     int fromModem;
+    /* 4 3 digit numbers + 3 dots + null termination */
+    char destinationIpAddress[4 * 3 + 3 * 1 + 1];
+    int destinationPort;
+    int listeningPort;
 };
 
 #endif
