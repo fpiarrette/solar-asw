@@ -11,6 +11,7 @@ class ContextFromModem : public Context
 public:
     Channel *getSource(void);
     Channel *getSink(void);
+    ChannelSocketClient *getChannelSocketClient(void);
 
 protected:
     ChannelSocketClient channelSocketClient;

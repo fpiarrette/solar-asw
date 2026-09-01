@@ -9,3 +9,8 @@ Channel *ContextFromModem::getSink(void)
 {
     return &channelSocketClient;
 }
+
+ChannelSocketClient *ContextFromModem::getChannelSocketClient(void)
+{
+    return &channelSocketClient;
+}

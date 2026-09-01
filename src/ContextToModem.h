@@ -11,6 +11,7 @@ class ContextToModem : public Context
 public:
     Channel *getSource(void);
     Channel *getSink(void);
+    ChannelSocketServer *getChannelSocketServer(void);
 
 protected:
     ChannelSocketServer channelSocketServer;

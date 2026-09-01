@@ -13,6 +13,8 @@ class ContextHost : public Context
 public:
     Channel *getSource(void);
     Channel *getSink(void);
+    ChannelSocketServer *getChannelSocketServer(void);
+    ChannelSocketClient *getChannelSocketClient(void);
 
 protected:
     ChannelNull channelNull;
