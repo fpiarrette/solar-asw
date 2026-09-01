@@ -1,5 +1,7 @@
 #include "Context.h"
 
+
+#include "ChannelNull.h"
 #include "ChannelSocketClient.h"
 #include "ChannelSocketServer.h"
 
@@ -13,6 +15,7 @@ public:
     Channel *getSink(void);
 
 protected:
+    ChannelNull channelNull;
     ChannelSocketClient channelSocketClient;
     ChannelSocketServer channelSocketServer;
 
