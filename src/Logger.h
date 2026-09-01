@@ -10,40 +10,43 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define L_ERROR(m, ...)                                                             \
-    do                                                                              \
-    {                                                                               \
-        Logger::getInstance()->log(LoggerAbstract::Level::ERROR, m, ##__VA_ARGS__); \
+#define L_V_STR(s) L_STR(s)
+#define L_STR(s) #s
+
+#define L_ERROR(m, ...)                                                                                 \
+    do                                                                                                  \
+    {                                                                                                   \
+        Logger::getInstance()->log(LoggerAbstract::Level::ERROR, __FILE__, __LINE__, m, ##__VA_ARGS__); \
     } while (0)
 
-#define L_WARNING(m, ...)                                                          \
-    do                                                                             \
-    {                                                                              \
-        Logger::getInstance()->log(LoggerAbstract::Level::WARN, m, ##__VA_ARGS__); \
+#define L_WARNING(m, ...)                                                                              \
+    do                                                                                                 \
+    {                                                                                                  \
+        Logger::getInstance()->log(LoggerAbstract::Level::WARN, __FILE__, __LINE__, m, ##__VA_ARGS__); \
     } while (0)
 
-#define L_INFO(m, ...)                                                             \
-    do                                                                             \
-    {                                                                              \
-        Logger::getInstance()->log(LoggerAbstract::Level::INFO, m, ##__VA_ARGS__); \
+#define L_INFO(m, ...)                                                                                 \
+    do                                                                                                 \
+    {                                                                                                  \
+        Logger::getInstance()->log(LoggerAbstract::Level::INFO, __FILE__, __LINE__, m, ##__VA_ARGS__); \
     } while (0)
 
-#define L_NOTICE(m, ...)                                                             \
-    do                                                                               \
-    {                                                                                \
-        Logger::getInstance()->log(LoggerAbstract::Level::NOTICE, m, ##__VA_ARGS__); \
-    } while (0)
-
-#define L_DEBUG(m, ...)                                                           \
-    do                                                                            \
-    {                                                                             \
-        Logger::getInstance()->log(LoggerAbstract::Level::DBG, m, ##__VA_ARGS__); \
-    } while (0)
-
-#define LOGGER_DEBUG_ERRNO                                                                               \
+#define L_NOTICE(m, ...)                                                                                 \
     do                                                                                                   \
     {                                                                                                    \
-        Logger::getInstance()->log(LoggerAbstract::Level::DBG, "errno: %d, %s", errno, strerror(errno)); \
+        Logger::getInstance()->log(LoggerAbstract::Level::NOTICE, __FILE__, __LINE__, m, ##__VA_ARGS__); \
+    } while (0)
+
+#define L_DEBUG(m, ...)                                                                               \
+    do                                                                                                \
+    {                                                                                                 \
+        Logger::getInstance()->log(LoggerAbstract::Level::DBG, __FILE__, __LINE__, m, ##__VA_ARGS__); \
+    } while (0)
+
+#define LOGGER_DEBUG_ERRNO                                                                                                   \
+    do                                                                                                                       \
+    {                                                                                                                        \
+        Logger::getInstance()->log(LoggerAbstract::Level::DBG, __FILE__, __LINE__, "errno: %d, %s", errno, strerror(errno)); \
     } while (0)
 
 class Logger

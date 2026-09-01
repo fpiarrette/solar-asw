@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 
 void LoggerStdout::init(void)
 {
@@ -11,12 +12,12 @@ void LoggerStdout::start(const char *name)
 {
 }
 
-void LoggerStdout::print(LoggerAbstract::Level level, const char *buffer)
+void LoggerStdout::print(LoggerAbstract::Level level, const char *file, int line, const char *buffer)
 {
     switch (level)
     {
     case LoggerAbstract::Level::ERROR:
-        printf("ERR: %s\n", buffer);
+        printf("ERR: %s %d: %s\n", basename(file), line, buffer);
         break;
     case LoggerAbstract::Level::WARN:
         printf("WARN: %s\n", buffer);
@@ -28,7 +29,7 @@ void LoggerStdout::print(LoggerAbstract::Level level, const char *buffer)
         printf("NOTICE: %s\n", buffer);
         break;
     case LoggerAbstract::Level::DBG:
-        printf("DBG: %s\n", buffer);
+        printf("DBG: %s %d: %s\n", basename(file), line, buffer);
         break;
 
     default:
@@ -39,4 +40,3 @@ void LoggerStdout::print(LoggerAbstract::Level level, const char *buffer)
 void LoggerStdout::stop(void)
 {
 }
-

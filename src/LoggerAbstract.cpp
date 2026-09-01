@@ -3,25 +3,25 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-void LoggerAbstract::log(LoggerAbstract::Level level, const char *format, ...)
+void LoggerAbstract::log(LoggerAbstract::Level level, const char *file, int line, const char *format, ...)
 {
     if (isAllowed(level))
     {
         va_list args;
         va_start(args, format);
-        compose(level, format, args);
+        compose(level, file, line, format, args);
         va_end(args);
     }
 }
 
-void LoggerAbstract::compose(LoggerAbstract::Level level, const char *format, va_list args)
+void LoggerAbstract::compose(LoggerAbstract::Level level, const char *file, int line, const char *format, va_list args)
 {
     char buffer[4096];
     int rc;
     rc = vsnprintf(buffer, sizeof(buffer), format, args);
     (void) rc;
     /* FIXME check return */
-    print(level, buffer);
+    print(level, file, line, buffer);
 }
 
 void LoggerAbstract::setLevel(int l)

@@ -26,15 +26,15 @@ public:
 
     virtual void init(void) = 0;
     virtual void start(const char *name) = 0;
-    void log(LoggerAbstract::Level level, const char *format, ...);
+    void log(LoggerAbstract::Level level, const char *file, int line, const char *format, ...);
     virtual void stop(void) = 0;
 
     void setLevel(int l);
     int isAllowed(Level l);
 
 protected:
-    void compose(LoggerAbstract::Level level, const char *format, va_list args);
-    virtual void print(LoggerAbstract::Level level, const char *buffer) = 0;
+    void compose(LoggerAbstract::Level level, const char *file, int line, const char *format, va_list args);
+    virtual void print(LoggerAbstract::Level level, const char *file, int line, const char *buffer) = 0;
     int level;
 
 private:
