@@ -44,20 +44,30 @@ int main(int argc, char *argv[])
 
             if (Config::getInstance()->isFromModem())
             {
+                /* specific process configuration */
                 processFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
                 processFromModem.setBufferSizeLimit(Config::getInstance()->getBufferSizeLimit());
                 process = &processFromModem;
+                /* specific context configuration */
+                contextFromModem.getChannelSocketClient()->setIpAddress(Config::getInstance()->getDestinationIpAddress());
+                contextFromModem.getChannelSocketClient()->setPort(Config::getInstance()->getDestinationPort());
                 context = &contextFromModem;
             }
             else
             {
+                /* specific process configuration */
                 process = &processToModem;
+                /* specific context configuration */
+                contextToModem.getChannelSocketServer()->setPort(Config::getInstance()->getListeningPort());
                 context = &contextToModem;
             }
 
 #ifdef FORCE_TEST_CONTEXT
             /* This compile time option allows to overwrite proper context and configure the process with a test context just for host platform and debug purpose */
             L_INFO("Using fake host context");
+            contextHost.getChannelSocketServer()->setPort(Config::getInstance()->getListeningPort());
+            contextHost.getChannelSocketClient()->setIpAddress(Config::getInstance()->getDestinationIpAddress());
+            contextHost.getChannelSocketClient()->setPort(Config::getInstance()->getDestinationPort());
             context = &contextHost;
 #endif
 
