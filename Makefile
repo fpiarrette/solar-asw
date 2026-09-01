@@ -59,6 +59,7 @@ endif
 
 FILES=$(SRC)/main.c \
 	$(SRC)/utils.c \
+	$(SRC)/ChannelNull.cpp \
 	$(SRC)/ChannelSpi.cpp \
 	$(SRC)/ChannelSocket.cpp \
 	$(SRC)/ChannelSocketServer.cpp \
