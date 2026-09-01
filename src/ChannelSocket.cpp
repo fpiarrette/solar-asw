@@ -1,5 +1,7 @@
 #include "ChannelSocket.h"
 
+#include "Logger.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <netinet/in.h>
@@ -14,6 +16,8 @@ Channel::Error ChannelSocket::setNonBlock(int f)
     r = fcntl(f, F_SETFL, c);
     if (r != 0)
     {
+        LOGGER_DEBUG_ERRNO;
+
         return Channel::Error::E_INT;
     }
     return Channel::Error::E_OK;
@@ -27,6 +31,7 @@ Channel::Error ChannelSocket::secureRx(int f, void *b, int s, int *r)
     t = recv(f, b, s, 0);
     if (t > 0)
     {
+        L_DEBUG("received %d", t);
         *r = t;
         return Channel::Error::E_OK;
     }
@@ -44,6 +49,8 @@ Channel::Error ChannelSocket::secureRx(int f, void *b, int s, int *r)
         }
         else
         {
+            LOGGER_DEBUG_ERRNO;
+
             return Channel::Error::E_INT;
         }
     }
@@ -60,10 +67,17 @@ Channel::Error ChannelSocket::secureStop(int f)
 
     r = shutdown(f, SHUT_RDWR);
 
-    if (errno == ENOTCONN)
+    if (r != 0)
     {
-        /* not really an error */
-        r = 0;
+        if (errno == ENOTCONN)
+        {
+            /* not really an error */
+            r = 0;
+        }
+        else
+        {
+            LOGGER_DEBUG_ERRNO;
+        }
     }
 
     close(f);
@@ -76,6 +90,8 @@ Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmi
     int r;
 
     r = send(f, data, size, 0);
+
+    L_DEBUG("sent %d from %d", r, size);
 
     if (r == size)
     {
@@ -90,12 +106,15 @@ Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmi
     else if (r < 0)
     {
         *transmitted = 0;
+
         if (errno == EAGAIN || errno == EWOULDBLOCK)
         {
             return Channel::Error::E_TRY;
         }
         else
         {
+            LOGGER_DEBUG_ERRNO;
+
             return Channel::Error::E_INT;
         }
     }
