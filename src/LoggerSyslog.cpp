@@ -19,7 +19,7 @@ void LoggerSyslog::print(LoggerAbstract::Level level, const char *file, int line
     switch (level)
     {
     case LoggerAbstract::Level::ERROR:
-        syslog(LOG_ERR, " %s %d: %s", basename(file), line, buffer);
+        syslog(LOG_ERR, " %s, line %d: %s", basename(file), line, buffer);
         break;
     case LoggerAbstract::Level::WARN:
         syslog(LOG_WARNING, " %s", buffer);
@@ -31,7 +31,7 @@ void LoggerSyslog::print(LoggerAbstract::Level level, const char *file, int line
         syslog(LOG_NOTICE, " %s", buffer);
         break;
     case LoggerAbstract::Level::DBG:
-        syslog(LOG_DEBUG, " %s %d: %s", basename(file), line, buffer);
+        syslog(LOG_DEBUG, " %s, line %d: %s", basename(file), line, buffer);
         break;
 
     default:

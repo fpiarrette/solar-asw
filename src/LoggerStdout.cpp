@@ -17,7 +17,7 @@ void LoggerStdout::print(LoggerAbstract::Level level, const char *file, int line
     switch (level)
     {
     case LoggerAbstract::Level::ERROR:
-        printf("ERR: %s %d: %s\n", basename(file), line, buffer);
+        printf("ERR: %s, line %d: %s\n", basename(file), line, buffer);
         break;
     case LoggerAbstract::Level::WARN:
         printf("WARN: %s\n", buffer);
@@ -29,7 +29,7 @@ void LoggerStdout::print(LoggerAbstract::Level level, const char *file, int line
         printf("NOTICE: %s\n", buffer);
         break;
     case LoggerAbstract::Level::DBG:
-        printf("DBG: %s %d: %s\n", basename(file), line, buffer);
+        printf("DBG: %s, line %d: %s\n", basename(file), line, buffer);
         break;
 
     default:
