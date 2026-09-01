@@ -116,7 +116,7 @@ then
     ${cmd}
 elif [ "$platform" = "$platform_host" ]
 then
-  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" DEBUG="${debug}" OPTIMIZATION="${optimization}" HARDENING="${hardening}" ${cmd}
+  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" DEBUG="${debug}" OPTIMIZATION="${optimization}" HARDENING="${hardening}" FORCE_TEST_CONTEXT="1" ${cmd}
 
 fi
 

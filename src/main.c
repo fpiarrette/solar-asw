@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
                 context = &contextToModem;
             }
 
-#ifdef PLAT_HOST
+#ifdef FORCE_TEST_CONTEXT
             /* This compile time option allows to overwrite proper context and configure the process with a test context just for host platform and debug purpose */
             L_INFO("Using fake host context");
             context = &contextHost;

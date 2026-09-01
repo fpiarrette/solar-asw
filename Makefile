@@ -6,6 +6,8 @@ DEBUG?=1
 OPTIMIZATION?=1
 HARDENING?=0
 
+FORCE_TEST_CONTEXT?=0
+
 ifndef PLATFORM
 $(error PLATFORM is not defined!)
 endif
@@ -48,6 +50,11 @@ ifeq ($(HARDENING),1)
 		CFLAGS += -D_FORTIFY_SOURCE=2
 		CXXFLAGS += -D_FORTIFY_SOURCE=2
 	endif
+endif
+
+ifeq ($(FORCE_TEST_CONTEXT),1)
+	CFLAGS += -DFORCE_TEST_CONTEXT
+	CXXFLAGS += -DFORCE_TEST_CONTEXT
 endif
 
 FILES=$(SRC)/main.c \
