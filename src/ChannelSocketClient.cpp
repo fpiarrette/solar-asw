@@ -28,13 +28,13 @@ Channel::Error ChannelSocketClient::start(void)
 {
     Channel::Error r;
 
+    L_DEBUG("starting on %s:%d...", ipAddress, port);
+
     /* server address definition */
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(9500);
-    inet_pton(AF_INET, "127.0.0.1", &serverAddress.sin_addr);
-
-    L_DEBUG("starting...");
+    serverAddress.sin_port = htons(port);
+    inet_pton(AF_INET, ipAddress, &serverAddress.sin_addr);
 
     if (connect(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0)
     {
@@ -78,4 +78,17 @@ Channel::Error ChannelSocketClient::stop(void)
         return secureStop(fd);
     else
         return Channel::Error::E_STA;
+}
+
+Channel::Error ChannelSocketClient::setIpAddress(const char *a)
+{
+    if (a == NULL)
+        return Channel::Error::E_ARG;
+
+    if ((strlen(a) + 1) > IP_ADDRESS_SIZE)
+        return Channel::Error::E_ARG;
+
+    strncpy(ipAddress, a, IP_ADDRESS_SIZE);
+
+    return Channel::Error::E_OK;
 }

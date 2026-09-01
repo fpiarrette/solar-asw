@@ -124,3 +124,9 @@ Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmi
         return Channel::Error::E_INT;
     }
 }
+
+Channel::Error ChannelSocket::setPort(int p)
+{
+    port = p;
+    return Channel::Error::E_OK;
+}

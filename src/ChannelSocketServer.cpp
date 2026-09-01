@@ -10,7 +10,6 @@
 
 Channel::Error ChannelSocketServer::init(void)
 {
-    int port = 9000;
     /* protocol AF_NET -> IPv4, SOCK_STREAM -> TCP socket */
     fd = socket(AF_INET, SOCK_STREAM, 0);
 
