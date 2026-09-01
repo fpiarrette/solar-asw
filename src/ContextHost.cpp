@@ -8,5 +8,5 @@ Channel *ContextHost::getSource(void)
 
 Channel *ContextHost::getSink(void)
 {
-    return &channelNull;
+    return &channelSocketClient;
 }
