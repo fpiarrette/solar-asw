@@ -1,5 +1,7 @@
 #include "Signals.h"
 
+#include "Logger.h"
+
 Signals Signals::instance;
 
 Signals *Signals::getInstance(void)
@@ -14,6 +16,8 @@ void Signals::init(void)
     sigaction(SIGINT, &s, NULL);
     sigaction(SIGTSTP, &s, NULL);
     sigaction(SIGCONT, &s, NULL);
+
+    L_DEBUG("OS signals management configured");
 }
 
 void Signals::handler(int signal)
