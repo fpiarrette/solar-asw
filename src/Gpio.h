@@ -26,7 +26,6 @@ public:
 
     static Gpio *getInstance(void);
 
-    Gpio::Error init(void);
     Gpio::Error start(void);
     Gpio::Error configure(int line, Type type);
     Gpio::Error set(int line, int value);
@@ -35,6 +34,7 @@ public:
     Gpio::Error setDeviceName(const char *name);
 
 protected:
+    Gpio();
 private:
     static Gpio instance;
     int fdChip;

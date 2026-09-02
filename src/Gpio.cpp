@@ -14,7 +14,7 @@ Gpio *Gpio::getInstance(void)
     return &instance;
 }
 
-Gpio::Error Gpio::init(void)
+Gpio::Gpio()
 {
     fdChip = -1;
 
@@ -24,8 +24,6 @@ Gpio::Error Gpio::init(void)
     }
 
     memset(deviceName, 0, sizeof(deviceName));
-
-    return Gpio::Error::E_OK;
 }
 
 Gpio::Error Gpio::start(void)
