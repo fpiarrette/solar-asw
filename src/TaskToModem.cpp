@@ -6,7 +6,7 @@
 
 const char *TaskToModem::getName(void)
 {
-    return "Communication task from EGSE -> MODEM";
+    return "EGSE -> MODEM";
 }
 
 void TaskToModem::prepare(void)
