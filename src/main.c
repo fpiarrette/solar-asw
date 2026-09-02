@@ -59,8 +59,6 @@ int main(int argc, char *argv[])
             /* specific configuration for SPI */
             /* TBC */
 
-            scheduller.init();
-
             if (Config::getInstance()->isFromModem())
             {
                 /* specific task configuration */
