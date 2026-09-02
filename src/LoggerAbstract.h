@@ -24,7 +24,6 @@ public:
         DBG = LOGGER_LEVEL_VALUE_DBG
     };
 
-    virtual void init(void) = 0;
     virtual void start(const char *name) = 0;
     void log(LoggerAbstract::Level level, const char *file, int line, const char *format, ...);
     virtual void stop(void) = 0;

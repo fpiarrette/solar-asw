@@ -4,10 +4,6 @@
 #include <stdarg.h>
 #include <string.h>
 
-void LoggerStdout::init(void)
-{
-}
-
 void LoggerStdout::start(const char *name)
 {
 }

@@ -5,10 +5,6 @@
 #include <string.h>
 #include <syslog.h>
 
-void LoggerSyslog::init(void)
-{
-}
-
 void LoggerSyslog::start(const char *name)
 {
     openlog(name, LOG_PID, LOG_USER);

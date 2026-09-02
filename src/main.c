@@ -28,7 +28,6 @@ int main(int argc, char *argv[])
         else
             Logger::config(Logger::Type::SYSLOG);
 
-        Logger::getInstance()->init();
         Logger::getInstance()->setLevel(Config::getInstance()->getLogLevel());
         Logger::getInstance()->start("Modem TCP converter");
 
