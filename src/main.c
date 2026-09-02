@@ -1,10 +1,15 @@
 #include "Config.h"
 #include "Logger.h"
-#include "ProcessToModem.h"
-#include "ProcessFromModem.h"
-#include "ContextToModem.h"
-#include "ContextHost.h"
-#include "ContextFromModem.h"
+
+#include "ChannelNull.h"
+#include "ChannelSocketClient.h"
+#include "ChannelSocketServer.h"
+#include "ChannelSpi.h"
+
+#include "Scheduller.h"
+#include "TaskFromModem.h"
+#include "TaskIdle.h"
+#include "TaskToModem.h"
 
 #include <stdlib.h>
 
@@ -32,47 +37,71 @@ int main(int argc, char *argv[])
         }
         else
         {
+            Scheduller scheduller;
 
-            Process *process;
-            Context *context;
-            ProcessFromModem processFromModem;
-            ContextFromModem contextFromModem;
-            ProcessToModem processToModem;
-            ContextToModem contextToModem;
+            /* tasks */
+            TaskFromModem taskFromModem;
+            TaskToModem taskToModem;
+            TaskIdle taskIdle;
 
-            ContextHost contextHost;
+            /* channels */
+            ChannelSocketClient channelSocketClient;
+            ChannelSocketServer channelSocketServer;
+            ChannelSpi channelSpi;
+            ChannelNull channelNull;
+
+            /* all channels are configured independently of the mode, because HOST mode could use a convination of them */
+            /* specific configuration for socket client */
+            channelSocketClient.setIpAddress(Config::getInstance()->getDestinationIpAddress());
+            channelSocketClient.setPort(Config::getInstance()->getDestinationPort());
+            /* specific configuration for socket server */
+            channelSocketServer.setPort(Config::getInstance()->getListeningPort());
+            /* specific configuration for SPI */
+            /* TBC */
+
+            scheduller.init();
 
             if (Config::getInstance()->isFromModem())
             {
-                /* specific process configuration */
-                processFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
-                processFromModem.setBufferSizeLimit(Config::getInstance()->getBufferSizeLimit());
-                process = &processFromModem;
-                /* specific context configuration */
-                contextFromModem.getChannelSocketClient()->setIpAddress(Config::getInstance()->getDestinationIpAddress());
-                contextFromModem.getChannelSocketClient()->setPort(Config::getInstance()->getDestinationPort());
-                context = &contextFromModem;
+                /* specific task configuration */
+                taskFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
+                taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
+
+                /* wiring */
+                taskFromModem.setSource(&channelSpi);
+                taskFromModem.setSink(&channelSocketClient);
+                scheduller.addTask(&taskFromModem, 2);
             }
             else
             {
-                /* specific process configuration */
-                process = &processToModem;
-                /* specific context configuration */
-                contextToModem.getChannelSocketServer()->setPort(Config::getInstance()->getListeningPort());
-                context = &contextToModem;
+                /* specific task configuration */
+
+                /* wiring */
+                taskToModem.setSource(&channelSocketServer);
+                taskToModem.setSink(&channelSpi);
+                scheduller.addTask(&taskToModem, 2);
             }
+
+            scheduller.addTask(&taskIdle, 16);
+            taskIdle.setScheduller(&scheduller);
 
 #ifdef FORCE_TEST_CONTEXT
             /* This compile time option allows to overwrite proper context and configure the process with a test context just for host platform and debug purpose */
-            L_INFO("Using fake host context");
-            contextHost.getChannelSocketServer()->setPort(Config::getInstance()->getListeningPort());
-            contextHost.getChannelSocketClient()->setIpAddress(Config::getInstance()->getDestinationIpAddress());
-            contextHost.getChannelSocketClient()->setPort(Config::getInstance()->getDestinationPort());
-            context = &contextHost;
+            if (Config::getInstance()->isFromModem())
+            {
+                /* specific task configuration */
+                taskFromModem.setSource(&channelSocketServer);
+            }
+            else
+            {
+                /* specific task configuration */
+                taskToModem.setSink(&channelSocketClient);
+            }
+
 #endif
 
-            /* execute process includling initialization, start, running and stop */
-            process->execute(context);
+            /* execute all schedulled tasks */
+            scheduller.run();
         }
 
         L_INFO("Finishing...");

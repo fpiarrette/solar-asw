@@ -65,19 +65,19 @@ FILES=$(SRC)/main.c \
 	$(SRC)/ChannelSocket.cpp \
 	$(SRC)/ChannelSocketServer.cpp \
 	$(SRC)/ChannelSocketClient.cpp \
-	$(SRC)/Process.cpp \
+	$(SRC)/CircularBuffer.cpp \
 	$(SRC)/Gpio.cpp \
-	$(SRC)/ProcessToModem.cpp \
-	$(SRC)/ProcessFromModem.cpp \
 	$(SRC)/Signals.cpp \
+	$(SRC)/Scheduller.cpp \
 	$(SRC)/Logger.cpp \
 	$(SRC)/LoggerAbstract.cpp \
 	$(SRC)/LoggerStdout.cpp \
 	$(SRC)/LoggerSyslog.cpp \
 	$(SRC)/Config.cpp \
-	$(SRC)/ContextFromModem.cpp \
-	$(SRC)/ContextHost.cpp \
-	$(SRC)/ContextToModem.cpp
+	$(SRC)/TaskFromModem.cpp \
+	$(SRC)/TaskIdle.cpp \
+	$(SRC)/TaskToModem.cpp
+
 
 .PHONY: clean
 
