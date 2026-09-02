@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
                 scheduller.addTask(&taskToModem, 2);
             }
 
-            scheduller.addTask(&taskIdle, 16);
+            scheduller.addTask(&taskIdle, 31);
             taskIdle.setScheduller(&scheduller);
 
 #ifdef FORCE_TEST_CONTEXT
