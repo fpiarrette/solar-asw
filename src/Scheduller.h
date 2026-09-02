@@ -10,6 +10,9 @@ public:
     class Task
     {
     public:
+        Task() {
+            expendedTime = 0;
+        }
         virtual const char *getName(void) = 0;
         virtual void prepare(void) = 0;
         virtual int need(long int time) = 0;
