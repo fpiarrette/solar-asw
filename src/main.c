@@ -6,9 +6,12 @@
 #include "ChannelSocketServer.h"
 #include "ChannelSpi.h"
 
+#include "Gpio.h"
+
 #include "Scheduller.h"
 #include "TaskFromModem.h"
 #include "TaskIdle.h"
+#include "TaskRest.h"
 #include "TaskToModem.h"
 
 #include <stdlib.h>
@@ -37,12 +40,14 @@ int main(int argc, char *argv[])
         }
         else
         {
+            /* Gpio::getInstance()->configure(0, Gpio::Type::IN); */
             Scheduller scheduller;
 
             /* tasks */
             TaskFromModem taskFromModem;
             TaskToModem taskToModem;
             TaskIdle taskIdle;
+            TaskRest taskRest;
 
             /* channels */
             ChannelSocketClient channelSocketClient;
@@ -79,6 +84,8 @@ int main(int argc, char *argv[])
                 taskToModem.setSink(&channelSpi);
                 scheduller.addTask(&taskToModem, 2);
             }
+
+            scheduller.addTask(&taskRest, 16);
 
             scheduller.addTask(&taskIdle, 31);
             taskIdle.setScheduller(&scheduller);
