@@ -1,18 +1,20 @@
 #include "Scheduller.h"
 
+#include "Alarms.h"
+#include "alarm_def.h"
 #include "Logger.h"
 #include "Signals.h"
 #include "utils.h"
 
 #include <string.h>
 
-void Scheduller::init(void)
+Scheduller::Scheduller()
 {
+    nextTask = -1;
+
     memset(tasks, 0, sizeof(tasks));
 
     period = 50;
-
-    L_DEBUG("initialized");
 }
 
 void Scheduller::addTask(Scheduller::Task *task, int executionOrder)
@@ -24,7 +26,7 @@ void Scheduller::addTask(Scheduller::Task *task, int executionOrder)
 
 void Scheduller::run(void)
 {
-    long int startTime, elapsedTime, sleepTime;
+    long int cycleStartTime, elapsedTime, sleepTime;
     int n;
 
     L_DEBUG("staring with %d ms period", period);
@@ -41,24 +43,32 @@ void Scheduller::run(void)
         }
     }
 
+    globalStartTime = utils_curr_time_in_ms();
+
+    /* align time alarms */
+    publishTimeAlarms(globalStartTime);
+    Alarms::getInstance()->clearAll();
+
     /* scheduller main loop */
     while (!Signals::getInstance()->isTerminated())
     {
         if (!Signals::getInstance()->isStopped())
         {
             /* get start time in ms */
-            startTime = utils_curr_time_in_ms();
+            cycleStartTime = utils_curr_time_in_ms() - globalStartTime;
+
+            publishTimeAlarms(cycleStartTime);
 
             for (n = 0; n < SCHEDULLER_SIZE; n++)
             {
-                if (tasks[n] != NULL && tasks[n]->need(startTime))
+                if (tasks[n] != NULL && tasks[n]->need(cycleStartTime))
                 {
-                    tasks[n]->run(startTime);
+                    tasks[n]->run(cycleStartTime);
                     break;
                 }
             }
 
-            elapsedTime = utils_curr_time_in_ms() - startTime;
+            elapsedTime = utils_curr_time_in_ms() - cycleStartTime - globalStartTime;
             sleepTime = period - elapsedTime;
 
             /* check at least a task was executed */
@@ -86,4 +96,57 @@ void Scheduller::run(void)
             tasks[n]->stop();
         }
     }
+}
+
+void Scheduller::publishTimeAlarms(long int time)
+{
+    long int t, s, h;
+
+    t = time / 10000;
+    s = time / 1000;
+    h = time / 100;
+
+    if (t != previousTenthSecondCounter)
+    {
+        Alarms::getInstance()->set(ALARM_DEF_TENTH_SECOND);
+        previousTenthSecondCounter = t;
+    }
+
+    if (s != previousSecondCounter)
+    {
+        Alarms::getInstance()->set(ALARM_DEF_SECOND);
+        previousSecondCounter = s;
+    }
+
+    if (h != previousHundredMiliSeconds)
+    {
+        Alarms::getInstance()->set(ALARM_DEF_HUNDRED_MS);
+        previousHundredMiliSeconds = h;
+    }
+}
+
+int Scheduller::hasMoreTasks(void)
+{
+    if (nextTask == -1)
+        nextTask = 0;
+    else
+        nextTask++;
+
+    while ((tasks[nextTask] == NULL) && nextTask < SCHEDULLER_SIZE)
+        nextTask++;
+
+    if (nextTask < SCHEDULLER_SIZE)
+    {
+        return 1;
+    }
+    else
+    {
+        nextTask = -1;
+        return 0;
+    }
+}
+
+Scheduller::Task *Scheduller::getNextTask(void)
+{
+    return tasks[nextTask];
 }

@@ -25,14 +25,23 @@ public:
     private:
     };
 
-    void init(void);
+    Scheduller();
     void addTask(Scheduller::Task *task, int executionOrder);
     void run(void);
 
+    int hasMoreTasks(void);
+    Scheduller::Task *getNextTask(void);
+
 protected:
+    void publishTimeAlarms(long int time);
+
 private:
     Scheduller::Task *tasks[SCHEDULLER_SIZE];
-    int period;
+    int period, nextTask;
+    long int globalStartTime;
+    long int previousTenthSecondCounter;
+    long int previousSecondCounter;
+    long int previousHundredMiliSeconds;
 };
 
 #endif
