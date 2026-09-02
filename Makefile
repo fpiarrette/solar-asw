@@ -76,6 +76,7 @@ FILES=$(SRC)/main.c \
 	$(SRC)/Config.cpp \
 	$(SRC)/TaskFromModem.cpp \
 	$(SRC)/TaskIdle.cpp \
+	$(SRC)/TaskRest.cpp \
 	$(SRC)/TaskToModem.cpp
 
 
