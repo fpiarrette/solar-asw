@@ -58,6 +58,7 @@ ifeq ($(FORCE_TEST_CONTEXT),1)
 endif
 
 FILES=$(SRC)/main.c \
+	$(SRC)/Alarms.cpp \
 	$(SRC)/utils.c \
 	$(SRC)/ChannelNull.cpp \
 	$(SRC)/ChannelSpi.cpp \
