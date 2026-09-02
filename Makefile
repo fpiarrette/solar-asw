@@ -65,6 +65,7 @@ FILES=$(SRC)/main.c \
 	$(SRC)/ChannelSocketServer.cpp \
 	$(SRC)/ChannelSocketClient.cpp \
 	$(SRC)/Process.cpp \
+	$(SRC)/Gpio.cpp \
 	$(SRC)/ProcessToModem.cpp \
 	$(SRC)/ProcessFromModem.cpp \
 	$(SRC)/Signals.cpp \
