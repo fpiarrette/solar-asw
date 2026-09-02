@@ -11,7 +11,7 @@ const char *TaskIdle::getName(void)
 
 void TaskIdle::prepare(void)
 {
-    expendedTime = 0;
+    /* expendedTime = 0; */
 
     L_DEBUG("prepared");
 }

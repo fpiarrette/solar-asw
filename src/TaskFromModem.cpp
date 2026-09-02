@@ -11,7 +11,7 @@ const char *TaskFromModem::getName(void)
 
 void TaskFromModem::prepare(void)
 {
-    expendedTime = 0;
+    /* expendedTime = 0; */
 
     source->init();
     sink->init();
