@@ -9,4 +9,6 @@ long int utils_curr_time_in_ms(void);
 #define xstr(a) str(a)
 #define str(a) #a
 
+#define ARRAY_SIZE(_a) (sizeof(_a) / sizeof(_a[0]))
+
 #endif
