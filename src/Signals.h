@@ -14,6 +14,7 @@ public:
     static void handler(int signal);
 
 protected:
+    Signals();
 private:
     static Signals instance;
 

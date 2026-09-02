@@ -8,6 +8,9 @@ Signals *Signals::getInstance(void)
 {
     return &instance;
 }
+Signals::Signals(void)
+{
+}
 
 void Signals::init(void)
 {
