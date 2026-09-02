@@ -2,9 +2,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define CONFIG_E_OK (0)
-#define CONFIG_E_INVALID (-1)
-
 class Config
 {
 public:
