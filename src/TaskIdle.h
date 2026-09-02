@@ -18,8 +18,6 @@ public:
 protected:
 private:
     Scheduller *scheduller;
-    long int period;
-    long int nextExecution;
 };
 
 #endif

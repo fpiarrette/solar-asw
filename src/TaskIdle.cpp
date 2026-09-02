@@ -1,5 +1,7 @@
 #include "TaskIdle.h"
 
+#include "Alarms.h"
+#include "alarm_def.h"
 #include "Logger.h"
 
 const char *TaskIdle::getName(void)
@@ -11,22 +13,33 @@ void TaskIdle::prepare(void)
 {
     expendedTime = 0;
 
-    period = 1000;
-    nextExecution = 0;
-
-    L_DEBUG("prepared, running at %d ms", period);
+    L_DEBUG("prepared");
 }
 
 int TaskIdle::need(long int time)
 {
-    /* needs to be executed if nextExecution is in the past */
-    return nextExecution < time;
+    return Alarms::getInstance()->get(ALARM_DEF_SECOND);
 }
 
 void TaskIdle::run(long int time)
 {
-    L_DEBUG("idle...., next execution time %d ms", nextExecution);
-    nextExecution = time + period;
+    Scheduller::Task *t;
+
+    Alarms::getInstance()->clear(ALARM_DEF_SECOND);
+
+    if (time == 0)
+    {
+        /* it has no sense to compute first cycle as time 0 will produce 'division by zero' */
+        return;
+    }
+
+    L_DEBUG("Scheduller report, total time %d", time);
+
+    while (scheduller->hasMoreTasks())
+    {
+        t = scheduller->getNextTask();
+        L_DEBUG("%s,\texpended %d ms,\tcpu used %0.03f %%", t->getName(), t->getExpendedTime(), (float)t->getExpendedTime() / time);
+    }
 }
 
 void TaskIdle::stop(void)
