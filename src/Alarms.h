@@ -6,7 +6,7 @@
 
 class Alarms
 {
-
+public:
     static Alarms *getInstance(void);
 
     int get(int alarmId);
