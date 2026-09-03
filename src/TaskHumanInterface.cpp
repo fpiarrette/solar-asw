@@ -6,7 +6,7 @@
 #include "Gpio.h"
 #include "gpio_def.h"
 
-#define LOG_PREFIX "Human IFC task"
+#define LOG_PREFIX "Human IFC task "
 
 const char *TaskHumanInterface::getName(void)
 {
