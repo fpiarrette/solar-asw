@@ -1,13 +1,16 @@
 # To do list of SOLAR ASW 
 
-* Compilar para host nativo, y poder hacer pruebas
-* Configurar canales socket para hacer un loop back
-* Manage and return error on Channels and Processes
+* Finish SPI channel
+* Test GPIO with /dev/gpiochip sim
 
 # Already done
 
+* Create circular buffer container
+* OS signals management (integrate on Scheduller)
+* GPIO manager
+* Configuration class
 * Channels abstraction
-* Channel SPI, Socket server, Socket client
+* Socket server, Socket client, Null channel
 * Config class to parse command line arguments
 * Logger abstraction
 * Logger syslog
@@ -17,3 +20,7 @@
 * Process from MODEM
 * Signal management
 * Utility to delay and measure time
+* Compilar para host nativo, y poder hacer pruebas
+* Configurar canales socket para hacer un loop back
+* Manage and return error on Channels and Processes
+* Move from Processes to Tasks and Scheduller (lightweight)
