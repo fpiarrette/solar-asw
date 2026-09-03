@@ -126,11 +126,17 @@ Channel::Error ChannelSocketServer::stop(void)
     Channel::Error r1 = Channel::Error::E_OK;
     Channel::Error r2 = Channel::Error::E_OK;
 
-    if (clientSocket > 0)
+    if (clientSocket > 0) {
         r1 = secureStop(clientSocket);
+        clientSocket = -1;
+    }
 
-    if (fd > 0)
+    if (fd > 0) {
         r2 = secureStop(fd);
+        fd = -1;
+    }
+
+    L_NOTICE(LOG_PREFIX "sttoped");
 
     return r1 == Channel::Error::E_OK && r2 == Channel::Error::E_OK ? Channel::Error::E_OK : Channel::Error::E_INT;
 }
