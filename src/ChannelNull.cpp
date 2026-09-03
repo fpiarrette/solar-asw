@@ -33,6 +33,6 @@ Channel::Error ChannelNull::rx(char *data, int size, int *received)
 
 Channel::Error ChannelNull::stop(void)
 {
-    L_NOTICE(LOG_PREFIX "stop");
+    L_NOTICE(LOG_PREFIX "stopped");
     return Channel::Error::E_OK;
 }
