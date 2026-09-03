@@ -39,7 +39,17 @@ int main(int argc, char *argv[])
         }
         else
         {
-            /* Gpio::getInstance()->configure(0, Gpio::Type::IN); */
+
+#ifdef FORCE_TEST_CONTEXT
+            /* in host it's not assumed /dev/gpiochip* and gpio module/driver */
+            Gpio::configure(Gpio::Type::MOCK);
+#else
+            /* in Linux ARM it's assumed /dev/gpiochip* and gpio module/driver */
+            Gpio::configure(Gpio::Type::MODULE);
+#endif
+            /* Line 0 as input is just an example */
+            Gpio::getInstance()->configure(0, GpioAbstract::Type::IN);
+
             Scheduller scheduller;
 
             /* tasks */
