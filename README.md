@@ -6,4 +6,4 @@ For [building, packaging and deploying](./docs/BUILD.md) shell scripts is provid
 
 Once the binary artifacts have been generated, there are at least two available options to [launch and test](./docs/LAUNCH.md) the SOLAR ASW. The recommended workflow depends on the target platform and the testing scenario being executed. Additional information can be found in [./docs/LAUNCH.md](./docs/LAUNCH.md).
 
-Finally, if you would like to explore the implementation details, [./docs/DESIGN.md](./docs/DESIGN.md) describes the main architectural concepts, software components, technological decisions adopted throughout the project.
+Finally, if you would like to explore the implementation details, [./docs/DESIGN.md](./docs/DESIGN.md) describes the main architectural concepts, software components, technological decisions adopted throughout the project. In addition, changes and [TODO](./docs/TODO.md) item list is available [here](./docs/TODO.md).
