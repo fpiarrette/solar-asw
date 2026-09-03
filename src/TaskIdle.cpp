@@ -13,8 +13,6 @@ const char *TaskIdle::getName(void)
 
 void TaskIdle::prepare(void)
 {
-    /* expendedTime = 0; */
-
     L_NOTICE(LOG_PREFIX "prepared");
 }
 
