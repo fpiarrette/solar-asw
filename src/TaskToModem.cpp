@@ -53,8 +53,17 @@ void TaskToModem::run(long int time)
 
 void TaskToModem::stop(void)
 {
-    source->stop();
-    sink->stop();
+    if (source != NULL)
+    {
+        source->stop();
+        source = NULL;
+    }
+
+    if (sink != NULL)
+    {
+        sink->stop();
+        sink = NULL;
+    }
 
     L_NOTICE(LOG_PREFIX "stopped");
 }
