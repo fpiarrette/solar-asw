@@ -77,6 +77,7 @@ FILES=$(SRC)/main.c \
 	$(SRC)/LoggerSyslog.cpp \
 	$(SRC)/Config.cpp \
 	$(SRC)/TaskFromModem.cpp \
+	$(SRC)/TaskHumanInterface.cpp \
 	$(SRC)/TaskIdle.cpp \
 	$(SRC)/TaskRest.cpp \
 	$(SRC)/TaskToModem.cpp
