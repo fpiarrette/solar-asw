@@ -67,6 +67,8 @@ FILES=$(SRC)/main.c \
 	$(SRC)/ChannelSocketClient.cpp \
 	$(SRC)/CircularBuffer.cpp \
 	$(SRC)/Gpio.cpp \
+	$(SRC)/GpioMock.cpp \
+	$(SRC)/GpioModule.cpp \
 	$(SRC)/Signals.cpp \
 	$(SRC)/Scheduller.cpp \
 	$(SRC)/Logger.cpp \
