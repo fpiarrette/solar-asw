@@ -7,6 +7,8 @@
 #include <sys/ioctl.h>
 #include <linux/gpio.h>
 
+#define LOG_PREFIX "GPIO module "
+
 GpioModule::GpioModule()
 {
     fdChip = -1;
@@ -21,6 +23,8 @@ GpioModule::GpioModule()
 
 GpioAbstract::Error GpioModule::start(void)
 {
+    L_NOTICE(LOG_PREFIX "starting");
+
     if (fdChip < 0)
     {
 
@@ -44,6 +48,8 @@ GpioAbstract::Error GpioModule::start(void)
 GpioAbstract::Error GpioModule::configure(int line, Type type)
 {
     struct gpio_v2_line_request request;
+
+    L_DEBUG("configuring line %d as %s", line, type == GpioAbstract::Type::IN? "IN" : "OUT");
 
     if (line < 0 || line >= GPIO_NUM_LINES)
     {
@@ -117,6 +123,8 @@ GpioAbstract::Error GpioModule::set(int line, int v)
 {
     struct gpio_v2_line_values values;
 
+    L_DEBUG("setting line %d to value %d", line, v);
+
     if (line < 0 || line >= GPIO_NUM_LINES)
     {
         return GpioAbstract::Error::E_ARG;
@@ -157,7 +165,7 @@ GpioAbstract::Error GpioModule::stop(void)
         close(fdChip);
         fdChip = -1;
     }
-
+    L_NOTICE(LOG_PREFIX "stopped");
     return GpioAbstract::Error::E_OK;
 }
 
