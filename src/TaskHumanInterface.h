@@ -7,6 +7,10 @@
 class TaskHumanInterface : public Scheduller::Task
 {
 public:
+    ~TaskHumanInterface()
+    {
+        stop();
+    }
     const char *getName(void);
     void prepare(void);
     int need(long int time);
