@@ -4,6 +4,8 @@
 
 #include <string.h>
 
+#define LOG_PREFIX "Task to modem "
+
 const char *TaskToModem::getName(void)
 {
     return "EGSE -> MODEM";
@@ -19,7 +21,7 @@ void TaskToModem::prepare(void)
     source->start();
     sink->start();
 
-    L_DEBUG("prepared");
+    L_NOTICE(LOG_PREFIX "prepared");
 }
 
 int TaskToModem::need(long int time)
@@ -51,10 +53,19 @@ void TaskToModem::run(long int time)
 
 void TaskToModem::stop(void)
 {
-    source->stop();
-    sink->stop();
+    if (source != NULL)
+    {
+        source->stop();
+        source = NULL;
+    }
 
-    L_DEBUG("stopped");
+    if (sink != NULL)
+    {
+        sink->stop();
+        sink = NULL;
+    }
+
+    L_NOTICE(LOG_PREFIX "stopped");
 }
 
 void TaskToModem::setSource(Channel *s)

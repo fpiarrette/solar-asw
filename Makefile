@@ -67,6 +67,8 @@ FILES=$(SRC)/main.c \
 	$(SRC)/ChannelSocketClient.cpp \
 	$(SRC)/CircularBuffer.cpp \
 	$(SRC)/Gpio.cpp \
+	$(SRC)/GpioMock.cpp \
+	$(SRC)/GpioModule.cpp \
 	$(SRC)/Signals.cpp \
 	$(SRC)/Scheduller.cpp \
 	$(SRC)/Logger.cpp \
@@ -75,6 +77,7 @@ FILES=$(SRC)/main.c \
 	$(SRC)/LoggerSyslog.cpp \
 	$(SRC)/Config.cpp \
 	$(SRC)/TaskFromModem.cpp \
+	$(SRC)/TaskHumanInterface.cpp \
 	$(SRC)/TaskIdle.cpp \
 	$(SRC)/TaskRest.cpp \
 	$(SRC)/TaskToModem.cpp

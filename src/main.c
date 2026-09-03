@@ -10,6 +10,7 @@
 
 #include "Scheduller.h"
 #include "TaskFromModem.h"
+#include "TaskHumanInterface.h"
 #include "TaskIdle.h"
 #include "TaskRest.h"
 #include "TaskToModem.h"
@@ -39,12 +40,23 @@ int main(int argc, char *argv[])
         }
         else
         {
-            /* Gpio::getInstance()->configure(0, Gpio::Type::IN); */
+
+#ifdef FORCE_TEST_CONTEXT
+            /* in host it's not assumed /dev/gpiochip* and gpio module/driver */
+            Gpio::configure(Gpio::Type::MOCK);
+#else
+            /* in Linux ARM it's assumed /dev/gpiochip* and gpio module/driver */
+            Gpio::configure(Gpio::Type::MODULE);
+#endif
+            /* Line 0 as input is just an example */
+            Gpio::getInstance()->configure(0, GpioAbstract::Type::IN);
+
             Scheduller scheduller;
 
             /* tasks */
             TaskFromModem taskFromModem;
             TaskToModem taskToModem;
+            TaskHumanInterface taskHumanInterface;
             TaskIdle taskIdle;
             TaskRest taskRest;
 
@@ -84,7 +96,11 @@ int main(int argc, char *argv[])
                 scheduller.addTask(&taskToModem, 2);
             }
 
+            /* manage REST interface */
             scheduller.addTask(&taskRest, 16);
+
+            /* manage human/GPIO interface */
+            scheduller.addTask(&taskHumanInterface, 20);
 
             scheduller.addTask(&taskIdle, 31);
             taskIdle.setScheduller(&scheduller);

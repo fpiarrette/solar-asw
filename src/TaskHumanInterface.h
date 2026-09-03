@@ -1,13 +1,13 @@
 
-#ifndef TASK_REST_H
-#define TASK_REST_H
+#ifndef TASK_HUMAN_INTERFACE_H
+#define TASK_HUMAN_INTERFACE_H
 
 #include "Scheduller.h"
 
-class TaskRest : public Scheduller::Task
+class TaskHumanInterface : public Scheduller::Task
 {
 public:
-    ~TaskRest()
+    ~TaskHumanInterface()
     {
         stop();
     }

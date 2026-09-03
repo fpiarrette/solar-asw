@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#define LOG_PREFIX "Channel TCP client "
+
 Channel::Error ChannelSocketClient::init(void)
 {
     /* client socket is created */
@@ -19,7 +21,7 @@ Channel::Error ChannelSocketClient::init(void)
         return Channel::Error::E_INT;
     }
 
-    L_DEBUG("client socket file descriptor %d", fd);
+    L_NOTICE(LOG_PREFIX "client socket file descriptor %d", fd);
 
     return Channel::Error::E_OK;
 }
@@ -28,7 +30,7 @@ Channel::Error ChannelSocketClient::start(void)
 {
     Channel::Error r;
 
-    L_DEBUG("starting on %s:%d...", ipAddress, port);
+    L_NOTICE(LOG_PREFIX "trying to connect to %s:%d...", ipAddress, port);
 
     /* server address definition */
     sockaddr_in serverAddress;
@@ -43,7 +45,7 @@ Channel::Error ChannelSocketClient::start(void)
         return Channel::Error::E_TRY;
     }
 
-    L_DEBUG("client connected");
+    L_NOTICE(LOG_PREFIX "client connected to server");
 
     /* change client socket to NON BLOCKING mode */
     if ((r = setNonBlock(fd)) != Channel::Error::E_OK)
@@ -74,8 +76,12 @@ Channel::Error ChannelSocketClient::rx(char *data, int size, int *received)
 
 Channel::Error ChannelSocketClient::stop(void)
 {
-    if (fd > 0)
-        return secureStop(fd);
+    if (fd > 0) {
+        Channel::Error e = secureStop(fd);
+        fd = -1;
+        L_NOTICE(LOG_PREFIX "sttoped");
+        return e;
+    }
     else
         return Channel::Error::E_STA;
 }

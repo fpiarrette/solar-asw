@@ -2,12 +2,15 @@
 
 #include "Logger.h"
 
+#define LOG_PREFIX "Signals "
+
 Signals Signals::instance;
 
 Signals *Signals::getInstance(void)
 {
     return &instance;
 }
+
 Signals::Signals(void)
 {
 }
@@ -20,7 +23,7 @@ void Signals::init(void)
     sigaction(SIGTSTP, &s, NULL);
     sigaction(SIGCONT, &s, NULL);
 
-    L_DEBUG("OS signals management configured");
+    L_NOTICE(LOG_PREFIX "configured");
 }
 
 void Signals::handler(int signal)

@@ -8,6 +8,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#define LOG_PREFIX "Channel TCP server "
+
 Channel::Error ChannelSocketServer::init(void)
 {
     /* protocol AF_NET -> IPv4, SOCK_STREAM -> TCP socket */
@@ -19,7 +21,7 @@ Channel::Error ChannelSocketServer::init(void)
         return Channel::Error::E_INT;
     }
 
-    L_DEBUG("server socket file descriptor %d", fd);
+    L_NOTICE(LOG_PREFIX "file descriptor %d", fd);
 
     /* bind to the address */
     sockaddr_in serverAddress;
@@ -32,7 +34,7 @@ Channel::Error ChannelSocketServer::init(void)
         return Channel::Error::E_INT;
     }
 
-    L_DEBUG("server socket bound to %d", port);
+    L_NOTICE(LOG_PREFIX "bound to %d", port);
 
     return Channel::Error::E_OK;
 }
@@ -41,7 +43,7 @@ Channel::Error ChannelSocketServer::start(void)
 {
     Channel::Error r;
 
-    L_DEBUG("starting");
+    L_NOTICE(LOG_PREFIX "starting");
 
     if (listen(fd, 5) < 0)
     {
@@ -49,7 +51,7 @@ Channel::Error ChannelSocketServer::start(void)
         return Channel::Error::E_INT;
     }
 
-    L_DEBUG("server socket is listening...");
+    L_NOTICE(LOG_PREFIX "is listening...");
 
     if ((r = setNonBlock(fd)) != Channel::Error::E_OK)
     {
@@ -71,7 +73,7 @@ Channel::Error ChannelSocketServer::checkClientConnection(void)
         clientSocket = accept(fd, nullptr, nullptr);
         if (clientSocket > 0)
         {
-            L_DEBUG("client socket accepted on %d", clientSocket);
+            L_NOTICE(LOG_PREFIX "client accepted on file descriptor %d", clientSocket);
             /* set client socket NON BLOCKING */
             return setNonBlock(clientSocket);
         }
@@ -124,11 +126,17 @@ Channel::Error ChannelSocketServer::stop(void)
     Channel::Error r1 = Channel::Error::E_OK;
     Channel::Error r2 = Channel::Error::E_OK;
 
-    if (clientSocket > 0)
+    if (clientSocket > 0) {
         r1 = secureStop(clientSocket);
+        clientSocket = -1;
+    }
 
-    if (fd > 0)
+    if (fd > 0) {
         r2 = secureStop(fd);
+        fd = -1;
+    }
+
+    L_NOTICE(LOG_PREFIX "sttoped");
 
     return r1 == Channel::Error::E_OK && r2 == Channel::Error::E_OK ? Channel::Error::E_OK : Channel::Error::E_INT;
 }

@@ -4,6 +4,8 @@
 #include "alarm_def.h"
 #include "Logger.h"
 
+#define LOG_PREFIX "Idle task "
+
 const char *TaskIdle::getName(void)
 {
     return "Idle task";
@@ -11,9 +13,7 @@ const char *TaskIdle::getName(void)
 
 void TaskIdle::prepare(void)
 {
-    /* expendedTime = 0; */
-
-    L_DEBUG("prepared");
+    L_NOTICE(LOG_PREFIX "prepared");
 }
 
 int TaskIdle::need(long int time)
@@ -44,5 +44,5 @@ void TaskIdle::run(long int time)
 
 void TaskIdle::stop(void)
 {
-    L_DEBUG("stopped");
+    L_NOTICE(LOG_PREFIX "stopped");
 }
