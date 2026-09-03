@@ -9,6 +9,10 @@
 class TaskFromModem : public Scheduller::Task
 {
 public:
+    ~TaskFromModem()
+    {
+        stop();
+    }
     const char *getName(void);
     void prepare(void);
     int need(long int time);
