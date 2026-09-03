@@ -2,15 +2,17 @@
 
 #include "Logger.h"
 
+#define LOG_PREFIX "Null channel "
+
 Channel::Error ChannelNull::init(void)
 {
-    L_DEBUG("init");
+    L_NOTICE(LOG_PREFIX "init");
     return Channel::Error::E_OK;
 }
 
 Channel::Error ChannelNull::start(void)
 {
-    L_DEBUG("start");
+    L_NOTICE(LOG_PREFIX "start");
     return Channel::Error::E_OK;
 }
 
@@ -31,6 +33,6 @@ Channel::Error ChannelNull::rx(char *data, int size, int *received)
 
 Channel::Error ChannelNull::stop(void)
 {
-    L_DEBUG("stop");
+    L_NOTICE(LOG_PREFIX "stop");
     return Channel::Error::E_OK;
 }

@@ -35,7 +35,7 @@ Gpio::Error Gpio::start(void)
 
         if (fdChip < 0)
         {
-            L_DEBUG("error openning gpio");
+            L_ERROR("error openning gpio");
 
             return Gpio::Error::E_INT;
         }
@@ -74,7 +74,7 @@ Gpio::Error Gpio::configure(int line, Type type)
 
         if (ioctl(fdChip, GPIO_V2_GET_LINE_IOCTL, &request) < 0)
         {
-            L_DEBUG("requesting GPIO control to kernel");
+            L_ERROR("requesting GPIO control to kernel");
 
             return Gpio::Error::E_INT;
         }
@@ -142,7 +142,7 @@ Gpio::Error Gpio::set(int line, int v)
 
     if (ioctl(fdLine[line], GPIO_V2_LINE_SET_VALUES_IOCTL, &values) < 0)
     {
-        L_DEBUG("setting GPIO line value");
+        L_ERROR("setting GPIO line value");
     }
 
     return Gpio::Error::E_OK;

@@ -4,6 +4,8 @@
 
 #include <string.h>
 
+#define LOG_PREFIX "Task from modem "
+
 const char *TaskFromModem::getName(void)
 {
     return "MODEM -> EGSE";
@@ -24,7 +26,7 @@ void TaskFromModem::prepare(void)
 
     timeDeliveryLimit = 1000;
 
-    L_DEBUG("prepared, time limit %d ms, size limit %d bytes", timeDeliveryLimit, bufferRxSize);
+    L_NOTICE(LOG_PREFIX "prepared, time limit %d ms, size limit %d bytes", timeDeliveryLimit, bufferRxSize);
 }
 
 int TaskFromModem::need(long int time)
@@ -81,7 +83,7 @@ void TaskFromModem::stop(void)
     source->stop();
     sink->stop();
 
-    L_DEBUG("stopped");
+    L_NOTICE(LOG_PREFIX "stopped");
 }
 
 void TaskFromModem::setTimeDeliveryLimit(int value)
