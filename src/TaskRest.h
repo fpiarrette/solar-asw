@@ -7,6 +7,10 @@
 class TaskRest : public Scheduller::Task
 {
 public:
+    ~TaskRest()
+    {
+        stop();
+    }
     const char *getName(void);
     void prepare(void);
     int need(long int time);
