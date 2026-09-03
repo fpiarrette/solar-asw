@@ -11,6 +11,11 @@
 class ChannelSocketClient : public ChannelSocket
 {
 public:
+    ~ChannelSocketClient()
+    {
+        /* make sure that stop function is called */
+        stop();
+    }
     Channel::Error init(void);
     Channel::Error start(void);
     Channel::Error tx(char *data, int size, int *transmitted);
