@@ -76,8 +76,12 @@ Channel::Error ChannelSocketClient::rx(char *data, int size, int *received)
 
 Channel::Error ChannelSocketClient::stop(void)
 {
-    if (fd > 0)
-        return secureStop(fd);
+    if (fd > 0) {
+        Channel::Error e = secureStop(fd);
+        fd = -1;
+        L_NOTICE(LOG_PREFIX "sttoped");
+        return e;
+    }
     else
         return Channel::Error::E_STA;
 }
