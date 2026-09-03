@@ -10,6 +10,7 @@
 
 #include "Scheduller.h"
 #include "TaskFromModem.h"
+#include "TaskHumanInterface.h"
 #include "TaskIdle.h"
 #include "TaskRest.h"
 #include "TaskToModem.h"
@@ -55,6 +56,7 @@ int main(int argc, char *argv[])
             /* tasks */
             TaskFromModem taskFromModem;
             TaskToModem taskToModem;
+            TaskHumanInterface taskHumanInterface;
             TaskIdle taskIdle;
             TaskRest taskRest;
 
@@ -94,7 +96,11 @@ int main(int argc, char *argv[])
                 scheduller.addTask(&taskToModem, 2);
             }
 
+            /* manage REST interface */
             scheduller.addTask(&taskRest, 16);
+
+            /* manage human/GPIO interface */
+            scheduller.addTask(&taskHumanInterface, 20);
 
             scheduller.addTask(&taskIdle, 31);
             taskIdle.setScheduller(&scheduller);
