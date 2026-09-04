@@ -1,3 +1,6 @@
 [submodule "tools/arm-poky-linux-gnueabi"]
 	path = tools/arm-poky-linux-gnueabi
-	url = /home/obsw/workspace/obsw/solar/solar-tools
+	url = https://gitlab.space.thales/tas-spain/onboard-software/missions/solar/tools/arm-poky-linux-gnueabi.git
+[submodule "tools/x86_64-pc-linux-gnu"]
+	path = tools/x86_64-pc-linux-gnu
+	url = https://gitlab.space.thales/tas-spain/onboard-software/missions/solar/tools/x86_64-pc-linux-gnu.git

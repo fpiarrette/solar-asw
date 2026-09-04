@@ -100,23 +100,18 @@ fi
 # create output dir just in case make clean is not executed
 mkdir -p ${project_dir}${output_dir}
 
-if [ "$platform" = "$platform_xt_atto_lxl" ]
-then
-  # launch make process
-  podman run ${flags} \
-    -v "${project_dir}:/ws" \
-    -w "${workspace_dir}" \
-    -e "SRC=${workspace_dir}${source_dir}" \
-    -e "OUTPUT=${workspace_dir}${output_dir}" \
-    -e "PLATFORM=${platform}" \
-    -e "DEBUG=${debug}" \
-    -e "OPTIMIZATION=${optimization}" \
-    -e "HARDENING=${hardening}" \
-    arm-poky-linux-gnueabi:latest \
-    ${cmd}
-elif [ "$platform" = "$platform_host" ]
-then
-  SRC="${project_dir}${source_dir}" OUTPUT="${project_dir}${output_dir}" PLATFORM="${platform}" DEBUG="${debug}" OPTIMIZATION="${optimization}" HARDENING="${hardening}" FORCE_TEST_CONTEXT="1" ${cmd}
+# source specific platform configuration
+. ${project_dir}/platform/${platform}.sh
 
-fi
-
+# launch make process
+podman run ${flags} \
+  -v "${project_dir}:/ws" \
+  -w "${workspace_dir}" \
+  -e "SRC=${workspace_dir}${source_dir}" \
+  -e "OUTPUT=${workspace_dir}${output_dir}" \
+  -e "PLATFORM=${platform}" \
+  -e "DEBUG=${debug}" \
+  -e "OPTIMIZATION=${optimization}" \
+  -e "HARDENING=${hardening}" \
+  ${DOCKER_IMAGE_NAME} \
+  ${cmd}
