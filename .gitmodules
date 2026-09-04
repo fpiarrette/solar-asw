@@ -1,0 +1,3 @@
+[submodule "tools/arm-poky-linux-gnueabi"]
+	path = tools/arm-poky-linux-gnueabi
+	url = https://gitlab.space.thales/tas-spain/onboard-software/missions/solar/solar-tools.git
