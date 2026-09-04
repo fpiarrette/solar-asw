@@ -8,6 +8,8 @@
 
 #include "Gpio.h"
 
+#include "Platform.h"
+
 #include "Scheduller.h"
 #include "TaskFromModem.h"
 #include "TaskHumanInterface.h"
@@ -40,16 +42,8 @@ int main(int argc, char *argv[])
         }
         else
         {
-
-#ifdef FORCE_TEST_CONTEXT
-            /* in host it's not assumed /dev/gpiochip* and gpio module/driver */
-            Gpio::configure(Gpio::Type::MOCK);
-#else
-            /* in Linux ARM it's assumed /dev/gpiochip* and gpio module/driver */
-            Gpio::configure(Gpio::Type::MODULE);
-#endif
-            /* Line 0 as input is just an example */
-            Gpio::getInstance()->configure(0, GpioAbstract::Type::IN);
+            /* Platform implementation fixed at compilation time */
+            Platform::getInstance()->init();
 
             Scheduller scheduller;
 
@@ -123,6 +117,9 @@ int main(int argc, char *argv[])
             /* execute all schedulled tasks */
             scheduller.run();
         }
+
+        /* free platform openned resources */
+        Platform::getInstance()->shutdown();
 
         L_INFO("Finishing...");
         Logger::getInstance()->stop();
