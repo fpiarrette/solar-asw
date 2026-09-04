@@ -6,8 +6,6 @@ DEBUG?=1
 OPTIMIZATION?=1
 HARDENING?=0
 
-FORCE_TEST_CONTEXT?=0
-
 ifndef PLATFORM
 $(error PLATFORM is not defined!)
 endif
@@ -16,8 +14,8 @@ endif
 include platform/$(PLATFORM).mk
 
 # for any platform...
-CFLAGS += -Wfatal-errors -Wall -std=c99
-CXXFLAGS += -Wfatal-errors -Wall -std=c++11
+CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM)
+CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM)
 
 # Manage DEBUG options
 ifeq ($(DEBUG),1)
@@ -52,11 +50,6 @@ ifeq ($(HARDENING),1)
 	endif
 endif
 
-ifeq ($(FORCE_TEST_CONTEXT),1)
-	CFLAGS += -DFORCE_TEST_CONTEXT
-	CXXFLAGS += -DFORCE_TEST_CONTEXT
-endif
-
 FILES=$(SRC)/main.c \
 	$(SRC)/Alarms.cpp \
 	$(SRC)/utils.c \
@@ -69,6 +62,7 @@ FILES=$(SRC)/main.c \
 	$(SRC)/Gpio.cpp \
 	$(SRC)/GpioMock.cpp \
 	$(SRC)/GpioModule.cpp \
+	$(SRC)/platform/$(PLATFORM)/Platform.cpp \
 	$(SRC)/Signals.cpp \
 	$(SRC)/Scheduller.cpp \
 	$(SRC)/Logger.cpp \
