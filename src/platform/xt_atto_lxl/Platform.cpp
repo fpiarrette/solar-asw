@@ -24,10 +24,8 @@ void Platform::init(void)
     Gpio::getInstance()->configure(0, GpioAbstract::Type::IN);
 }
 
-void Platform::init(void)
+void Platform::shutdown(void)
 {
-    /* configure all lines as input before stopping Gpio? */
-    Gpio::getInstance()->configure(0, GpioAbstract::Type::IN);
-
+    /* really not needed to free Gpio as it is mocked */
     Gpio::getInstance()->stop();
 }
