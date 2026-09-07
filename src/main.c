@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
             TaskHumanInterface taskHumanInterface;
             TaskIdle taskIdle;
             TaskKiller taskKiller;
-            TaskRest taskRest;
+            /* TaskRest taskRest; */
 
             /* channels */
             ChannelSocketClient channelSocketClient;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
             taskKiller.setScheduller(&scheduller);
 
             /* manage REST interface */
-            scheduller.addTask(&taskRest, 16);
+            /* scheduller.addTask(&taskRest, 16); */
 
             /* manage human/GPIO interface */
             scheduller.addTask(&taskHumanInterface, 20);

@@ -75,7 +75,6 @@ FILES=$(SRC)/main.c \
 	$(SRC)/TaskHumanInterface.cpp \
 	$(SRC)/TaskIdle.cpp \
 	$(SRC)/TaskKiller.cpp \
-	$(SRC)/TaskRest.cpp \
 	$(SRC)/TaskToModem.cpp
 
 
