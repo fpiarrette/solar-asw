@@ -14,6 +14,7 @@
 #include "TaskFromModem.h"
 #include "TaskHumanInterface.h"
 #include "TaskIdle.h"
+#include "TaskKiller.h"
 #include "TaskRest.h"
 #include "TaskToModem.h"
 
@@ -52,11 +53,13 @@ int main(int argc, char *argv[])
             TaskToModem taskToModem;
             TaskHumanInterface taskHumanInterface;
             TaskIdle taskIdle;
+            TaskKiller taskKiller;
             TaskRest taskRest;
 
             /* channels */
             ChannelSocketClient channelSocketClient;
             ChannelSocketServer channelSocketServer;
+            ChannelSocketServer channelSocketKillStop;
             ChannelSpi channelSpi;
             ChannelNull channelNull;
 
@@ -90,11 +93,19 @@ int main(int argc, char *argv[])
                 scheduller.addTask(&taskToModem, 2);
             }
 
+            /* set task killer a reception channel */
+            channelSocketKillStop.setPort(9090);
+            taskKiller.setSource(&channelSocketKillStop);
+            taskKiller.setScheduller(&scheduller);
+
             /* manage REST interface */
             scheduller.addTask(&taskRest, 16);
 
             /* manage human/GPIO interface */
             scheduller.addTask(&taskHumanInterface, 20);
+
+            /* manage graceful kill stop flags */
+            scheduller.addTask(&taskKiller, 26);
 
             scheduller.addTask(&taskIdle, 31);
             taskIdle.setScheduller(&scheduller);

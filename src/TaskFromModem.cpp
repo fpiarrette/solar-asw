@@ -38,8 +38,10 @@ int TaskFromModem::need(long int time)
     return bufferRxSize > 0;
 }
 
-void TaskFromModem::run(long int time)
+Scheduller::Task::Result TaskFromModem::run(long int time)
 {
+    if (!need(time))
+        return Scheduller::Task::IDLE;
 
     /* update write pointer*/
     bufferStorage.write(bufferRx, bufferRxSize);
@@ -57,6 +59,8 @@ void TaskFromModem::run(long int time)
 
         forwardToSink(time);
     }
+
+    return Scheduller::Task::Result::WORKED;
 }
 
 void TaskFromModem::forwardToSink(long int time)

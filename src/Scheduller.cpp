@@ -48,11 +48,13 @@ void Scheduller::run(void)
     /* align time alarms */
     publishTimeAlarms(globalStartTime);
     Alarms::getInstance()->clearAll();
+    terminated = 0;
+    paused = 0;
 
     /* scheduller main loop */
-    while (!Signals::getInstance()->isTerminated())
+    while (!terminated)
     {
-        if (!Signals::getInstance()->isStopped())
+        if (!paused)
         {
             /* get start time in ms */
             cycleStartTime = utils_curr_time_in_ms() - globalStartTime;
@@ -61,9 +63,10 @@ void Scheduller::run(void)
 
             for (n = 0; n < SCHEDULLER_SIZE; n++)
             {
-                if (tasks[n] != NULL && tasks[n]->need(cycleStartTime))
+                if (tasks[n] != NULL && (tasks[n]->run(cycleStartTime) == Scheduller::Task::Result::WORKED))
                 {
-                    tasks[n]->run(cycleStartTime);
+                    /* Task::run return != 0 when work is performed, in that case Scheduller shall STOP */
+                    /* searching for a task to execute */
                     break;
                 }
             }
@@ -85,6 +88,24 @@ void Scheduller::run(void)
         {
             /* process stopped, just sleep for 100mS */
             utils_sleep(100);
+        }
+
+        if (Alarms::getInstance()->get(ALARM_DEF_STOP))
+        {
+            paused = 1;
+            Alarms::getInstance()->clear(ALARM_DEF_STOP);
+        }
+
+        if (Alarms::getInstance()->get(ALARM_DEF_KILL))
+        {
+            terminated = 1;
+            Alarms::getInstance()->clear(ALARM_DEF_KILL);
+        }
+
+        if (Alarms::getInstance()->get(ALARM_DEF_RESUME))
+        {
+            paused = 0;
+            Alarms::getInstance()->clear(ALARM_DEF_RESUME);
         }
     }
 

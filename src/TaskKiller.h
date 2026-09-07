@@ -1,34 +1,29 @@
 
-#ifndef TASK_TO_MODEM_H
-#define TASK_TO_MODEM_H
+#ifndef TASK_KILLER_H
+#define TASK_KILLER_H
 
 #include "Channel.h"
-#include "CircularBuffer.h"
 #include "Scheduller.h"
 
-class TaskToModem : public Scheduller::Task
+class TaskKiller : public Scheduller::Task
 {
 public:
-    ~TaskToModem()
+    ~TaskKiller()
     {
         stop();
     }
     const char *getName(void);
     void prepare(void);
-    int need(long int time);
     Scheduller::Task::Result run(long int time);
     void stop(void);
 
     void setSource(Channel *source);
-    void setSink(Channel *sink);
+    void setScheduller(Scheduller *s) { scheduller = s; }
 
 protected:
 private:
+    Scheduller *scheduller;
     Channel *source;
-    Channel *sink;
-    CircularBuffer storage;
-    char bufferRx[512];
-    int bufferRxSize;
 };
 
 #endif

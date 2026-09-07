@@ -21,16 +21,19 @@ int TaskIdle::need(long int time)
     return Alarms::getInstance()->get(ALARM_DEF_SECOND);
 }
 
-void TaskIdle::run(long int time)
+Scheduller::Task::Result TaskIdle::run(long int time)
 {
     Scheduller::Task *t;
+
+    if (!need(time))
+        return Scheduller::Task::Result::IDLE;
 
     Alarms::getInstance()->clear(ALARM_DEF_SECOND);
 
     if (time == 0)
     {
         /* it has no sense to compute first cycle as time 0 will produce 'division by zero' */
-        return;
+        return Scheduller::Task::Result::IDLE;
     }
 
     L_DEBUG("Scheduller report, total time %d", time);
@@ -40,6 +43,8 @@ void TaskIdle::run(long int time)
         t = scheduller->getNextTask();
         L_DEBUG("%s,\texpended %d ms,\tcpu used %0.03f %%", t->getName(), t->getExpendedTime(), (float)t->getExpendedTime() / time);
     }
+
+    return Scheduller::Task::Result::WORKED;
 }
 
 void TaskIdle::stop(void)

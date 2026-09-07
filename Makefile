@@ -16,6 +16,7 @@ include platform/$(PLATFORM).mk
 # for any platform...
 CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM)
 CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM)
+LDLIBS += -lmicrohttpd
 
 # Manage DEBUG options
 ifeq ($(DEBUG),1)
@@ -73,6 +74,7 @@ FILES=$(SRC)/main.c \
 	$(SRC)/TaskFromModem.cpp \
 	$(SRC)/TaskHumanInterface.cpp \
 	$(SRC)/TaskIdle.cpp \
+	$(SRC)/TaskKiller.cpp \
 	$(SRC)/TaskRest.cpp \
 	$(SRC)/TaskToModem.cpp
 
@@ -84,4 +86,4 @@ clean:
 	mkdir -p $(ARTIFACTS)
 
 all: $(FILES)
-	$(CXX) $(CXXFLAGS) -o $(ARTIFACTS)/main $(FILES) -I$(SRC)
+	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC) $(LDFLAGS) $(LDLIBS) -o $(ARTIFACTS)/main
