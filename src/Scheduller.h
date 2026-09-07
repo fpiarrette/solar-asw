@@ -10,11 +10,13 @@ public:
     class Task
     {
     public:
-        enum Result {
+        enum Result
+        {
             WORKED,
             IDLE
         };
-        Task() {
+        Task()
+        {
             expendedTime = 0;
         }
         virtual const char *getName(void) = 0;
@@ -37,6 +39,9 @@ public:
 
     int hasMoreTasks(void);
     Scheduller::Task *getNextTask(void);
+    void pause(void) { paused = 1; }
+    void resume(void) { paused = 0; }
+    void kill(void) { terminated = 1; }
 
 protected:
     void publishTimeAlarms(long int time);
@@ -48,6 +53,7 @@ private:
     long int previousTenthSecondCounter;
     long int previousSecondCounter;
     long int previousHundredMiliSeconds;
+    int terminated, paused;
 };
 
 #endif
