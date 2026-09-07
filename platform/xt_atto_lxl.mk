@@ -20,3 +20,6 @@ CXX = $(TARGET_PREFIX)g++
 # FIXME: Consider moving these lines into SDK Docker image, as specific project DO NOT have to know internal Docker image SDK installation paths
 CFLAGS = -mthumb -mfpu=neon-vfpv4 -mfloat-abi=hard -mcpu=cortex-a5 -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64 --sysroot=/opt/arm-poky-linux-gnueabi/sysroots/cortexa5t2hf-neon-vfpv4-poky-linux-gnueabi
 CXXFLAGS = -mthumb -mfpu=neon-vfpv4 -mfloat-abi=hard -mcpu=cortex-a5 -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64 --sysroot=/opt/arm-poky-linux-gnueabi/sysroots/cortexa5t2hf-neon-vfpv4-poky-linux-gnueabi
+LDFLAGS =
+LDLIBS =
+
