@@ -4,7 +4,7 @@
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
 project_dir=$script_dir/../..
 
-. $project_dir/tools/rest/validate.sh
+. $project_dir/tools/net/validate.sh
 
 echo "sending kill $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_KILL_PORT"
 
