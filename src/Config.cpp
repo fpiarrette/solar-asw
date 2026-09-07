@@ -67,7 +67,7 @@ Config *Config::getInstance(void)
 Config::Error Config::init(int argc, char *argv[])
 {
     Config::Error returnValue;
-    char c;
+    int c;
 
     returnValue = Config::Error::E_OK;
 
