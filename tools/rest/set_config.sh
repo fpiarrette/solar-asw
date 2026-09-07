@@ -2,7 +2,7 @@
 
 # obtain project base dir
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$script_dir
+project_dir=$script_dir/../..
 
 # GET → read information
 # POST → create a resource or trigger an action
@@ -10,7 +10,7 @@ project_dir=$script_dir
 # PATCH → partialy change resource configuration
 # DELETE → delete a resource
 
-. $project_dir/validate.sh
+. $project_dir/tools/rest/validate.sh
 
 echo "setting config to $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
 

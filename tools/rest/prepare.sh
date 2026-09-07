@@ -2,7 +2,7 @@
 
 # obtain project base dir
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$script_dir
+project_dir=$script_dir/../..
 
 unset SOLAR_TARGET_IP_ADDRESS
 echo -n "SOLAR target IP address: " 
