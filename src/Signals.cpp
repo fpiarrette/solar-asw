@@ -1,5 +1,7 @@
 #include "Signals.h"
 
+#include "alarm_def.h"
+#include "Alarms.h"
 #include "Logger.h"
 
 #define LOG_PREFIX "Signals "
@@ -32,12 +34,15 @@ void Signals::handler(int signal)
     {
     case SIGINT:
         Signals::getInstance()->terminated = 1;
+        Alarms::getInstance()->set(ALARM_DEF_KILL);
         break;
     case SIGTSTP:
         Signals::getInstance()->stopped = 1;
+        Alarms::getInstance()->set(ALARM_DEF_STOP);
         break;
     case SIGCONT:
         Signals::getInstance()->stopped = 0;
+        Alarms::getInstance()->set(ALARM_DEF_RESUME);
         break;
     default:
         break;
