@@ -101,7 +101,7 @@ fi
 mkdir -p ${project_dir}${output_dir}
 
 # source specific platform configuration
-. ${project_dir}/platform/${platform}.sh
+. ${project_dir}/config/platform/${platform}.sh
 
 # launch make process
 podman run ${flags} \

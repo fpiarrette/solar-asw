@@ -8,7 +8,7 @@ project_dir=$script_dir/../..
 . $project_dir/tools/runners/validate.sh
 
 # source specific platform configuration
-. ${project_dir}/platform/${PLATFORM}.sh
+. ${project_dir}/config/platform/${PLATFORM}.sh
 
 # Docker flags
 flags=-t

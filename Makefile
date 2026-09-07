@@ -11,7 +11,7 @@ $(error PLATFORM is not defined!)
 endif
 
 # configure variables values depending on platform
-include platform/$(PLATFORM).mk
+include config/platform/$(PLATFORM).mk
 
 # for any platform...
 CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM)
