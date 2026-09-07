@@ -14,7 +14,7 @@ public:
     const char *getName(void);
     void prepare(void);
     int need(long int time);
-    void run(long int time);
+    Scheduller::Task::Result run(long int time);
     void stop(void);
 
     void setScheduller(Scheduller *s) { scheduller = s; }

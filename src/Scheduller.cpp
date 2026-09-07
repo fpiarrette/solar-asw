@@ -61,9 +61,10 @@ void Scheduller::run(void)
 
             for (n = 0; n < SCHEDULLER_SIZE; n++)
             {
-                if (tasks[n] != NULL && tasks[n]->need(cycleStartTime))
+                if (tasks[n] != NULL && (tasks[n]->run(cycleStartTime) == Scheduller::Task::Result::WORKED))
                 {
-                    tasks[n]->run(cycleStartTime);
+                    /* Task::run return != 0 when work is performed, in that case Scheduller shall STOP */
+                    /* searching for a task to execute */
                     break;
                 }
             }

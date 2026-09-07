@@ -23,8 +23,9 @@ int TaskRest::need(long int time)
     return 0;
 }
 
-void TaskRest::run(long int time)
+Scheduller::Task::Result TaskRest::run(long int time)
 {
+    return Scheduller::Task::Result::IDLE;
 }
 
 void TaskRest::stop(void)

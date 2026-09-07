@@ -32,10 +32,13 @@ int TaskToModem::need(long int time)
     return bufferRxSize > 0;
 }
 
-void TaskToModem::run(long int time)
+Scheduller::Task::Result TaskToModem::run(long int time)
 {
     int t, r;
     char b[2 * 1024];
+
+    if (!need(time))
+        return Scheduller::Task::Result::IDLE;
 
     storage.write(bufferRx, bufferRxSize);
 
@@ -49,6 +52,8 @@ void TaskToModem::run(long int time)
         /* return data to buffer -> adjust read pointer */
         storage.rewind(r - t);
     }
+
+    return Scheduller::Task::Result::WORKED;
 }
 
 void TaskToModem::stop(void)

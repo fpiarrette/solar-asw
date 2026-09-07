@@ -25,8 +25,11 @@ int TaskHumanInterface::need(long int time)
     return needsToBeExecuted;
 }
 
-void TaskHumanInterface::run(long int time)
+Scheduller::Task::Result TaskHumanInterface::run(long int time)
 {
+    if (!need(time))
+        return Scheduller::Task::Result::IDLE;
+
     if (Alarms::getInstance()->get(ALARM_DEF_ERROR))
     {
         Gpio::getInstance()->set(GPIO_DEF_ERROR, 1);
@@ -38,6 +41,8 @@ void TaskHumanInterface::run(long int time)
     }
 
     L_DEBUG("GPIO error notified");
+
+    return Scheduller::Task::Result::WORKED;
 }
 
 void TaskHumanInterface::stop(void)
