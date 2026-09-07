@@ -4,6 +4,10 @@
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
 project_dir=$script_dir
 
-curl -X GET http://localhost:8080/status
+. $project_dir/validate.sh
+
+echo "getting status from $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
+
+curl -X GET http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/status
 
 echo ""

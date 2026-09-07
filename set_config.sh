@@ -10,6 +10,10 @@ project_dir=$script_dir
 # PATCH → partialy change resource configuration
 # DELETE → delete a resource
 
-curl -X POST http://localhost:8080/api/config -H "Content-Type: application/json" -d '{"name":"Fernando","role":"Software Architect","active":true}'
+. $project_dir/validate.sh
+
+echo "setting config to $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
+
+curl -X POST http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/api/config -H "Content-Type: application/json" -d '{"name":"Fernando","role":"Software Architect","active":true}'
 
 echo ""
