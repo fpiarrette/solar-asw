@@ -1,11 +1,6 @@
 #!/bin/sh
 
-# obtain project base dir
-script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$script_dir/../..
-
-. $project_dir/tools/net/validate.sh
-. $project_dir/tools/launcher/validate.sh
+# this script shall not be executed direclty, is intendeed to be called from main/parent script
 
 # source specific platform configuration
 . ${project_dir}/config/docker/${PLATFORM}.sh
