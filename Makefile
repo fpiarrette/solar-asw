@@ -1,6 +1,5 @@
 # Makefile for cleaning and building
 
-OUTPUT?=./build
 SRC?=./src
 DEBUG?=1
 OPTIMIZATION?=1
@@ -14,6 +13,10 @@ ifndef PLATFORM
 $(error PLATFORM is not defined!)
 endif
 
+ifndef OUTPUT_DIR
+$(error OUTPUT_DIR is not defined!)
+endif
+
 # configure variables values depending on platform
 include config/make/$(PLATFORM).mk
 
@@ -24,11 +27,9 @@ LDLIBS += -lmicrohttpd
 
 # Manage DEBUG options
 ifeq ($(DEBUG),1)
-	ARTIFACTS = ${OUTPUT}/${PLATFORM}/debug
 	CFLAGS += -g -feliminate-unused-debug-types -DDEBUG
 	CXXFLAGS += -g -feliminate-unused-debug-types -DDEBUG
 else
-	ARTIFACTS = ${OUTPUT}/${PLATFORM}/release
 	CFLAGS += -DNDEBUG
 	CXXFLAGS += -DNDEBUG
 endif
@@ -85,8 +86,8 @@ FILES=$(SRC)/main.c \
 .PHONY: clean
 
 clean:
-	rm -rf $(ARTIFACTS)
-	mkdir -p $(ARTIFACTS)
+	rm -rf $(OUTPUT_DIR)
+	mkdir -p $(OUTPUT_DIR)
 
 all: $(FILES)
-	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC) $(LDFLAGS) $(LDLIBS) -o $(ARTIFACTS)/$(BINARY_NAME)
+	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/$(BINARY_NAME)

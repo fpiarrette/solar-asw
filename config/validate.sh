@@ -29,3 +29,15 @@ then
   echo "You have to prepare environment first!"
   exit 1
 fi
+
+if [ ! -n "$BINARY_NAME" ]
+then
+  echo "You have to prepare environment first!"
+  exit 1
+fi
+
+if [ ! -n "$OUTPUT_DIR" ]
+then
+  echo "You have to prepare environment first!"
+  exit 1
+fi

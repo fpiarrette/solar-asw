@@ -29,3 +29,12 @@ export SOLAR_TARGET_KILL_PORT="9090"
 export SOLAR_TARGET_REST_PORT="8080"
 export DOCKER_IMAGE_NAME=x86_64-pc-linux-gnu:latest
 export BINARY_NAME=solar-asw
+
+if [ $DEBUG -eq 0 ]
+then
+  OUTPUT_DIR="build/$PLATFORM/release"
+else
+  OUTPUT_DIR="build/$PLATFORM/debug"
+fi
+
+export OUTPUT_DIR

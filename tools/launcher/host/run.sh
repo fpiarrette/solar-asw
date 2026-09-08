@@ -6,12 +6,7 @@
 flags=-t
 workspace_dir=/ws
 
-if [ -z "$DEBUG" ]
-then
-  cmd=$workspace_dir/build/host/release/$BINARY_NAME
-else
-  cmd=$workspace_dir/build/host/debug/$BINARY_NAME
-fi
+cmd="$workspace_dir/$OUTPUT_DIR/$BINARY_NAME"
 
 # launch make process
 podman run ${flags} \

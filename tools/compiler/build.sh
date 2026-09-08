@@ -16,26 +16,22 @@ workspace_dir="/ws"
 
 source_dir=/src
 
-# create output dir
-output_dir=/build
-
 optimization=0
 
 hardening=0
 
 show_help()
 {
-    echo "$0 [-i] [-s {/src}] [-o {/build}] [-c {\"make clean all\"}] [-z] [-e] [-h]"
+    echo "$0 [-i] [-s {/src}] [-c {\"make clean all\"}] [-z] [-e] [-h]"
     echo "\t[-i] interactive"
     echo "\t[-s {/src}] define source directory"
-    echo "\t[-o {/build}] define output directory"
     echo "\t[-c {\"make clean all\"}] define command"
     echo "\t[-z] activate optimization"
     echo "\t[-e] include GCC hardening options"
     echo "\t[-h] show this help"
 }
 
-while getopts "h?is:o:c:ze" opt; do
+while getopts "h?is:c:ze" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -47,9 +43,6 @@ while getopts "h?is:o:c:ze" opt; do
       ;;
     s)
       source_dir="${OPTARG}"
-      ;;
-    o)
-      output_dir="${OPTARG}"
       ;;
     c)
       cmd="${OPTARG}"
@@ -74,20 +67,21 @@ echo "Command: ${cmd}"
 echo "Platform: ${PLATFORM}"
 echo "Debug: ${DEBUG}"
 echo "Docker image: ${DOCKER_IMAGE_NAME}"
+echo "Output dir: ${OUTPUT_DIR}"
 echo "--------------------------------------------------------------------------------"
 
 # check basic environment configuration
 . ${project_dir}/config/validate.sh
 
 # create output dir just in case make clean is not executed
-mkdir -p ${project_dir}${output_dir}
+mkdir -p "${project_dir}/${OUTPUT_DIR}"
 
 # launch make process
 podman run ${flags} \
   -v "${project_dir}:/ws" \
   -w "${workspace_dir}" \
   -e "SRC=${workspace_dir}${source_dir}" \
-  -e "OUTPUT=${workspace_dir}${output_dir}" \
+  -e "OUTPUT_DIR=${workspace_dir}/${OUTPUT_DIR}" \
   -e "BINARY_NAME=${BINARY_NAME}" \
   -e "PLATFORM=${PLATFORM}" \
   -e "DEBUG=${DEBUG}" \
