@@ -2,9 +2,10 @@
 
 # obtain project base dir
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$script_dir/../../..
+project_dir=$(readlink -f $script_dir/../../..)
 
-. $project_dir/tools/net/validate.sh
+# general environment validation
+. $project_dir/config/validate.sh
 
 echo "getting statistics from $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
 
