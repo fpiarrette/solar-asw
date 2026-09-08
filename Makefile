@@ -85,6 +85,21 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/TaskKiller.cpp \
 	$(SRC_DIR)/TaskToModem.cpp
 
+FILES_TEST_SPI=$(SRC_DIR)/test_spi.c \
+	$(SRC_DIR)/ChannelSpi.cpp \
+	$(SRC_DIR)/Logger.cpp \
+	$(SRC_DIR)/LoggerAbstract.cpp \
+	$(SRC_DIR)/LoggerStdout.cpp \
+	$(SRC_DIR)/LoggerSyslog.cpp
+
+FILES_TEST_GPIO=$(SRC_DIR)/test_gpio.c \
+	$(SRC_DIR)/Gpio.cpp \
+	$(SRC_DIR)/GpioMock.cpp \
+	$(SRC_DIR)/GpioModule.cpp \
+	$(SRC_DIR)/Logger.cpp \
+	$(SRC_DIR)/LoggerAbstract.cpp \
+	$(SRC_DIR)/LoggerStdout.cpp \
+	$(SRC_DIR)/LoggerSyslog.cpp
 
 .PHONY: clean
 
@@ -94,3 +109,9 @@ clean:
 
 all: $(FILES)
 	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/$(BINARY_NAME)
+
+test_spi: $(FILES_TEST_SPI)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi
+
+test_gpio: $(FILES_TEST_GPIO)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_gpio
