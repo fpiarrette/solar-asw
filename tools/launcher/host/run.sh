@@ -2,9 +2,6 @@
 
 # this script shall not be executed direclty, is intendeed to be called from main/parent script
 
-# source specific platform configuration
-. ${project_dir}/config/docker/${PLATFORM}.sh
-
 # Docker flags
 flags=-t
 workspace_dir=/ws

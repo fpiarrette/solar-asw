@@ -23,3 +23,9 @@ then
   echo "You have to prepare environment first!"
   exit 1
 fi
+
+if [ ! -n "$DOCKER_IMAGE_NAME" ]
+then
+  echo "You have to prepare environment first!"
+  exit 1
+fi

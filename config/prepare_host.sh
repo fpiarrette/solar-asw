@@ -27,3 +27,4 @@ export DEBUG
 export SOLAR_TARGET_IP_ADDRESS="127.0.0.1"
 export SOLAR_TARGET_KILL_PORT="9090"
 export SOLAR_TARGET_REST_PORT="8080"
+export DOCKER_IMAGE_NAME=x86_64-pc-linux-gnu:latest

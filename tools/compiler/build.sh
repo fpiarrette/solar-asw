@@ -73,6 +73,7 @@ echo "Solar build system"
 echo "Command: ${cmd}"
 echo "Platform: ${PLATFORM}"
 echo "Debug: ${DEBUG}"
+echo "Docker image: ${DOCKER_IMAGE_NAME}"
 echo "--------------------------------------------------------------------------------"
 
 # check basic environment configuration
@@ -80,9 +81,6 @@ echo "--------------------------------------------------------------------------
 
 # create output dir just in case make clean is not executed
 mkdir -p ${project_dir}${output_dir}
-
-# source specific platform configuration
-. ${project_dir}/config/docker/${PLATFORM}.sh
 
 # launch make process
 podman run ${flags} \
