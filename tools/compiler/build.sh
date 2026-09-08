@@ -88,6 +88,7 @@ podman run ${flags} \
   -w "${workspace_dir}" \
   -e "SRC=${workspace_dir}${source_dir}" \
   -e "OUTPUT=${workspace_dir}${output_dir}" \
+  -e "BINARY_NAME=${BINARY_NAME}" \
   -e "PLATFORM=${PLATFORM}" \
   -e "DEBUG=${DEBUG}" \
   -e "OPTIMIZATION=${optimization}" \

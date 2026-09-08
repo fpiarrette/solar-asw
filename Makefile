@@ -6,6 +6,10 @@ DEBUG?=1
 OPTIMIZATION?=1
 HARDENING?=0
 
+ifndef BINARY_NAME
+$(error BINARY_NAME is not defined!)
+endif
+
 ifndef PLATFORM
 $(error PLATFORM is not defined!)
 endif
@@ -85,4 +89,4 @@ clean:
 	mkdir -p $(ARTIFACTS)
 
 all: $(FILES)
-	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC) $(LDFLAGS) $(LDLIBS) -o $(ARTIFACTS)/main
+	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC) $(LDFLAGS) $(LDLIBS) -o $(ARTIFACTS)/$(BINARY_NAME)

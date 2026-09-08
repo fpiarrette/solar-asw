@@ -5,8 +5,13 @@
 # Docker flags
 flags=-t
 workspace_dir=/ws
-binary_name=main
-cmd=$workspace_dir/build/host/debug/$binary_name
+
+if [ -z "$DEBUG" ]
+then
+  cmd=$workspace_dir/build/host/release/$BINARY_NAME
+else
+  cmd=$workspace_dir/build/host/debug/$BINARY_NAME
+fi
 
 # launch make process
 podman run ${flags} \
