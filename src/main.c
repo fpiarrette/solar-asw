@@ -37,6 +37,14 @@ int main(int argc, char *argv[])
 
         L_INFO("Starting...");
 
+#ifdef DEBUG
+        L_DEBUG("Debug version");
+#elif
+#ifdef NDEBUG
+        L_NOTICE("Release version");
+#endif
+#endif
+
         if (Config::getInstance()->isShowHelp())
         {
             Config::getInstance()->help(argc, argv);
