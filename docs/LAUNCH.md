@@ -4,7 +4,9 @@ Before launching the SOLAR ASW, a binary artifact must be [created](./BUILD.md).
 
 ## In representative embedded platform
 
-TBW
+### Dependencies in host
+
+To be descrived: sshpass
 
 ## In host platform
 
