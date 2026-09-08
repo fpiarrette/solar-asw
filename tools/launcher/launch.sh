@@ -8,4 +8,4 @@ project_dir=$(readlink -f $script_dir/../..)
 . $project_dir/config/validate.sh
 
 #specific run depending on $PLATFORM
-. $project_dir/tools/launcher/$PLATFORM/run.sh
+. $project_dir/tools/launcher/$PLATFORM/launch.sh
