@@ -14,24 +14,21 @@ cmd="make clean all"
 # create source dir
 workspace_dir="/ws"
 
-source_dir=/src
-
 optimization=0
 
 hardening=0
 
 show_help()
 {
-    echo "$0 [-i] [-s {/src}] [-c {\"make clean all\"}] [-z] [-e] [-h]"
+    echo "$0 [-i] [-c {\"make clean all\"}] [-z] [-e] [-h]"
     echo "\t[-i] interactive"
-    echo "\t[-s {/src}] define source directory"
     echo "\t[-c {\"make clean all\"}] define command"
     echo "\t[-z] activate optimization"
     echo "\t[-e] include GCC hardening options"
     echo "\t[-h] show this help"
 }
 
-while getopts "h?is:c:ze" opt; do
+while getopts "h?ic:ze" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -40,9 +37,6 @@ while getopts "h?is:c:ze" opt; do
     i)
       flags="${flags} -i"
       cmd="bash"
-      ;;
-    s)
-      source_dir="${OPTARG}"
       ;;
     c)
       cmd="${OPTARG}"
@@ -80,7 +74,7 @@ mkdir -p "${project_dir}/${OUTPUT_DIR}"
 podman run ${flags} \
   -v "${project_dir}:/ws" \
   -w "${workspace_dir}" \
-  -e "SRC=${workspace_dir}${source_dir}" \
+  -e "SRC_DIR=${workspace_dir}/src" \
   -e "OUTPUT_DIR=${workspace_dir}/${OUTPUT_DIR}" \
   -e "BINARY_NAME=${BINARY_NAME}" \
   -e "PLATFORM=${PLATFORM}" \
