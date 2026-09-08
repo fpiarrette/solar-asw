@@ -21,24 +21,21 @@ output_dir=/build
 
 optimization=0
 
-debug=0
-
 hardening=0
 
 show_help()
 {
-    echo "$0 [-i] [-s {/src}] [-o {/build}] [-c {\"make clean all\"}] [-z] [-d] [-e] [-h]"
+    echo "$0 [-i] [-s {/src}] [-o {/build}] [-c {\"make clean all\"}] [-z] [-e] [-h]"
     echo "\t[-i] interactive"
     echo "\t[-s {/src}] define source directory"
     echo "\t[-o {/build}] define output directory"
     echo "\t[-c {\"make clean all\"}] define command"
     echo "\t[-z] activate optimization"
-    echo "\t[-d] compile with debug symbols"
     echo "\t[-e] include GCC hardening options"
     echo "\t[-h] show this help"
 }
 
-while getopts "h?is:o:c:p:zde" opt; do
+while getopts "h?is:o:c:ze" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -60,9 +57,6 @@ while getopts "h?is:o:c:p:zde" opt; do
     z)
       optimization=1
       ;;
-    d)
-      debug=1
-      ;;
     e)
       hardening=1
       ;;
@@ -78,6 +72,7 @@ echo "--------------------------------------------------------------------------
 echo "Solar build system"
 echo "Command: ${cmd}"
 echo "Platform: ${PLATFORM}"
+echo "Debug: ${DEBUG}"
 echo "--------------------------------------------------------------------------------"
 
 # check basic environment configuration
@@ -96,7 +91,7 @@ podman run ${flags} \
   -e "SRC=${workspace_dir}${source_dir}" \
   -e "OUTPUT=${workspace_dir}${output_dir}" \
   -e "PLATFORM=${PLATFORM}" \
-  -e "DEBUG=${debug}" \
+  -e "DEBUG=${DEBUG}" \
   -e "OPTIMIZATION=${optimization}" \
   -e "HARDENING=${hardening}" \
   ${DOCKER_IMAGE_NAME} \
