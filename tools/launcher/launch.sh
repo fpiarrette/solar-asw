@@ -7,6 +7,5 @@ project_dir=$(readlink -f $script_dir/../..)
 # general environment validation
 . $project_dir/config/validate.sh
 
-echo "sending kill $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_KILL_PORT"
-
-echo "kill" | nc -q 0 $SOLAR_TARGET_IP_ADDRESS $SOLAR_TARGET_KILL_PORT
+#specific run depending on $PLATFORM
+. $project_dir/tools/launcher/$PLATFORM/launch.sh

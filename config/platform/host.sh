@@ -1,1 +1,0 @@
-DOCKER_IMAGE_NAME=x86_64-pc-linux-gnu:latest

@@ -1,17 +1,27 @@
 # Makefile for cleaning and building
 
-OUTPUT?=./build
-SRC?=./src
 DEBUG?=1
 OPTIMIZATION?=1
 HARDENING?=0
+
+ifndef SRC_DIR
+$(error SRC_DIR is not defined!)
+endif
+
+ifndef BINARY_NAME
+$(error BINARY_NAME is not defined!)
+endif
 
 ifndef PLATFORM
 $(error PLATFORM is not defined!)
 endif
 
+ifndef OUTPUT_DIR
+$(error OUTPUT_DIR is not defined!)
+endif
+
 # configure variables values depending on platform
-include config/platform/$(PLATFORM).mk
+include config/make/$(PLATFORM).mk
 
 # for any platform...
 CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM)
@@ -20,11 +30,9 @@ LDLIBS += -lmicrohttpd
 
 # Manage DEBUG options
 ifeq ($(DEBUG),1)
-	ARTIFACTS = ${OUTPUT}/${PLATFORM}/debug
 	CFLAGS += -g -feliminate-unused-debug-types -DDEBUG
 	CXXFLAGS += -g -feliminate-unused-debug-types -DDEBUG
 else
-	ARTIFACTS = ${OUTPUT}/${PLATFORM}/release
 	CFLAGS += -DNDEBUG
 	CXXFLAGS += -DNDEBUG
 endif
@@ -51,38 +59,38 @@ ifeq ($(HARDENING),1)
 	endif
 endif
 
-FILES=$(SRC)/main.c \
-	$(SRC)/Alarms.cpp \
-	$(SRC)/utils.c \
-	$(SRC)/ChannelNull.cpp \
-	$(SRC)/ChannelSpi.cpp \
-	$(SRC)/ChannelSocket.cpp \
-	$(SRC)/ChannelSocketServer.cpp \
-	$(SRC)/ChannelSocketClient.cpp \
-	$(SRC)/CircularBuffer.cpp \
-	$(SRC)/Gpio.cpp \
-	$(SRC)/GpioMock.cpp \
-	$(SRC)/GpioModule.cpp \
-	$(SRC)/platform/$(PLATFORM)/Platform.cpp \
-	$(SRC)/Signals.cpp \
-	$(SRC)/Scheduller.cpp \
-	$(SRC)/Logger.cpp \
-	$(SRC)/LoggerAbstract.cpp \
-	$(SRC)/LoggerStdout.cpp \
-	$(SRC)/LoggerSyslog.cpp \
-	$(SRC)/Config.cpp \
-	$(SRC)/TaskFromModem.cpp \
-	$(SRC)/TaskHumanInterface.cpp \
-	$(SRC)/TaskIdle.cpp \
-	$(SRC)/TaskKiller.cpp \
-	$(SRC)/TaskToModem.cpp
+FILES=$(SRC_DIR)/main.c \
+	$(SRC_DIR)/Alarms.cpp \
+	$(SRC_DIR)/utils.c \
+	$(SRC_DIR)/ChannelNull.cpp \
+	$(SRC_DIR)/ChannelSpi.cpp \
+	$(SRC_DIR)/ChannelSocket.cpp \
+	$(SRC_DIR)/ChannelSocketServer.cpp \
+	$(SRC_DIR)/ChannelSocketClient.cpp \
+	$(SRC_DIR)/CircularBuffer.cpp \
+	$(SRC_DIR)/Gpio.cpp \
+	$(SRC_DIR)/GpioMock.cpp \
+	$(SRC_DIR)/GpioModule.cpp \
+	$(SRC_DIR)/platform/$(PLATFORM)/Platform.cpp \
+	$(SRC_DIR)/Signals.cpp \
+	$(SRC_DIR)/Scheduller.cpp \
+	$(SRC_DIR)/Logger.cpp \
+	$(SRC_DIR)/LoggerAbstract.cpp \
+	$(SRC_DIR)/LoggerStdout.cpp \
+	$(SRC_DIR)/LoggerSyslog.cpp \
+	$(SRC_DIR)/Config.cpp \
+	$(SRC_DIR)/TaskFromModem.cpp \
+	$(SRC_DIR)/TaskHumanInterface.cpp \
+	$(SRC_DIR)/TaskIdle.cpp \
+	$(SRC_DIR)/TaskKiller.cpp \
+	$(SRC_DIR)/TaskToModem.cpp
 
 
 .PHONY: clean
 
 clean:
-	rm -rf $(ARTIFACTS)
-	mkdir -p $(ARTIFACTS)
+	rm -rf $(OUTPUT_DIR)
+	mkdir -p $(OUTPUT_DIR)
 
 all: $(FILES)
-	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC) $(LDFLAGS) $(LDLIBS) -o $(ARTIFACTS)/main
+	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/$(BINARY_NAME)

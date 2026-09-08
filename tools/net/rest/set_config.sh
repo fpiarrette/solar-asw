@@ -1,8 +1,10 @@
 #!/bin/sh
 
 # obtain project base dir
-script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$script_dir/../../..
+project_dir=$(readlink -f $script_dir/../../..)
+
+# general environment validation
+. $project_dir/config/validate.sh
 
 # GET → read information
 # POST → create a resource or trigger an action

@@ -2,7 +2,7 @@
 
 # obtain project base dir
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$script_dir
+project_dir=$(readlink -f $script_dir/../..)
 
 # reset getopts
 OPTIND=1
@@ -14,37 +14,21 @@ cmd="make clean all"
 # create source dir
 workspace_dir="/ws"
 
-source_dir=/src
-
-# create output dir
-output_dir=/build
-
-# default platform
-platform_xt_atto_lxl=xt_atto_lxl
-platform_host=host
-platform="${platform_xt_atto_lxl}"
-
 optimization=0
-
-debug=0
 
 hardening=0
 
 show_help()
 {
-    echo "$0 [-i] [-s {/src}] [-o {/build}] [-p {$platform_xt_atto_lxl/$platform_host}] [-c {\"make clean all\"}] [-z] [-d] [-e] [-h]"
+    echo "$0 [-i] [-c {\"make clean all\"}] [-z] [-e] [-h]"
     echo "\t[-i] interactive"
-    echo "\t[-s {/src}] define source directory"
-    echo "\t[-o {/build}] define output directory"
-    echo "\t[-p {$platform_xt_atto_lxl/$platform_host}] define platform"
     echo "\t[-c {\"make clean all\"}] define command"
     echo "\t[-z] activate optimization"
-    echo "\t[-d] compile with debug symbols"
     echo "\t[-e] include GCC hardening options"
     echo "\t[-h] show this help"
 }
 
-while getopts "h?is:o:c:p:zde" opt; do
+while getopts "h?ic:ze" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -54,23 +38,11 @@ while getopts "h?is:o:c:p:zde" opt; do
       flags="${flags} -i"
       cmd="bash"
       ;;
-    s)
-      source_dir="${OPTARG}"
-      ;;
-    o)
-      output_dir="${OPTARG}"
-      ;;
     c)
       cmd="${OPTARG}"
       ;;
-    p)
-      platform="${OPTARG}"
-      ;;
     z)
       optimization=1
-      ;;
-    d)
-      debug=1
       ;;
     e)
       hardening=1
@@ -85,32 +57,28 @@ shift $((OPTIND-1))
 # info
 echo "--------------------------------------------------------------------------------"
 echo "Solar build system"
-#echo "Source: ${project_dir}${source_dir}"
-#echo "Output: ${project_dir}${output_dir}"
 echo "Command: ${cmd}"
-echo "Platform: ${platform}"
+echo "Platform: ${PLATFORM}"
+echo "Debug: ${DEBUG}"
+echo "Docker image: ${DOCKER_IMAGE_NAME}"
+echo "Output dir: ${OUTPUT_DIR}"
 echo "--------------------------------------------------------------------------------"
 
-if [ "$platform" != "$platform_xt_atto_lxl" ] && [ "$platform" != "$platform_host" ]
-then
-  show_help
-  exit 0
-fi
+# check basic environment configuration
+. ${project_dir}/config/validate.sh
 
 # create output dir just in case make clean is not executed
-mkdir -p ${project_dir}${output_dir}
-
-# source specific platform configuration
-. ${project_dir}/config/platform/${platform}.sh
+mkdir -p "${project_dir}/${OUTPUT_DIR}"
 
 # launch make process
 podman run ${flags} \
   -v "${project_dir}:/ws" \
   -w "${workspace_dir}" \
-  -e "SRC=${workspace_dir}${source_dir}" \
-  -e "OUTPUT=${workspace_dir}${output_dir}" \
-  -e "PLATFORM=${platform}" \
-  -e "DEBUG=${debug}" \
+  -e "SRC_DIR=${workspace_dir}/src" \
+  -e "OUTPUT_DIR=${workspace_dir}/${OUTPUT_DIR}" \
+  -e "BINARY_NAME=${BINARY_NAME}" \
+  -e "PLATFORM=${PLATFORM}" \
+  -e "DEBUG=${DEBUG}" \
   -e "OPTIMIZATION=${optimization}" \
   -e "HARDENING=${hardening}" \
   ${DOCKER_IMAGE_NAME} \
