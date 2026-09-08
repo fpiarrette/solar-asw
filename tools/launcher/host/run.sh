@@ -5,7 +5,7 @@ script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
 project_dir=$script_dir/../..
 
 . $project_dir/tools/net/validate.sh
-. $project_dir/tools/runners/validate.sh
+. $project_dir/tools/launcher/validate.sh
 
 # source specific platform configuration
 . ${project_dir}/config/platform/${PLATFORM}.sh

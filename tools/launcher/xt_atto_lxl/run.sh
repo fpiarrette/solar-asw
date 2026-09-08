@@ -5,7 +5,7 @@ script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
 project_dir=$script_dir/../..
 
 . $project_dir/tools/net/validate.sh
-. $project_dir/tools/runners/validate.sh
+. $project_dir/tools/launcher/validate.sh
 
 binary_name=main
 source_file=$project_dir/build/xt_atto_lxl/debug/$binary_name
