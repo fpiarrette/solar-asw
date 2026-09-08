@@ -2,7 +2,7 @@
 
 # obtain project base dir
 script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$script_dir
+project_dir=$script_dir/../..
 
 # reset getopts
 OPTIND=1
@@ -85,8 +85,6 @@ shift $((OPTIND-1))
 # info
 echo "--------------------------------------------------------------------------------"
 echo "Solar build system"
-#echo "Source: ${project_dir}${source_dir}"
-#echo "Output: ${project_dir}${output_dir}"
 echo "Command: ${cmd}"
 echo "Platform: ${platform}"
 echo "--------------------------------------------------------------------------------"
