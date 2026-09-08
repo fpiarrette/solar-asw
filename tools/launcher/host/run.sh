@@ -8,7 +8,7 @@ project_dir=$script_dir/../..
 . $project_dir/tools/launcher/validate.sh
 
 # source specific platform configuration
-. ${project_dir}/config/platform/${PLATFORM}.sh
+. ${project_dir}/config/docker/${PLATFORM}.sh
 
 # Docker flags
 flags=-t
