@@ -1,7 +1,0 @@
-
-CC = gcc
-CXX = g++
-CFLAGS =
-CXXFLAGS =
-LDFLAGS =
-LDLIBS =
