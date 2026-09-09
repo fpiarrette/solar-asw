@@ -20,12 +20,24 @@ ifndef OUTPUT_DIR
 $(error OUTPUT_DIR is not defined!)
 endif
 
+ifndef PLATFORM_ID
+$(error PLATFORM_ID is not defined!)
+endif
+
+ifndef PLATFORM_HOST
+$(error PLATFORM_HOST is not defined!)
+endif
+
+ifndef PLATFORM_TARGET
+$(error PLATFORM_TARGET is not defined!)
+endif
+
 # configure variables values depending on platform
 include config/make/$(PLATFORM).mk
 
 # for any platform...
-CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM)
-CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM)
+CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
+CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
 LDLIBS += -lmicrohttpd
 
 # Manage DEBUG options
