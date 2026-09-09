@@ -10,6 +10,13 @@ void getLineValue(char *deviceName, char *line)
     int l, v;
     GpioAbstract::Error result;
 
+    result = Gpio::getInstance()->start();
+    if (result != GpioAbstract::Error::E_OK)
+    {
+        L_ERROR("opening GPIO");
+        return;
+    }
+
     if (sscanf(line, "%d", &l) != 1)
     {
         L_ERROR("%s can not be converted to int", line);
@@ -33,12 +40,26 @@ void getLineValue(char *deviceName, char *line)
     }
 
     L_NOTICE("line %d is %s", l, v == 0 ? "off" : "on");
+
+    result = Gpio::getInstance()->stop();
+    if (result != GpioAbstract::Error::E_OK)
+    {
+        L_ERROR("stopping GPIO");
+        return;
+    }
 }
 
 void setLineValue(char *deviceName, char *line, char *value)
 {
     int l, v;
     GpioAbstract::Error result;
+
+    result = Gpio::getInstance()->start();
+    if (result != GpioAbstract::Error::E_OK)
+    {
+        L_ERROR("opening GPIO");
+        return;
+    }
 
     if (sscanf(line, "%d", &l) != 1)
     {
@@ -69,6 +90,13 @@ void setLineValue(char *deviceName, char *line, char *value)
     }
 
     L_NOTICE("line %d set to %d", l, v);
+
+    result = Gpio::getInstance()->stop();
+    if (result != GpioAbstract::Error::E_OK)
+    {
+        L_ERROR("stopping GPIO");
+        return;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -101,8 +129,6 @@ int main(int argc, char *argv[])
 
         break;
     }
-
-    Gpio::getInstance()->stop();
 
     L_INFO("Finishing...");
 
