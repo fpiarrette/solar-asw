@@ -80,16 +80,18 @@ int main(int argc, char *argv[])
 
     L_INFO("Starting...");
 
-    Gpio::configure(Gpio::Type::MODULE);
-    Gpio::getInstance()->setDeviceName(argv[1]);
-
     switch (argc)
     {
     case 3:
-        getLineValue(argv[1], argv[2]);
-        break;
     case 4:
-        setLineValue(argv[1], argv[2], argv[3]);
+        Gpio::configure(Gpio::Type::MODULE);
+        Gpio::getInstance()->setDeviceName(argv[1]);
+
+        if (argc == 3)
+            getLineValue(argv[1], argv[2]);
+        else
+            setLineValue(argv[1], argv[2], argv[3]);
+
         break;
 
     default:
