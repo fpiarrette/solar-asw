@@ -1,11 +1,14 @@
 #!/bin/sh
 
 # obtain project base dir
-script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$(readlink -f $script_dir/../..)
+SCRIPT_DIR=$(readlink -f $(pwd)/$(dirname "$0"))
+PROJECT_DIR=$(readlink -f $SCRIPT_DIR/../..)
 
 # general environment validation
-. $project_dir/config/validate.sh
+. $PROJECT_DIR/config/validate.sh
 
-#specific run depending on $PLATFORM
-. $project_dir/tools/launcher/$PLATFORM/launch.sh
+# specific deploy depending on $PLATFORM
+. $PROJECT_DIR/tools/launcher/$PLATFORM/deploy.sh
+
+# specific run depending on $PLATFORM
+. $PROJECT_DIR/tools/launcher/$PLATFORM/launch.sh
