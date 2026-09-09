@@ -41,3 +41,21 @@ then
   echo "You have to prepare environment first!"
   exit 1
 fi
+
+if [ ! -n "$PLATFORM_ID" ]
+then
+  echo "You have to prepare environment first!"
+  exit 1
+fi
+
+if [ ! -n "$PLATFORM_HOST" ]
+then
+  echo "You have to prepare environment first!"
+  exit 1
+fi
+
+if [ ! -n "$PLATFORM_TARGET" ]
+then
+  echo "You have to prepare environment first!"
+  exit 1
+fi
