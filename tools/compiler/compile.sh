@@ -18,17 +18,20 @@ optimization=0
 
 hardening=0
 
+test=0
+
 show_help()
 {
-    echo "$0 [-i] [-c {\"make clean all\"}] [-z] [-e] [-h]"
+    echo "$0 [-i] [-c {\"make clean all\"}] [-z] [-e] [-t] [-h]"
     echo "\t[-i] interactive"
     echo "\t[-c {\"make clean all\"}] define command"
     echo "\t[-z] activate optimization"
     echo "\t[-e] include GCC hardening options"
+    echo "\t[-t] also compile test software"
     echo "\t[-h] show this help"
 }
 
-while getopts "h?ic:ze" opt; do
+while getopts "h?ic:zet" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -44,6 +47,9 @@ while getopts "h?ic:ze" opt; do
     z)
       optimization=1
       ;;
+    t)
+      test=1
+      ;;
     e)
       hardening=1
       ;;
@@ -53,6 +59,17 @@ done
 shift $((OPTIND-1))
 
 [ "${1:-}" = "--" ] && shift
+
+# include test software only for target platform
+if [ "$test" -eq "1" ]
+then
+  if [ "$PLATFORM_ID" -eq "$PLATFORM_TARGET" ]
+  then
+    cmd="$cmd test_gpio test_spi"
+  else
+    echo "Test can not be compiled for host"
+  fi
+fi
 
 # info
 echo "--------------------------------------------------------------------------------"
@@ -78,6 +95,9 @@ podman run ${flags} \
   -e "OUTPUT_DIR=${workspace_dir}/${OUTPUT_DIR}" \
   -e "BINARY_NAME=${BINARY_NAME}" \
   -e "PLATFORM=${PLATFORM}" \
+  -e "PLATFORM_ID=${PLATFORM_ID}" \
+  -e "PLATFORM_HOST=${PLATFORM_HOST}" \
+  -e "PLATFORM_TARGET=${PLATFORM_TARGET}" \
   -e "DEBUG=${DEBUG}" \
   -e "OPTIMIZATION=${optimization}" \
   -e "HARDENING=${hardening}" \
