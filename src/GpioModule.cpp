@@ -32,6 +32,8 @@ GpioAbstract::Error GpioModule::start(void)
 
         if (fdChip < 0)
         {
+            LOGGER_DEBUG_ERRNO;
+
             L_ERROR("error openning gpio");
 
             return GpioAbstract::Error::E_INT;
@@ -49,7 +51,7 @@ GpioAbstract::Error GpioModule::configure(int line, Type type)
 {
     struct gpio_v2_line_request request;
 
-    L_DEBUG("configuring line %d as %s", line, type == GpioAbstract::Type::IN? "IN" : "OUT");
+    L_DEBUG("configuring line %d as %s", line, type == GpioAbstract::Type::IN ? "IN" : "OUT");
 
     if (line < 0 || line >= GPIO_NUM_LINES)
     {
@@ -73,6 +75,8 @@ GpioAbstract::Error GpioModule::configure(int line, Type type)
 
         if (ioctl(fdChip, GPIO_V2_GET_LINE_IOCTL, &request) < 0)
         {
+            LOGGER_DEBUG_ERRNO;
+
             L_ERROR("requesting GPIO control to kernel");
 
             return GpioAbstract::Error::E_INT;
@@ -110,6 +114,8 @@ GpioAbstract::Error GpioModule::get(int line, int *v)
 
     if (ioctl(fdLine[line], GPIO_V2_LINE_GET_VALUES_IOCTL, &values) < 0)
     {
+        LOGGER_DEBUG_ERRNO;
+
         return GpioAbstract::Error::E_INT;
     }
 
@@ -143,6 +149,8 @@ GpioAbstract::Error GpioModule::set(int line, int v)
 
     if (ioctl(fdLine[line], GPIO_V2_LINE_SET_VALUES_IOCTL, &values) < 0)
     {
+        LOGGER_DEBUG_ERRNO;
+
         L_ERROR("setting GPIO line value");
     }
 
@@ -155,17 +163,25 @@ GpioAbstract::Error GpioModule::stop(void)
     {
         if (fdLine[n] > 0)
         {
-            close(fdLine[n]);
+            if (close(fdLine[n]) < 0)
+
+                LOGGER_DEBUG_ERRNO;
+
             fdLine[n] = -1;
         }
     }
 
     if (fdChip > 0)
     {
-        close(fdChip);
+        if (close(fdChip) < 0)
+
+            LOGGER_DEBUG_ERRNO;
+
         fdChip = -1;
     }
+
     L_NOTICE(LOG_PREFIX "stopped");
+
     return GpioAbstract::Error::E_OK;
 }
 
