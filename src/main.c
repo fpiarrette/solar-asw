@@ -41,10 +41,14 @@ int main(int argc, char *argv[])
 
 #ifdef DEBUG
         L_DEBUG("Debug version");
-#elif
-#ifdef NDEBUG
+#else
         L_NOTICE("Release version");
 #endif
+
+#if PLATFORM_ID == PLATFORM_HOST
+        L_NOTICE("Platform: host");
+#else
+        L_NOTICE("Platform: target");
 #endif
 
         if (Config::getInstance()->isShowHelp())
@@ -140,7 +144,10 @@ static void configure_and_run(void)
     scheduller.addTask(&taskIdle, 31);
     taskIdle.setScheduller(&scheduller);
 
-#ifdef FORCE_TEST_CONTEXT
+#if PLATFORM_ID == PLATFORM_HOST
+
+    L_WARNING("In host platform SPI channel is replaced by socket client and server channels");
+
     /* This compile time option allows to overwrite proper context and configure the process with a test context just for host platform and debug purpose */
     if (Config::getInstance()->isFromModem())
     {
@@ -152,7 +159,6 @@ static void configure_and_run(void)
         /* specific task configuration */
         taskToModem.setSink(&channelSocketClient);
     }
-
 #endif
 
     /* execute all schedulled tasks */
