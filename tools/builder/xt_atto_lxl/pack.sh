@@ -12,6 +12,7 @@ tar -C $OUTPUT_DIR -cvf $OUTPUT_DIR/$PACK_NAME solar-asw
 
 # add test binaries
 tar -C $OUTPUT_DIR -rvf $OUTPUT_DIR/$PACK_NAME test_spi
+tar -C $OUTPUT_DIR -rvf $OUTPUT_DIR/$PACK_NAME test_spi_ioctl
 tar -C $OUTPUT_DIR -rvf $OUTPUT_DIR/$PACK_NAME test_gpio
 tar -C $OUTPUT_DIR -rvf $OUTPUT_DIR/$PACK_NAME test_gpio_ioctl
 
