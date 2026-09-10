@@ -10,7 +10,6 @@ int do_read(int fd, char *_line)
 {
     struct gpiohandle_request request;
     struct gpiohandle_data data;
-
     int line;
 
     if (sscanf(_line, "%d", &line) != 1)
