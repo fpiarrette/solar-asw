@@ -60,12 +60,15 @@ shift $((OPTIND-1))
 
 [ "${1:-}" = "--" ] && shift
 
+# check basic environment configuration
+. ${project_dir}/config/validate.sh
+
 # include test software only for target platform
 if [ "$test" -eq "1" ]
 then
   if [ "$PLATFORM_ID" -eq "$PLATFORM_TARGET" ]
   then
-    cmd="$cmd test_gpio test_spi"
+    cmd="$cmd tests"
   else
     echo "Test can not be compiled for host"
   fi
@@ -80,9 +83,6 @@ echo "Debug: ${DEBUG}"
 echo "Docker image: ${DOCKER_IMAGE_NAME}"
 echo "Output dir: ${OUTPUT_DIR}"
 echo "--------------------------------------------------------------------------------"
-
-# check basic environment configuration
-. ${project_dir}/config/validate.sh
 
 # create output dir just in case make clean is not executed
 mkdir -p "${project_dir}/${OUTPUT_DIR}"
