@@ -55,3 +55,8 @@ if [ ! -n "$PLATFORM_TARGET" ]
 then
   show_error
 fi
+
+if [ ! -n "$PACK_NAME" ]
+then
+  show_error
+fi
