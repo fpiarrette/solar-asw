@@ -2,11 +2,6 @@
 
 # this script shall not be executed direclty, is intendeed to be called from main/parent script
 
-# create an empty tar
-#tar -cf $OUTPUT_DIR/solar.tar -T /dev/null
-
-echo "$PROJECT_DIR/$OUTPUT_DIR"
-
 # add binary
 tar -C $OUTPUT_DIR -cvf $OUTPUT_DIR/$PACK_NAME solar-asw
 
