@@ -4,26 +4,22 @@
 
 . $PROJECT_DIR/tools/launcher/xt_atto_lxl/config.sh
 
-if [ -f $PROJECT_DIR/$OUTPUT_DIR/$BINARY_NAME ]
+# create destination
+ssh_command="cd $INSTALLATION_DIR; mkdir -p $INSTALLATION_NAME"
+sshpass -p "$TARGET_SSH_PASSWORD" ssh -t admin@$SOLAR_TARGET_IP_ADDRESS $ssh_command
+
+if [ -f $SOURCE_FILE ]
 then
-    echo "copying $BINARY_NAME"
+    echo "copying $SOURCE_FILE"
     sshpass -p "$TARGET_SSH_PASSWORD" scp $SOURCE_FILE admin@$SOLAR_TARGET_IP_ADDRESS:$DESTINATION_DIR
 else
-    echo "$BINARY_NAME not available"
+    echo "$SOURCE_FILE not available"
 fi
 
-if [ -f $PROJECT_DIR/$OUTPUT_DIR/test_gpio ]
-then
-    echo "copying test_gpio"
-    sshpass -p "$TARGET_SSH_PASSWORD" scp $PROJECT_DIR/$OUTPUT_DIR/test_gpio admin@$SOLAR_TARGET_IP_ADDRESS:$DESTINATION_DIR
-else
-    echo "test_gpio not available"
-fi
+# untar installation
+ssh_command="cd $INSTALLATION_DIR/$INSTALLATION_NAME; tar -xvf $PACK_NAME"
+sshpass -p "$TARGET_SSH_PASSWORD" ssh -t admin@$SOLAR_TARGET_IP_ADDRESS $ssh_command
 
-if [ -f $PROJECT_DIR/$OUTPUT_DIR/test_spi ]
-then
-    echo "copying test_spi"
-    sshpass -p "$TARGET_SSH_PASSWORD" scp $PROJECT_DIR/$OUTPUT_DIR/test_spi admin@$SOLAR_TARGET_IP_ADDRESS:$DESTINATION_DIR
-else
-    echo "test_spi not available"
-fi
+# run installation
+#ssh_command="cd $INSTALLATION_DIR/$INSTALLATION_NAME; ./install.sh"
+#sshpass -p "$TARGET_SSH_PASSWORD" ssh -t admin@$SOLAR_TARGET_IP_ADDRESS $
