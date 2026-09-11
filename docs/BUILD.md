@@ -52,6 +52,27 @@ host$ file ./build/xt_atto_lxl/release/solar-asw
 ...
 ```
 
+### Target LINUX OS preparation for running SOLAR ASW
+
+* Permission over GPIO
+
+By default `admin` user do not have permision to operate and manage `/dev/gpiochip*`. SOLAR ASW .tar artifact contains an installtion script that creates `gpio` group, adds this group to `admin` user and creates `udev` rule to allow managet for `gpio` user group.
+
+```
+target:admin> cd /home/admin/solar-asw
+target:admin> su
+target:root> ./install.sh
+target:root> exit
+target:admin> exit
+```
+
+* SPI avtivation
+
+SPI inrterfaces are desabled by default. In order to enable SPI interface an specific Telnet console is available.
+For details about the process [LXL series manual (AK-Dinrail-LXL and ATTO-LXL)](./ak-nord/manual_lxl.pdf), page 33, HARDWARE MENU descrives how to enable a wide range of interface including SPI.
+
+In addition [Mini-EVA-Kit for ATTO-LXL user manual](./mini_evakit_atto_en.pdf) descrives how LXL pins are mapped to external board connector.
+
 ## General for HOST platform
 
 ```
@@ -116,3 +137,10 @@ An SSH client, such as PuTTY, can be used to connect to the board using the defa
 ```bash
 su -
 ```
+# References
+
+[LXL series manual (AK-Dinrail-LXL and ATTO-LXL)](./ak-nord/manual_lxl.pdf)
+
+[XT ATTO LXL Technical data sheet](./DS_XT-ATTO-LXL_EN.pdf)
+
+[Mini-EVA-Kit for ATTO-LXL user manual](./mini_evakit_atto_en.pdf)
