@@ -6,93 +6,111 @@
 #include <string.h>
 #include <linux/gpio.h>
 
-int try_close(int fd)
+int do_read(int fd, char *_line)
 {
-    if (close(fd) < 0)
-    {
-        perror("closing device");
-        return -1;
-    }
-    return 0;
-}
+    struct gpiohandle_request request;
+    struct gpiohandle_data data;
 
-int do_read(int fd, char *l)
-{
-    struct gpio_v2_line_request request;
-    struct gpio_v2_line_values values;
-    int line, fd_line, v;
+    int line;
 
-    if (sscanf(l, "%d", &line) != 1)
+    if (sscanf(_line, "%d", &line) != 1)
     {
-        fprintf(stderr, "invalid argument: %s\n", l);
+        fprintf(stderr, "invalid argument: %s\n", _line);
 
         return -1;
     }
 
     memset(&request, 0, sizeof(request));
-/*
-    request.num_lines = 1;
-    request.offsets[0] = line;
-    */
-    /*request.config.flags = GPIO_V2_LINE_FLAG_INPUT;*/
 
-    printf("line value %d\n", line);
+    request.lineoffsets[0] = line;
+    request.lines = 1;
+    request.flags = GPIOHANDLE_REQUEST_INPUT;
 
-    int r;
-    if ((r = ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &request)) < 0)
+    if (ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &request) < 0)
     {
-        perror("configuring line");
+        perror("getting the line");
 
         return -1;
     }
 
-    fd_line = request.fd;
+    printf("line file descriptor %d\n", request.fd);
 
-    printf("ioctl %d fd %d\n", r, fd_line);
-
-    if (fd_line < 0)
+    if (ioctl(request.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) < 0)
     {
+        perror("reading the line");
 
-        fprintf(stderr, "line file descriptor is invalid\n");
+        close(request.fd);
 
         return -1;
     }
 
-    /*****************************************/
+    printf("line %d value %d read\n", line, data.values[0]);
 
-#if 0
-
-    memset(&values, 0, sizeof(values));
-
-    values.mask = 1;
-
-    if (ioctl(fd_line, GPIO_V2_LINE_GET_VALUES_IOCTL, &values) < 0)
+    if (close(request.fd) < 0)
     {
-        perror("configuring line");
+        perror("closing line file descriptor");
 
         return -1;
     }
-
-    v = (values.bits & 1);
-
-    printf("line value is %d", v);
-#endif
-
-    /*****************************************/
-
-#if 0
-    if (close(fd_line) < 0)
-    {
-        perror("closing line");
-        return -1;
-    }
-#endif
 
     return 0;
 }
 
-int do_write(int fd, char *line, char *value)
+int do_write(int fd, char *_line, char *_value)
 {
+    struct gpiohandle_request request;
+    struct gpiohandle_data data;
+
+    int line, value;
+
+    if (sscanf(_line, "%d", &line) != 1)
+    {
+        fprintf(stderr, "invalid argument: %s\n", _line);
+
+        return -1;
+    }
+
+    if (sscanf(_value, "%d", &value) != 1)
+    {
+        fprintf(stderr, "invalid argument: %s\n", _value);
+
+        return -1;
+    }
+
+    request.lines = 1;
+    request.lineoffsets[0] = line;
+    request.flags = GPIOHANDLE_REQUEST_OUTPUT;
+
+    if (ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &request))
+    {
+        perror("getting the line");
+
+        return -1;
+    }
+
+    printf("line file descriptor %d\n", request.fd);
+
+    data.values[0] = (value != 0) ? 1 : 0;
+
+    if (ioctl(request.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
+    {
+        perror("writing the line");
+
+        if (close(request.fd) < 0)
+        {
+            perror("closing line file descriptor");
+        }
+
+        return -1;
+    }
+
+    if (close(request.fd) < 0)
+    {
+        perror("closing line file descriptor");
+    }
+
+    printf("line %d set to %d value\n", line, data.values[0]);
+
     return 0;
 }
 
