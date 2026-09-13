@@ -132,10 +132,10 @@ test_spi: $(FILES_TEST_SPI)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi
 
 test_spi_ioctl: $(FILES_TEST_SPI_IOCTL)
-	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI_IOCTL) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi_ioctl
+	$(DEFAULT_CC) $(FILES_TEST_SPI_IOCTL) -I$(SRC_DIR) -o $(OUTPUT_DIR)/test_spi_ioctl
 
 test_gpio: $(FILES_TEST_GPIO)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_gpio
 
 test_gpio_ioctl: $(FILES_TEST_GPIO_IOCTL)
-	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO_IOCTL) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_gpio_ioctl
+	$(DEFAULT_CC) $(FILES_TEST_GPIO_IOCTL) -I$(SRC_DIR) -o $(OUTPUT_DIR)/test_gpio_ioctl
