@@ -107,7 +107,7 @@ host$ ./tools/net/kill.sh
 
 ### Telnet on port 23
 
-A Telnet client, such as PuTTY, can be used to connect to the board using the default password `xt`. Once connected, a menu is available to access general settings and services. Typically, both the Telnet and SSHD services should be installed and running.
+A Telnet client, such as PuTTY or using Linux telnet command, can be used to connect to the board using the default password `xt`. Once connected, a menu is available to access general settings and services. Typically, both the Telnet and SSHD services should be installed and running.
 
 ### SSH on port 22
 
