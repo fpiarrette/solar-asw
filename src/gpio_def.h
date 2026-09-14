@@ -5,7 +5,8 @@
 #include "GpioAbstract.h"
 
 /* GPIO dfinition */
-#define GPIO_DEF_ERROR (GPIO_DEF_16)
-#define GPIO_DEF_WARNING (GPIO_DEF_16)
+#define GPIO_PORT (3)
+#define GPIO_LINE_ERROR (28)
+#define GPIO_LINE_WARNING (28)
 
 #endif
