@@ -6,6 +6,11 @@ show_error()
   exit 1
 }
 
+if [ ! -n "$PROJECT_DIR" ]
+then
+  show_error
+fi
+
 if [ ! -n "$PLATFORM" ]
 then
   show_error
