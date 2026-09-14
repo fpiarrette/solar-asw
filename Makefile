@@ -113,9 +113,11 @@ FILES_TEST_GPIO=$(SRC_DIR)/test_gpio.c \
 	$(SRC_DIR)/LoggerStdout.cpp \
 	$(SRC_DIR)/LoggerSyslog.cpp
 
-FILES_TEST_GPIO_IOCTL=$(SRC_DIR)/test_gpio_ioctl.c
+FILES_TEST_GPIO_IOCTL=$(SRC_DIR)/test_gpio_ioctl.c \
+	$(SRC_DIR)/test_common.c
 
-FILES_TEST_SPI_IOCTL=$(SRC_DIR)/test_spi_ioctl.c
+FILES_TEST_SPI_IOCTL=$(SRC_DIR)/test_spi_ioctl.c \
+	$(SRC_DIR)/test_common.c
 
 .PHONY: clean
 
@@ -132,10 +134,10 @@ test_spi: $(FILES_TEST_SPI)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi
 
 test_spi_ioctl: $(FILES_TEST_SPI_IOCTL)
-	$(DEFAULT_CC) $(FILES_TEST_SPI_IOCTL) -I$(SRC_DIR) -o $(OUTPUT_DIR)/test_spi_ioctl
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI_IOCTL) -I$(SRC_DIR) $(LDFLAGS) -o $(OUTPUT_DIR)/test_spi_ioctl
 
 test_gpio: $(FILES_TEST_GPIO)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_gpio
 
 test_gpio_ioctl: $(FILES_TEST_GPIO_IOCTL)
-	$(DEFAULT_CC) $(FILES_TEST_GPIO_IOCTL) -I$(SRC_DIR) -o $(OUTPUT_DIR)/test_gpio_ioctl
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO_IOCTL) -I$(SRC_DIR) $(LDFLAGS) -o $(OUTPUT_DIR)/test_gpio_ioctl
