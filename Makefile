@@ -20,12 +20,24 @@ ifndef OUTPUT_DIR
 $(error OUTPUT_DIR is not defined!)
 endif
 
+ifndef PLATFORM_ID
+$(error PLATFORM_ID is not defined!)
+endif
+
+ifndef PLATFORM_HOST
+$(error PLATFORM_HOST is not defined!)
+endif
+
+ifndef PLATFORM_TARGET
+$(error PLATFORM_TARGET is not defined!)
+endif
+
 # configure variables values depending on platform
 include config/make/$(PLATFORM).mk
 
 # for any platform...
-CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM)
-CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM)
+CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
+CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
 LDLIBS += -lmicrohttpd
 
 # Manage DEBUG options
@@ -85,6 +97,27 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/TaskKiller.cpp \
 	$(SRC_DIR)/TaskToModem.cpp
 
+FILES_TEST_SPI=$(SRC_DIR)/test_spi.c \
+	$(SRC_DIR)/ChannelSpi.cpp \
+	$(SRC_DIR)/Logger.cpp \
+	$(SRC_DIR)/LoggerAbstract.cpp \
+	$(SRC_DIR)/LoggerStdout.cpp \
+	$(SRC_DIR)/LoggerSyslog.cpp
+
+FILES_TEST_GPIO=$(SRC_DIR)/test_gpio.c \
+	$(SRC_DIR)/Gpio.cpp \
+	$(SRC_DIR)/GpioMock.cpp \
+	$(SRC_DIR)/GpioModule.cpp \
+	$(SRC_DIR)/Logger.cpp \
+	$(SRC_DIR)/LoggerAbstract.cpp \
+	$(SRC_DIR)/LoggerStdout.cpp \
+	$(SRC_DIR)/LoggerSyslog.cpp
+
+FILES_TEST_GPIO_IOCTL=$(SRC_DIR)/test_gpio_ioctl.c \
+	$(SRC_DIR)/test_common.c
+
+FILES_TEST_SPI_IOCTL=$(SRC_DIR)/test_spi_ioctl.c \
+	$(SRC_DIR)/test_common.c
 
 .PHONY: clean
 
@@ -94,3 +127,17 @@ clean:
 
 all: $(FILES)
 	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/$(BINARY_NAME)
+
+tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl
+
+test_spi: $(FILES_TEST_SPI)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi
+
+test_spi_ioctl: $(FILES_TEST_SPI_IOCTL)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI_IOCTL) -I$(SRC_DIR) $(LDFLAGS) -o $(OUTPUT_DIR)/test_spi_ioctl
+
+test_gpio: $(FILES_TEST_GPIO)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_gpio
+
+test_gpio_ioctl: $(FILES_TEST_GPIO_IOCTL)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO_IOCTL) -I$(SRC_DIR) $(LDFLAGS) -o $(OUTPUT_DIR)/test_gpio_ioctl
