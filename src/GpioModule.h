@@ -10,6 +10,7 @@
 
 #define GPIO_NUM_PORTS (4)
 #define GPIO_NUM_LINES (32)
+#define GPIO_OFFSET(_p, _l) (_p * GPIO_NUM_LINES + _l)
 
 typedef struct port_s
 {
