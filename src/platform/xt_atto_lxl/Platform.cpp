@@ -1,7 +1,7 @@
 #include "Platform.h"
 
 #include "Gpio.h"
-#include "gpio_def.h"
+#include "platform_def.h"
 #include "Logger.h"
 
 #define LOG_PREFIX "Platform xt_atto_lxl"
@@ -21,8 +21,8 @@ void Platform::init(void)
 {
     Gpio::configure(Gpio::Type::MODULE);
 
-    Gpio::getInstance()->configure(GPIO_PORT, GPIO_LINE_ERROR, GpioAbstract::Type::OUT);
-    Gpio::getInstance()->configure(GPIO_PORT, GPIO_LINE_WARNING, GpioAbstract::Type::OUT);
+    Gpio::getInstance()->configure(PLATFORM_GPIO_PORT, PLATFORM_GPIO_LINE_ERROR, GpioAbstract::Type::OUT);
+    Gpio::getInstance()->configure(PLATFORM_GPIO_PORT, PLATFORM_GPIO_LINE_WARNING, GpioAbstract::Type::OUT);
 }
 
 void Platform::shutdown(void)
