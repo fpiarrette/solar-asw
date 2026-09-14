@@ -2,7 +2,7 @@
 #ifndef GPIO_ABSTRACT_H
 #define GPIO_ABSTRACT_H
 
-#define GPIO_NUM_LINES (32)
+#define GPIO_NUM_LINES (128)
 #define GPIO_DEV_NAME_SIZE (256)
 
 #define GPIO_DEF_00 (0)
