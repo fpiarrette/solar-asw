@@ -21,7 +21,7 @@ void Platform::init(void)
     Gpio::configure(Gpio::Type::MOCK);
 
     /* Line 0 as input is just an example */
-    Gpio::getInstance()->configure(0, GpioAbstract::Type::IN);
+    Gpio::getInstance()->configure(0, 0, GpioAbstract::Type::IN);
 }
 
 void Platform::shutdown(void)
