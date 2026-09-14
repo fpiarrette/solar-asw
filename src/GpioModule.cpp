@@ -13,10 +13,11 @@ GpioModule::GpioModule()
 {
     fdChip = -1;
 
-    for (int n = 0; n < GPIO_NUM_LINES; n++)
-    {
-        fdLine[n] = -1;
-    }
+    for (int i = 0; i < GPIO_NUM_PORTS; i++)
+        for (int j = 0; j < GPIO_NUM_LINES; j++)
+        {
+            port[i].offset[j] = -1;
+        }
 
     memset(deviceName, 0, sizeof(deviceName));
 }
@@ -47,7 +48,7 @@ GpioAbstract::Error GpioModule::start(void)
     }
 }
 
-GpioAbstract::Error GpioModule::configure(int line, Type type)
+GpioAbstract::Error GpioModule::configure(int _port, int _line, Type _type)
 {
     struct gpiohandle_request request;
 
@@ -58,24 +59,28 @@ GpioAbstract::Error GpioModule::configure(int line, Type type)
         return GpioAbstract::Error::E_STA;
     }
 
-    L_DEBUG("configuring line %d as %s", line, type == GpioAbstract::Type::IN ? "IN" : "OUT");
+    L_DEBUG("configuring port %d, ine %d as %s", _port, _line, _type == GpioAbstract::Type::IN ? "IN" : "OUT");
 
-    if (line < 0 || line >= GPIO_NUM_LINES)
+    if (_port < 0 || _port >= GPIO_NUM_PORTS)
     {
         return GpioAbstract::Error::E_ARG;
     }
 
-    if (fdLine[line] < 0)
+    if (_line < 0 || _line >= GPIO_NUM_LINES)
     {
+        return GpioAbstract::Error::E_ARG;
+    }
 
+    if (port[_port].offset[_line] < 0)
+    {
         memset(&request, 0, sizeof(request));
 
-        request.lineoffsets[0] = line;
+        request.lineoffsets[0] = _port * _line;
         request.lines = 1;
 
-        if (type == GpioAbstract::Type::OUT)
+        if (_type == GpioAbstract::Type::OUT)
             request.flags = GPIOHANDLE_REQUEST_OUTPUT;
-        else if (type == GpioAbstract::Type::IN)
+        else if (_type == GpioAbstract::Type::IN)
             request.flags = GPIOHANDLE_REQUEST_INPUT;
         else
             return GpioAbstract::Error::E_INT;
@@ -90,7 +95,7 @@ GpioAbstract::Error GpioModule::configure(int line, Type type)
         }
 
         /* store line file descriptor */
-        fdLine[line] = request.fd;
+        port[_port].offset[_line] = request.fd;
 
         return GpioAbstract::Error::E_OK;
     }
@@ -100,16 +105,21 @@ GpioAbstract::Error GpioModule::configure(int line, Type type)
     }
 }
 
-GpioAbstract::Error GpioModule::get(int line, int *v)
+GpioAbstract::Error GpioModule::get(int _port, int _line, int *v)
 {
     struct gpiohandle_data data;
 
-    if (line < 0 || line >= GPIO_NUM_LINES)
+    if (_port < 0 || _port >= GPIO_NUM_PORTS)
     {
         return GpioAbstract::Error::E_ARG;
     }
 
-    if (fdLine[line] < 0)
+    if (_line < 0 || _line >= GPIO_NUM_LINES)
+    {
+        return GpioAbstract::Error::E_ARG;
+    }
+
+    if (port[_port].offset[_line] < 0)
     {
         /* line was not configured */
         return GpioAbstract::Error::E_STA;
@@ -117,14 +127,14 @@ GpioAbstract::Error GpioModule::get(int line, int *v)
 
     memset(&data, 0, sizeof(data));
 
-    if (ioctl(fdLine[line], GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) < 0)
+    if (ioctl(port[_port].offset[_line], GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) < 0)
     {
         LOGGER_DEBUG_ERRNO;
 
         return GpioAbstract::Error::E_INT;
     }
 
-    L_DEBUG("Line %d is %d", line, data.values[0]);
+    L_DEBUG("Port %d, line %d is %d", _port, _line, data.values[0]);
 
     /* assign result */
     *v = data.values[0];
@@ -132,18 +142,23 @@ GpioAbstract::Error GpioModule::get(int line, int *v)
     return GpioAbstract::Error::E_OK;
 }
 
-GpioAbstract::Error GpioModule::set(int line, int v)
+GpioAbstract::Error GpioModule::set(int _port, int _line, int v)
 {
     struct gpiohandle_data data;
 
-    L_DEBUG("setting line %d to value %d", line, v);
+    L_DEBUG("setting port %d, line %d to value %d", _port, _line, v);
 
-    if (line < 0 || line >= GPIO_NUM_LINES)
+    if (_port < 0 || _port >= GPIO_NUM_PORTS)
     {
         return GpioAbstract::Error::E_ARG;
     }
 
-    if (fdLine[line] < 0)
+    if (_line < 0 || _line >= GPIO_NUM_LINES)
+    {
+        return GpioAbstract::Error::E_ARG;
+    }
+
+    if (port[_port].offset[_line] < 0)
     {
         /* line was not configured */
         return GpioAbstract::Error::E_STA;
@@ -153,7 +168,7 @@ GpioAbstract::Error GpioModule::set(int line, int v)
 
     data.values[0] = (v != 0) ? 1 : 0;
 
-    if (ioctl(fdLine[line], GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
+    if (ioctl(port[_port].offset[_line], GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
     {
         LOGGER_DEBUG_ERRNO;
 
@@ -165,17 +180,18 @@ GpioAbstract::Error GpioModule::set(int line, int v)
 
 GpioAbstract::Error GpioModule::stop(void)
 {
-    for (int n = 0; n < GPIO_NUM_LINES; n++)
-    {
-        if (fdLine[n] > 0)
+    for (int i = 0; i < GPIO_NUM_PORTS; i++)
+        for (int j = 0; j < GPIO_NUM_LINES; j++)
         {
-            if (close(fdLine[n]) < 0)
+            if (port[i].offset[j] > 0)
+            {
+                if (close(port[i].offset[j]) < 0)
 
-                LOGGER_DEBUG_ERRNO;
+                    LOGGER_DEBUG_ERRNO;
 
-            fdLine[n] = -1;
+                port[i].offset[j] = -1;
+            }
         }
-    }
 
     if (fdChip > 0)
     {

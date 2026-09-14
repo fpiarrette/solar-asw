@@ -10,19 +10,19 @@ GpioAbstract::Error GpioMock::start(void)
     return GpioAbstract::Error::E_OK;
 }
 
-GpioAbstract::Error GpioMock::configure(int line, GpioAbstract::Type type)
+GpioAbstract::Error GpioMock::configure(int port, int line, GpioAbstract::Type type)
 {
-    L_DEBUG("configuring line %d as %s", line, type == GpioAbstract::Type::IN? "IN" : "OUT");
+    L_DEBUG("configuring port %d, line %d as %s", port, line, type == GpioAbstract::Type::IN? "IN" : "OUT");
 
     return GpioAbstract::Error::E_OK;
 }
 
-GpioAbstract::Error GpioMock::get(int line, int *v)
+GpioAbstract::Error GpioMock::get(int port, int line, int *v)
 {
     return GpioAbstract::Error::E_OK;
 }
 
-GpioAbstract::Error GpioMock::set(int line, int v)
+GpioAbstract::Error GpioMock::set(int port, int line, int v)
 {
     L_DEBUG("setting line %d to value %d", line, v);
 
