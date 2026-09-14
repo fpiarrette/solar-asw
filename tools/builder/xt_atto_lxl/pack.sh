@@ -15,3 +15,5 @@ tar -C $OUTPUT_DIR -rvf $OUTPUT_DIR/$PACK_NAME test_gpio_ioctl
 tar -C $PROJECT_DIR/src/resources -rvf $OUTPUT_DIR/$PACK_NAME 90-gpio.rules
 tar -C $PROJECT_DIR/src/resources -rvf $OUTPUT_DIR/$PACK_NAME run.sh
 tar -C $PROJECT_DIR/src/resources -rvf $OUTPUT_DIR/$PACK_NAME install.sh
+tar -C $PROJECT_DIR/src/resources -rvf $OUTPUT_DIR/$PACK_NAME install_gpio.sh
+tar -C $PROJECT_DIR/src/resources -rvf $OUTPUT_DIR/$PACK_NAME install_spi.sh
