@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# obtain project base dir
-script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
-project_dir=$(readlink -f $script_dir/../..)
-
 # reset getopts
 OPTIND=1
 
@@ -61,7 +57,7 @@ shift $((OPTIND-1))
 [ "${1:-}" = "--" ] && shift
 
 # check basic environment configuration
-. ${project_dir}/config/validate.sh
+. ${PROJECT_DIR}/config/validate.sh
 
 # include test software only for target platform
 if [ "$test" -eq "1" ]
@@ -85,11 +81,11 @@ echo "Output dir: ${OUTPUT_DIR}"
 echo "--------------------------------------------------------------------------------"
 
 # create output dir just in case make clean is not executed
-mkdir -p "${project_dir}/${OUTPUT_DIR}"
+mkdir -p "${PROJECT_DIR}/${OUTPUT_DIR}"
 
 # launch make process
 podman run ${flags} \
-  -v "${project_dir}:/ws" \
+  -v "${PROJECT_DIR}:${workspace_dir}" \
   -w "${workspace_dir}" \
   -e "SRC_DIR=${workspace_dir}/src" \
   -e "OUTPUT_DIR=${workspace_dir}/${OUTPUT_DIR}" \
