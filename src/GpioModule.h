@@ -13,7 +13,7 @@
 
 typedef struct port_s
 {
-    int offset[GPIO_NUM_LINES];
+    int line[GPIO_NUM_LINES];
 } port_t;
 
 class GpioModule : public GpioAbstract

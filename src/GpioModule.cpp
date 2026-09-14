@@ -16,7 +16,7 @@ GpioModule::GpioModule()
     for (int i = 0; i < GPIO_NUM_PORTS; i++)
         for (int j = 0; j < GPIO_NUM_LINES; j++)
         {
-            port[i].offset[j] = -1;
+            port[i].line[j] = -1;
         }
 
     memset(deviceName, 0, sizeof(deviceName));
@@ -71,7 +71,7 @@ GpioAbstract::Error GpioModule::configure(int _port, int _line, Type _type)
         return GpioAbstract::Error::E_ARG;
     }
 
-    if (port[_port].offset[_line] < 0)
+    if (port[_port].line[_line] < 0)
     {
         memset(&request, 0, sizeof(request));
 
@@ -95,7 +95,7 @@ GpioAbstract::Error GpioModule::configure(int _port, int _line, Type _type)
         }
 
         /* store line file descriptor */
-        port[_port].offset[_line] = request.fd;
+        port[_port].line[_line] = request.fd;
 
         return GpioAbstract::Error::E_OK;
     }
@@ -119,7 +119,7 @@ GpioAbstract::Error GpioModule::get(int _port, int _line, int *v)
         return GpioAbstract::Error::E_ARG;
     }
 
-    if (port[_port].offset[_line] < 0)
+    if (port[_port].line[_line] < 0)
     {
         /* line was not configured */
         return GpioAbstract::Error::E_STA;
@@ -127,7 +127,7 @@ GpioAbstract::Error GpioModule::get(int _port, int _line, int *v)
 
     memset(&data, 0, sizeof(data));
 
-    if (ioctl(port[_port].offset[_line], GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) < 0)
+    if (ioctl(port[_port].line[_line], GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) < 0)
     {
         LOGGER_DEBUG_ERRNO;
 
@@ -158,7 +158,7 @@ GpioAbstract::Error GpioModule::set(int _port, int _line, int v)
         return GpioAbstract::Error::E_ARG;
     }
 
-    if (port[_port].offset[_line] < 0)
+    if (port[_port].line[_line] < 0)
     {
         /* line was not configured */
         return GpioAbstract::Error::E_STA;
@@ -168,7 +168,7 @@ GpioAbstract::Error GpioModule::set(int _port, int _line, int v)
 
     data.values[0] = (v != 0) ? 1 : 0;
 
-    if (ioctl(port[_port].offset[_line], GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
+    if (ioctl(port[_port].line[_line], GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
     {
         LOGGER_DEBUG_ERRNO;
 
@@ -183,13 +183,13 @@ GpioAbstract::Error GpioModule::stop(void)
     for (int i = 0; i < GPIO_NUM_PORTS; i++)
         for (int j = 0; j < GPIO_NUM_LINES; j++)
         {
-            if (port[i].offset[j] > 0)
+            if (port[i].line[j] > 0)
             {
-                if (close(port[i].offset[j]) < 0)
+                if (close(port[i].line[j]) < 0)
 
                     LOGGER_DEBUG_ERRNO;
 
-                port[i].offset[j] = -1;
+                port[i].line[j] = -1;
             }
         }
 
