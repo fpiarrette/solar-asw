@@ -49,7 +49,14 @@ GpioAbstract::Error GpioModule::start(void)
 
 GpioAbstract::Error GpioModule::configure(int line, Type type)
 {
-    struct gpio_v2_line_request request;
+    struct gpiohandle_request request;
+
+    if (fdChip < 0)
+    {
+        L_WARNING(LOG_PREFIX "wrong state");
+
+        return GpioAbstract::Error::E_STA;
+    }
 
     L_DEBUG("configuring line %d as %s", line, type == GpioAbstract::Type::IN ? "IN" : "OUT");
 
@@ -63,17 +70,17 @@ GpioAbstract::Error GpioModule::configure(int line, Type type)
 
         memset(&request, 0, sizeof(request));
 
-        request.num_lines = 1;
-        request.offsets[0] = line;
+        request.lineoffsets[0] = line;
+        request.lines = 1;
 
         if (type == GpioAbstract::Type::OUT)
-            request.config.flags = GPIO_V2_LINE_FLAG_OUTPUT;
+            request.flags = GPIOHANDLE_REQUEST_OUTPUT;
         else if (type == GpioAbstract::Type::IN)
-            request.config.flags = GPIO_V2_LINE_FLAG_INPUT;
+            request.flags = GPIOHANDLE_REQUEST_INPUT;
         else
             return GpioAbstract::Error::E_INT;
 
-        if (ioctl(fdChip, GPIO_V2_GET_LINE_IOCTL, &request) < 0)
+        if (ioctl(fdChip, GPIO_GET_LINEHANDLE_IOCTL, &request) < 0)
         {
             LOGGER_DEBUG_ERRNO;
 
@@ -95,7 +102,7 @@ GpioAbstract::Error GpioModule::configure(int line, Type type)
 
 GpioAbstract::Error GpioModule::get(int line, int *v)
 {
-    struct gpio_v2_line_values values;
+    struct gpiohandle_data data;
 
     if (line < 0 || line >= GPIO_NUM_LINES)
     {
@@ -108,26 +115,26 @@ GpioAbstract::Error GpioModule::get(int line, int *v)
         return GpioAbstract::Error::E_STA;
     }
 
-    memset(&values, 0, sizeof(values));
+    memset(&data, 0, sizeof(data));
 
-    values.mask = 1;
-
-    if (ioctl(fdLine[line], GPIO_V2_LINE_GET_VALUES_IOCTL, &values) < 0)
+    if (ioctl(fdLine[line], GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) < 0)
     {
         LOGGER_DEBUG_ERRNO;
 
         return GpioAbstract::Error::E_INT;
     }
 
+    L_DEBUG("Line %d is %d", line, data.values[0]);
+
     /* assign result */
-    *v = (values.bits & 1);
+    *v = data.values[0];
 
     return GpioAbstract::Error::E_OK;
 }
 
 GpioAbstract::Error GpioModule::set(int line, int v)
 {
-    struct gpio_v2_line_values values;
+    struct gpiohandle_data data;
 
     L_DEBUG("setting line %d to value %d", line, v);
 
@@ -142,12 +149,11 @@ GpioAbstract::Error GpioModule::set(int line, int v)
         return GpioAbstract::Error::E_STA;
     }
 
-    memset(&values, 0, sizeof(values));
+    memset(&data, 0, sizeof(data));
 
-    values.mask = 1;
-    values.bits = v;
+    data.values[0] = (v != 0) ? 1 : 0;
 
-    if (ioctl(fdLine[line], GPIO_V2_LINE_SET_VALUES_IOCTL, &values) < 0)
+    if (ioctl(fdLine[line], GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
     {
         LOGGER_DEBUG_ERRNO;
 
