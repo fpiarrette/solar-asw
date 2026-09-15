@@ -15,7 +15,7 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
-#define LOG_PREFIX "Channel SPI "
+#define LOG_PREFIX "Channel SPI master"
 
 ChannelSpiMaster::ChannelSpiMaster(void)
 {
