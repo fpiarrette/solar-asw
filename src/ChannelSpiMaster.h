@@ -1,13 +1,13 @@
 #include "Channel.h"
 
-#ifndef CHANNEL_SPI_H
-#define CHANNEL_SPI_H
+#ifndef CHANNEL_SPI_MASTER_H
+#define CHANNEL_SPI_MASTER_H
 
-class ChannelSpi : public Channel
+class ChannelSpiMaster : public Channel
 {
 public:
-    ChannelSpi();
-    ~ChannelSpi()
+    ChannelSpiMaster();
+    ~ChannelSpiMaster()
     {
         /* make sure that stop function is called */
         stop();

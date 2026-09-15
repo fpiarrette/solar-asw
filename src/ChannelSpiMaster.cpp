@@ -1,4 +1,4 @@
-#include "ChannelSpi.h"
+#include "ChannelSpiMaster.h"
 
 #include "Logger.h"
 
@@ -17,7 +17,7 @@
 
 #define LOG_PREFIX "Channel SPI "
 
-ChannelSpi::ChannelSpi(void)
+ChannelSpiMaster::ChannelSpiMaster(void)
 {
     memset(deviceName, 0, sizeof(deviceName));
     memset(receptionBuffer, 0, sizeof(receptionBuffer));
@@ -26,7 +26,7 @@ ChannelSpi::ChannelSpi(void)
     fd = -1;
 }
 
-Channel::Error ChannelSpi::init(void)
+Channel::Error ChannelSpiMaster::init(void)
 {
     if (fd > 0)
     {
@@ -57,12 +57,12 @@ Channel::Error ChannelSpi::init(void)
     return Channel::Error::E_OK;
 }
 
-void ChannelSpi::setDeviceName(const char *name)
+void ChannelSpiMaster::setDeviceName(const char *name)
 {
     strncpy(deviceName, name, sizeof(deviceName));
 }
 
-void ChannelSpi::dumpStatus(void)
+void ChannelSpiMaster::dumpStatus(void)
 {
     __u8 lsb, bits;
     __u32 mode, speed;
@@ -94,7 +94,7 @@ void ChannelSpi::dumpStatus(void)
     L_DEBUG("%s: spi mode 0x%x, %d bits %sper word, %u Hz max", deviceName, mode, bits, lsb ? "(lsb first) " : "", speed);
 }
 
-Channel::Error ChannelSpi::start(void)
+Channel::Error ChannelSpiMaster::start(void)
 {
     /* dump SPI dev status */
     dumpStatus();
@@ -104,7 +104,7 @@ Channel::Error ChannelSpi::start(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSpi::tx(char *data, int size, int *tranmitted)
+Channel::Error ChannelSpiMaster::tx(char *data, int size, int *tranmitted)
 {
     struct spi_ioc_transfer transfer;
     int dataToTransmit;
@@ -150,7 +150,7 @@ Channel::Error ChannelSpi::tx(char *data, int size, int *tranmitted)
     }
 }
 
-Channel::Error ChannelSpi::rx(char *data, int size, int *received)
+Channel::Error ChannelSpiMaster::rx(char *data, int size, int *received)
 {
 
     if (receivedDataSize > 0)
@@ -178,7 +178,7 @@ Channel::Error ChannelSpi::rx(char *data, int size, int *received)
     }
 }
 
-Channel::Error ChannelSpi::stop(void)
+Channel::Error ChannelSpiMaster::stop(void)
 {
     if (fd > 0)
     {

@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-#include "ChannelSpi.h"
+#include "ChannelSpiMaster.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +54,7 @@ int fromHexToString(char *str, char *hex, int size)
     return 0;
 }
 
-void sendAndReceive(ChannelSpi *spi, char *device_name, char *hex_string)
+void sendAndReceive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
 {
     char data_tx[256];
     int transmitted, size;
@@ -121,15 +121,15 @@ int main(int argc, char *argv[])
 
     L_INFO("Starting...");
 
-    ChannelSpi channelSpi;
+    ChannelSpiMaster channelSpiMaster;
 
     switch (argc)
     {
     case 3:
 
-        sendAndReceive(&channelSpi, argv[1], argv[2]);
+        sendAndReceive(&channelSpiMaster, argv[1], argv[2]);
 
-        channelSpi.stop();
+        channelSpiMaster.stop();
 
         break;
 

@@ -4,7 +4,7 @@
 #include "ChannelNull.h"
 #include "ChannelSocketClient.h"
 #include "ChannelSocketServer.h"
-#include "ChannelSpi.h"
+#include "ChannelSpiMaster.h"
 
 #include "Gpio.h"
 
@@ -94,7 +94,7 @@ static void configure_and_run(void)
     ChannelSocketClient channelSocketClient;
     ChannelSocketServer channelSocketServer;
     ChannelSocketServer channelSocketKillStop;
-    ChannelSpi channelSpi;
+    ChannelSpiMaster channelSpiMaster;
     ChannelNull channelNull;
 
     /* all channels are configured independently of the mode, because HOST mode could use a convination of them */
@@ -113,7 +113,7 @@ static void configure_and_run(void)
         taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
 
         /* wiring */
-        taskFromModem.setSource(&channelSpi);
+        taskFromModem.setSource(&channelSpiMaster);
         taskFromModem.setSink(&channelSocketClient);
         scheduller.addTask(&taskFromModem, 2);
     }
@@ -123,7 +123,7 @@ static void configure_and_run(void)
 
         /* wiring */
         taskToModem.setSource(&channelSocketServer);
-        taskToModem.setSink(&channelSpi);
+        taskToModem.setSink(&channelSpiMaster);
         scheduller.addTask(&taskToModem, 2);
     }
 
