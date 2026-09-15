@@ -106,29 +106,76 @@ Channel::Error ChannelSpi::start(void)
 
 Channel::Error ChannelSpi::tx(char *data, int size, int *tranmitted)
 {
+    struct spi_ioc_transfer transfer;
+    int dataToTransmit;
+
     receivedDataSize = 0;
+    *tranmitted = 0;
 
-    /* dummy transmision */
-    strncpy(receptionBuffer, data, sizeof(receptionBuffer));
-    receivedDataSize = size;
+    if ((unsigned int)size > sizeof(receptionBuffer))
+    {
+        dataToTransmit = sizeof(receptionBuffer);
+    }
+    else
+    {
+        dataToTransmit = size;
+    }
 
-    *tranmitted = size;
+    transfer.tx_buf = (unsigned long long)data;
+    transfer.rx_buf = (unsigned long long)receptionBuffer;
+    /* same amount of data for tx and rx */
+    transfer.len = dataToTransmit;
 
-    return Channel::Error::E_OK;
+    if (ioctl(fd, SPI_IOC_MESSAGE(1), &transfer) < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+        return Channel::Error::E_INT;
+    }
+
+    /* data comes in at same rate than data goes out */
+    receivedDataSize = dataToTransmit;
+
+    /* ioctl do not fail, so is addumed that data is transmited */
+    *tranmitted = dataToTransmit;
+
+    if (dataToTransmit < size)
+    {
+        /* in case transmitter data is less than original size */
+        return Channel::Error::E_TRY;
+    }
+    else
+    {
+        /* in case than whole data is fully sent */
+        return Channel::Error::E_OK;
+    }
 }
 
 Channel::Error ChannelSpi::rx(char *data, int size, int *received)
 {
-    *received = receivedDataSize;
 
     if (receivedDataSize > 0)
     {
-        memcpy(data, receptionBuffer, receivedDataSize < size ? receivedDataSize : size);
+        if (size > receivedDataSize)
+        {
+            size = receivedDataSize;
+        }
 
-        receivedDataSize = 0;
+        memcpy(data, receptionBuffer, size);
+
+        receivedDataSize -= size;
+
+        *received = size;
+
+        if (receivedDataSize > 0)
+            return Channel::Error::E_TRY;
+        else
+            return Channel::Error::E_OK;
     }
-
-    return Channel::Error::E_OK;
+    else
+    {
+        *received = 0;
+        return Channel::Error::E_OK;
+    }
 }
 
 Channel::Error ChannelSpi::stop(void)
