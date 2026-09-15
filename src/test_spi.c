@@ -82,8 +82,6 @@ int main(int argc, char *argv[])
 
         send_n_receive(&channelSpiMaster, argv[1], argv[2]);
 
-        channelSpiMaster.stop();
-
         break;
 
     default:
