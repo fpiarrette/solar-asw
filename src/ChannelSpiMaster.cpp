@@ -121,6 +121,7 @@ Channel::Error ChannelSpiMaster::tx(char *data, int size, int *tranmitted)
         dataToTransmit = size;
     }
 
+    memset(&transfer, 0, sizeof(transfer));
     transfer.tx_buf = (unsigned long long)data;
     transfer.rx_buf = (unsigned long long)receptionBuffer;
     /* same amount of data for tx and rx */
