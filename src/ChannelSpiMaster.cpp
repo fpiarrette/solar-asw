@@ -15,7 +15,7 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
-#define LOG_PREFIX "Channel SPI master"
+#define LOG_PREFIX "Channel SPI master "
 
 ChannelSpiMaster::ChannelSpiMaster(void)
 {
@@ -37,7 +37,6 @@ Channel::Error ChannelSpiMaster::init(void)
 
     if (strlen(deviceName) == 0)
     {
-
         L_ERROR("device name not configured");
 
         return Channel::Error::E_STA;
