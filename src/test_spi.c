@@ -2,59 +2,12 @@
 
 #include "ChannelSpiMaster.h"
 
+#include "test_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
-int fromStringToHex(char *hex, char *str, int *size)
-{
-    char b[3];
-    int v, l, s, n;
-
-    l = strlen(str);
-
-    if ((l % 1) != 0)
-    {
-        L_ERROR("invalid hex string length");
-        return -1;
-    }
-
-    s = 0;
-
-    for (n = 0; n < l; n += 2, s++)
-    {
-        b[0] = str[n + 0];
-        b[1] = str[n + 1];
-        b[2] = 0;
-
-        if (sscanf(b, "%d", &v) != 1)
-        {
-            L_ERROR("invalid hex string content: %s", b);
-            return -2;
-        }
-
-        hex[s] = v;
-    }
-
-    *size = s;
-
-    return 0;
-}
-
-int fromHexToString(char *str, char *hex, int size)
-{
-    int n;
-
-    for (n = 0; n < size; n++)
-    {
-        sprintf(&str[n * 2], "%02d", hex[n]);
-    }
-
-    str[n * 2] = 0;
-
-    return 0;
-}
-
-void sendAndReceive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
+void send_n_receive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
 {
     char data_tx[256];
     int transmitted, size;
@@ -81,7 +34,7 @@ void sendAndReceive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
         return;
     }
 
-    if (fromStringToHex(data_tx, hex_string, &size) != 0)
+    if (str_2_hex(data_tx, hex_string, &size) != 0)
     {
         L_ERROR("converting %s", hex_string);
         return;
@@ -107,7 +60,7 @@ void sendAndReceive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
 
     L_NOTICE("received %d bytes, result %d", received, result);
 
-    fromHexToString(converted_string, data_rx, received);
+    hex_2_str(converted_string, data_rx, received);
 
     L_NOTICE("received data: %s", converted_string);
 }
@@ -127,7 +80,7 @@ int main(int argc, char *argv[])
     {
     case 3:
 
-        sendAndReceive(&channelSpiMaster, argv[1], argv[2]);
+        send_n_receive(&channelSpiMaster, argv[1], argv[2]);
 
         channelSpiMaster.stop();
 
