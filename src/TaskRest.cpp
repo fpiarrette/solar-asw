@@ -11,7 +11,7 @@ http_context_t TaskRest::context;
 TaskRest::TaskRest()
 {
     /* default port value */
-    port = 8080;
+    port = 8888;
 }
 
 const char *TaskRest::getName(void)

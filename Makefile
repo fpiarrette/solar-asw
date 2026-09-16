@@ -95,6 +95,7 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/TaskHumanInterface.cpp \
 	$(SRC_DIR)/TaskIdle.cpp \
 	$(SRC_DIR)/TaskKiller.cpp \
+	$(SRC_DIR)/TaskRest.cpp \
 	$(SRC_DIR)/TaskToModem.cpp
 
 FILES_TEST_SPI=$(SRC_DIR)/test_spi.c \

@@ -27,7 +27,7 @@ done
 export PLATFORM_HOST=1
 export PLATFORM_TARGET=2
 export SOLAR_TARGET_KILL_PORT="9090"
-export SOLAR_TARGET_REST_PORT="8080"
+export SOLAR_TARGET_REST_PORT="8888"
 export BINARY_NAME=solar-asw
 export PACK_NAME=solar-asw.tar
 
