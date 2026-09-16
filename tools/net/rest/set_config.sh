@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # obtain project base dir
+script_dir=$(readlink -f $(pwd)/$(dirname "$0"))
 project_dir=$(readlink -f $script_dir/../../..)
 
 # general environment validation
@@ -11,8 +12,6 @@ project_dir=$(readlink -f $script_dir/../../..)
 # PUT → fully replace resource configuration
 # PATCH → partialy change resource configuration
 # DELETE → delete a resource
-
-. $project_dir/tools/net/validate.sh
 
 echo "setting config to $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
 
