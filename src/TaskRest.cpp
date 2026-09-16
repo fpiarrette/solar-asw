@@ -74,20 +74,9 @@ enum MHD_Result TaskRest::requestHandlerSingle(
     void **con_cls)
 {
 
-    MHD_Result ret = replier->process(connection, url, method, version);
+    MHD_Result ret = replier->process(connection, url, method, version, 0, 0);
 
     context.worked = 1;
-
-    return ret;
-}
-
-MHD_Result TaskRest::reply(struct MHD_Connection *connection, int code, const char *body, size_t size)
-{
-    MHD_Response *response = MHD_create_response_from_buffer(size, (void *)body, MHD_RESPMEM_PERSISTENT);
-
-    MHD_Result ret = MHD_queue_response(connection, code, response);
-
-    MHD_destroy_response(response);
 
     return ret;
 }
@@ -107,10 +96,13 @@ enum MHD_Result TaskRest::requestHandlerParts(
     if (con_cls == NULL)
     {
         *con_cls = &context;
+        L_DEBUG("Context initialized->first call");
     }
 
     if (*uploadDataSize > 0)
     {
+        L_DEBUG("upload data %d", *uploadDataSize);
+
         http_context_t *c = (http_context_t *)*con_cls;
 
         memcpy(&c->buffer[c->size], uploadData, *uploadDataSize);
@@ -118,15 +110,14 @@ enum MHD_Result TaskRest::requestHandlerParts(
         c->size += *uploadDataSize;
 
         *uploadDataSize = 0;
+
+        L_DEBUG("Current size %d", c->size);
     }
     else
     {
-        /* process POST method */
-        L_DEBUG("Process %s method %s", method, url);
+        L_DEBUG("last call");
 
-        const char *body = "{ \"result\": 0, \"message\": \"OK\" }";
-
-        ret = reply(connection, MHD_HTTP_OK, body, strlen(body));
+        ret = replier->process(connection, url, method, version, context.buffer, context.size);
     }
 
     context.worked = 1;

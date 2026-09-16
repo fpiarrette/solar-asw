@@ -29,7 +29,6 @@ public:
     static void setReplier(RestReplier *replier);
 
 protected:
-    static MHD_Result reply(struct MHD_Connection *connection, int code, const char *body, size_t size);
     static enum MHD_Result requestHandler(
         void *cls,
         struct MHD_Connection *connection,
