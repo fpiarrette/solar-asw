@@ -8,9 +8,9 @@ class GpioMock : public GpioAbstract
 {
 public:
     GpioAbstract::Error start(void);
-    GpioAbstract::Error configure(int line, GpioAbstract::Type type);
-    GpioAbstract::Error set(int line, int value);
-    GpioAbstract::Error get(int line, int *value);
+    GpioAbstract::Error configure(int port, int line, GpioAbstract::Type type);
+    GpioAbstract::Error set(int port, int line, int value);
+    GpioAbstract::Error get(int port, int line, int *value);
     GpioAbstract::Error stop(void);
     GpioAbstract::Error setDeviceName(const char *name);
 
