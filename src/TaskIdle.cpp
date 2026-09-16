@@ -36,6 +36,10 @@ Scheduller::Task::Result TaskIdle::run(long int time)
         return Scheduller::Task::Result::IDLE;
     }
 
+    if (!verbose) {
+        return Scheduller::Task::Result::IDLE;
+    }
+
     L_DEBUG("Scheduller report, total time %d", time);
 
     while (scheduller->hasMoreTasks())

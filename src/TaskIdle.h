@@ -7,6 +7,10 @@
 class TaskIdle : public Scheduller::Task
 {
 public:
+    TaskIdle()
+    {
+        verbose = 0;
+    }
     ~TaskIdle()
     {
         stop();
@@ -22,6 +26,7 @@ public:
 protected:
 private:
     Scheduller *scheduller;
+    int verbose;
 };
 
 #endif
