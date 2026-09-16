@@ -45,7 +45,7 @@ void get_line_value(Gpio *gpio, char *deviceName, char *port, char *line)
         return;
     }
 
-    L_NOTICE("port %d, line %d is %s", l, v == 0 ? "off" : "on");
+    L_NOTICE("port %d, line %d is %s", p, l, v == 0 ? "off" : "on");
 
     result = gpio->stop();
     if (result != Gpio::Error::E_OK)
@@ -104,6 +104,10 @@ void set_line_value(Gpio *gpio, char *deviceName, char *port, char *line, char *
 
     L_NOTICE("port %d, line %d set to %d", p, l, v);
 
+    L_INFO("Press any key to finish");
+
+    getchar();
+
     result = gpio->stop();
 
     if (result != Gpio::Error::E_OK)
@@ -139,8 +143,8 @@ int main(int argc, char *argv[])
 
     default:
         L_ERROR("Wrong number of arguments");
-        L_NOTICE("2 arguments: <device> <line>");
-        L_NOTICE("3 arguments: <device> <line> <value>");
+        L_NOTICE("3 arguments: <device> <port> <line>");
+        L_NOTICE("4 arguments: <device> <port> <line> <value>");
 
         break;
     }
