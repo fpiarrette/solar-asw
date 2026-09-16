@@ -137,6 +137,11 @@ An SSH client, such as PuTTY, can be used to connect to the board using the defa
 ```bash
 su -
 ```
+
+### How completely patch XT ATTO LXL image?
+
+In main SOLAR ASW repository there is [the last image](../src/resources/mc_swuimage_mod-sama5d27-som1-ek-sd-20260915151544.swu) supplied by AK nord. XT ATTO LXL board can be patched using the HTTP interface available on port 8080. Board restart is automatically issued.
+
 # References
 
 [LXL series manual (AK-Dinrail-LXL and ATTO-LXL)](./ak-nord/manual_lxl.pdf)

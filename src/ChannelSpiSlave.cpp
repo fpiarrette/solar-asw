@@ -57,48 +57,8 @@ Channel::Error ChannelSpiSlave::init(void)
     return Channel::Error::E_OK;
 }
 
-void ChannelSpiSlave::setDeviceName(const char *name)
-{
-    strncpy(deviceName, name, sizeof(deviceName));
-}
-
-void ChannelSpiSlave::dumpStatus(void)
-{
-    __u8 lsb, bits;
-    __u32 mode, speed;
-
-    if (ioctl(fd, SPI_IOC_RD_MODE32, &mode) < 0)
-    {
-        LOGGER_DEBUG_ERRNO;
-        return;
-    }
-
-    if (ioctl(fd, SPI_IOC_RD_LSB_FIRST, &lsb) < 0)
-    {
-        LOGGER_DEBUG_ERRNO;
-        return;
-    }
-
-    if (ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits) < 0)
-    {
-        LOGGER_DEBUG_ERRNO;
-        return;
-    }
-
-    if (ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &speed) < 0)
-    {
-        LOGGER_DEBUG_ERRNO;
-        return;
-    }
-
-    L_DEBUG("%s: spi mode 0x%x, %d bits %sper word, %u Hz max", deviceName, mode, bits, lsb ? "(lsb first) " : "", speed);
-}
-
 Channel::Error ChannelSpiSlave::start(void)
 {
-    /* dump SPI dev status */
-    dumpStatus();
-
     L_NOTICE(LOG_PREFIX "started");
 
     return Channel::Error::E_OK;
