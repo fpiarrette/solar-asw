@@ -23,14 +23,45 @@ enum MHD_Result RestReplier::process(
     struct MHD_Connection *connection,
     const char *url,
     const char *method,
-    const char *version)
+    const char *version,
+    char *requestBody,
+    int size)
 {
     L_DEBUG("%s '%s'", method, url);
 
-    const char *statusTemplate = "{ \"alarms\": [%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d] }";
-    char statusBuffer[256];
+    if (strcmp("/api/status", url) == 0)
+    {
+        return processStatus(connection, url, method, version, requestBody, size);
+    }
+    else if (strcmp("/api/statistics", url) == 0)
+    {
+        return processStatistics(connection, url, method, version, requestBody, size);
+    }
+    else if (strcmp("/api/config", url) == 0)
+    {
+        return processConfig(connection, url, method, version, requestBody, size);
+    }
+    else
+    {
+        return processNotFound(connection, url, method, version, requestBody, size);
+    }
+}
 
-    sprintf(statusBuffer, statusTemplate,
+enum MHD_Result RestReplier::processStatus(
+    struct MHD_Connection *connection,
+    const char *url,
+    const char *method,
+    const char *version,
+    char *requestBody,
+    int size)
+{
+
+    const char *t = "{ \"alarms\": [%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d] }";
+    char b[256];
+
+    /* get status */
+    /* build response */
+    sprintf(b, t,
             Alarms::getInstance()->get(0),
             Alarms::getInstance()->get(1),
             Alarms::getInstance()->get(2),
@@ -64,5 +95,67 @@ enum MHD_Result RestReplier::process(
             Alarms::getInstance()->get(30),
             Alarms::getInstance()->get(31));
 
-    return reply(connection, MHD_HTTP_OK, statusBuffer, strlen(statusBuffer));
+    /* send response */
+    return reply(connection, MHD_HTTP_OK, b, strlen(b));
+}
+
+enum MHD_Result RestReplier::processStatistics(
+    struct MHD_Connection *connection,
+    const char *url,
+    const char *method,
+    const char *version,
+    char *requestBody,
+    int size)
+{
+    const char *t = "{ \"uplink\": %d, \"downllink\": %d }";
+    char b[256];
+
+    /* get statistics */
+    /* build response */
+
+    sprintf(b, t, 0, 0);
+
+    /* send response */
+    return reply(connection, MHD_HTTP_OK, b, strlen(b));
+}
+
+enum MHD_Result RestReplier::processConfig(
+    struct MHD_Connection *connection,
+    const char *url,
+    const char *method,
+    const char *version,
+    char *requestBody,
+    int size)
+{
+    const char *t = "{ \"result\": %d }";
+    char b[256];
+
+    /* parse request body */
+    /* apply configuration */
+    /* build response */
+
+    L_DEBUG("body '%s'", requestBody);
+    L_DEBUG("size '%d'", size);
+
+    sprintf(b, t, 0);
+
+    /* send response */
+    return reply(connection, MHD_HTTP_OK, b, strlen(b));
+}
+
+enum MHD_Result RestReplier::processNotFound(
+    struct MHD_Connection *connection,
+    const char *url,
+    const char *method,
+    const char *version,
+    char *requestBody,
+    int size)
+{
+
+    const char *t = "{ \"error\": %d }";
+    char b[256];
+
+    sprintf(b, t, 404);
+
+    return reply(connection, MHD_HTTP_NOT_FOUND, b, strlen(b));
 }
