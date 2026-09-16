@@ -59,7 +59,7 @@ Gpio::Error Gpio::configure(int _port, int _line, Type _type)
         return Gpio::Error::E_STA;
     }
 
-    L_DEBUG("configuring port %d, ine %d as %s", _port, _line, _type == Gpio::Type::IN ? "IN" : "OUT");
+    L_DEBUG("configuring port %d, line %d (offset %d) as %s", _port, _line, GPIO_OFFSET(_port, _line), _type == Gpio::Type::IN ? "IN" : "OUT");
 
     if (_port < 0 || _port >= GPIO_NUM_PORTS)
     {
@@ -75,7 +75,7 @@ Gpio::Error Gpio::configure(int _port, int _line, Type _type)
     {
         memset(&request, 0, sizeof(request));
 
-        request.lineoffsets[0] = _port * _line;
+        request.lineoffsets[0] = GPIO_OFFSET(_port, _line);
         request.lines = 1;
 
         if (_type == Gpio::Type::OUT)
@@ -134,7 +134,7 @@ Gpio::Error Gpio::get(int _port, int _line, int *v)
         return Gpio::Error::E_INT;
     }
 
-    L_DEBUG("Port %d, line %d is %d", _port, _line, data.values[0]);
+    L_DEBUG("Port %d, line %d (offset %d) is %d", _port, _line, GPIO_OFFSET(_port, _line), data.values[0]);
 
     /* assign result */
     *v = data.values[0];
@@ -146,7 +146,7 @@ Gpio::Error Gpio::set(int _port, int _line, int v)
 {
     struct gpiohandle_data data;
 
-    L_DEBUG("setting port %d, line %d to value %d", _port, _line, v);
+    L_DEBUG("setting port %d, line %d (offset %d) to value %d", _port, _line, GPIO_OFFSET(_port, _line), v);
 
     if (_port < 0 || _port >= GPIO_NUM_PORTS)
     {
@@ -185,6 +185,8 @@ Gpio::Error Gpio::stop(void)
         {
             if (port[i].line[j] > 0)
             {
+                L_DEBUG("closing port %d line %d (offset %d)", i, j, GPIO_OFFSET(i, j));
+
                 if (close(port[i].line[j]) < 0)
 
                     LOGGER_DEBUG_ERRNO;
