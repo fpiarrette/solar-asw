@@ -5,13 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void getLineValue(char *deviceName, char *port, char *line)
+void get_line_value(Gpio *gpio, char *deviceName, char *port, char *line)
 {
     int p, l, v;
-    GpioAbstract::Error result;
+    Gpio::Error result;
 
-    result = Gpio::getInstance()->start();
-    if (result != GpioAbstract::Error::E_OK)
+    result = gpio->start();
+    if (result != Gpio::Error::E_OK)
     {
         L_ERROR("opening GPIO");
         return;
@@ -29,17 +29,17 @@ void getLineValue(char *deviceName, char *port, char *line)
         return;
     }
 
-    result = Gpio::getInstance()->configure(p, l, GpioAbstract::Type::IN);
+    result = gpio->configure(p, l, Gpio::Type::IN);
 
-    if (result != GpioAbstract::Error::E_OK)
+    if (result != Gpio::Error::E_OK)
     {
         L_ERROR("port %d, line %d can not be configured as input", p, l);
         return;
     }
 
-    result = Gpio::getInstance()->get(p, l, &v);
+    result = gpio->get(p, l, &v);
 
-    if (result != GpioAbstract::Error::E_OK)
+    if (result != Gpio::Error::E_OK)
     {
         L_ERROR("error reading port %d, line %d", p, l);
         return;
@@ -47,23 +47,24 @@ void getLineValue(char *deviceName, char *port, char *line)
 
     L_NOTICE("port %d, line %d is %s", l, v == 0 ? "off" : "on");
 
-    result = Gpio::getInstance()->stop();
-    if (result != GpioAbstract::Error::E_OK)
+    result = gpio->stop();
+    if (result != Gpio::Error::E_OK)
     {
         L_ERROR("stopping GPIO");
         return;
     }
 }
 
-void setLineValue(char *deviceName, char *port, char *line, char *value)
+void set_line_value(Gpio *gpio, char *deviceName, char *port, char *line, char *value)
 {
     int p, l, v;
-    GpioAbstract::Error result;
+    Gpio::Error result;
 
-    result = Gpio::getInstance()->start();
-    if (result != GpioAbstract::Error::E_OK)
+    result = gpio->start();
+
+    if (result != Gpio::Error::E_OK)
     {
-        L_ERROR("opening GPIO");
+        L_ERROR("starting GPIO");
         return;
     }
 
@@ -85,17 +86,17 @@ void setLineValue(char *deviceName, char *port, char *line, char *value)
         return;
     }
 
-    result = Gpio::getInstance()->configure(p, l, GpioAbstract::Type::OUT);
+    result = gpio->configure(p, l, Gpio::Type::OUT);
 
-    if (result != GpioAbstract::Error::E_OK)
+    if (result != Gpio::Error::E_OK)
     {
         L_ERROR("port %d, line %d can not be configured as output", p, l);
         return;
     }
 
-    result = Gpio::getInstance()->set(p, l, v);
+    result = gpio->set(p, l, v);
 
-    if (result != GpioAbstract::Error::E_OK)
+    if (result != Gpio::Error::E_OK)
     {
         L_ERROR("error writing port %d, line %d", p, l);
         return;
@@ -103,8 +104,9 @@ void setLineValue(char *deviceName, char *port, char *line, char *value)
 
     L_NOTICE("port %d, line %d set to %d", p, l, v);
 
-    result = Gpio::getInstance()->stop();
-    if (result != GpioAbstract::Error::E_OK)
+    result = gpio->stop();
+
+    if (result != Gpio::Error::E_OK)
     {
         L_ERROR("stopping GPIO");
         return;
@@ -113,6 +115,8 @@ void setLineValue(char *deviceName, char *port, char *line, char *value)
 
 int main(int argc, char *argv[])
 {
+    Gpio gpio;
+
     Logger::config(Logger::Type::STDOUT);
 
     Logger::getInstance()->setLevel(1);
@@ -124,13 +128,12 @@ int main(int argc, char *argv[])
     {
     case 4:
     case 5:
-        Gpio::configure(Gpio::Type::MODULE);
-        Gpio::getInstance()->setDeviceName(argv[1]);
+        gpio.setDeviceName(argv[1]);
 
         if (argc == 4)
-            getLineValue(argv[1], argv[2], argv[3]);
+            get_line_value(&gpio, argv[1], argv[2], argv[3]);
         else
-            setLineValue(argv[1], argv[2], argv[3], argv[4]);
+            set_line_value(&gpio, argv[1], argv[2], argv[3], argv[4]);
 
         break;
 

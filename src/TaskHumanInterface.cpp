@@ -3,7 +3,7 @@
 #include "Alarms.h"
 #include "alarm_def.h"
 #include "Logger.h"
-#include "Gpio.h"
+#include "Platform.h"
 #include "platform_def.h"
 
 #define LOG_PREFIX "Human IFC task "
@@ -32,12 +32,12 @@ Scheduller::Task::Result TaskHumanInterface::run(long int time)
 
     if (Alarms::getInstance()->get(ALARM_DEF_ERROR))
     {
-        Gpio::getInstance()->set(PLATFORM_GPIO_PORT, PLATFORM_GPIO_LINE_ERROR, 1);
+        Platform::getInstance()->getGpio()->set(PLATFORM_GPIO_PORT, PLATFORM_GPIO_LINE_ERROR, 1);
     }
 
     if (Alarms::getInstance()->get(ALARM_DEF_WARNING))
     {
-        Gpio::getInstance()->set(PLATFORM_GPIO_PORT, PLATFORM_GPIO_LINE_WARNING, 1);
+        Platform::getInstance()->getGpio()->set(PLATFORM_GPIO_PORT, PLATFORM_GPIO_LINE_WARNING, 1);
     }
 
     L_DEBUG("GPIO error notified");

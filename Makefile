@@ -82,9 +82,7 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/ChannelSocketServer.cpp \
 	$(SRC_DIR)/ChannelSocketClient.cpp \
 	$(SRC_DIR)/CircularBuffer.cpp \
-	$(SRC_DIR)/Gpio.cpp \
-	$(SRC_DIR)/GpioMock.cpp \
-	$(SRC_DIR)/GpioModule.cpp \
+	$(SRC_DIR)/platform/$(PLATFORM)/Gpio.cpp \
 	$(SRC_DIR)/platform/$(PLATFORM)/Platform.cpp \
 	$(SRC_DIR)/Signals.cpp \
 	$(SRC_DIR)/Scheduller.cpp \
@@ -111,9 +109,7 @@ FILES_TEST_SPI=$(SRC_DIR)/test_spi.c \
 
 FILES_TEST_GPIO=$(SRC_DIR)/test_gpio.c \
 	$(SRC_DIR)/test_common.c \
-	$(SRC_DIR)/Gpio.cpp \
-	$(SRC_DIR)/GpioMock.cpp \
-	$(SRC_DIR)/GpioModule.cpp \
+	$(SRC_DIR)/platform/$(PLATFORM)/Gpio.cpp \
 	$(SRC_DIR)/Logger.cpp \
 	$(SRC_DIR)/LoggerAbstract.cpp \
 	$(SRC_DIR)/LoggerStdout.cpp \
