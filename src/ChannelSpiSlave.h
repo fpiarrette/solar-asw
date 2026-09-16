@@ -1,9 +1,9 @@
-#include "Channel.h"
+#include "ChannelSpi.h"
 
 #ifndef CHANNEL_SPI_SLAVE_H
 #define CHANNEL_SPI_SLAVE_H
 
-class ChannelSpiSlave : public Channel
+class ChannelSpiSlave : public ChannelSpi
 {
 public:
     ChannelSpiSlave();
@@ -18,14 +18,8 @@ public:
     Channel::Error rx(char *data, int size, int *received);
     Channel::Error stop(void);
 
-    void setDeviceName(const char *name);
-
 protected:
-    void dumpStatus(void);
-
 private:
-    int fd;
-    char deviceName[256];
     char transmisionBuffer[512];
     int transmisionDataSize;
 };

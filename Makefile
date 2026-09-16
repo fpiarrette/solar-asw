@@ -75,6 +75,7 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/Alarms.cpp \
 	$(SRC_DIR)/utils.c \
 	$(SRC_DIR)/ChannelNull.cpp \
+	$(SRC_DIR)/ChannelSpi.cpp \
 	$(SRC_DIR)/ChannelSpiMaster.cpp \
 	$(SRC_DIR)/ChannelSpiSlave.cpp \
 	$(SRC_DIR)/ChannelSocket.cpp \
@@ -100,6 +101,7 @@ FILES=$(SRC_DIR)/main.c \
 
 FILES_TEST_SPI=$(SRC_DIR)/test_spi.c \
 	$(SRC_DIR)/test_common.c \
+	$(SRC_DIR)/ChannelSpi.cpp \
 	$(SRC_DIR)/ChannelSpiMaster.cpp \
 	$(SRC_DIR)/ChannelSpiSlave.cpp \
 	$(SRC_DIR)/Logger.cpp \

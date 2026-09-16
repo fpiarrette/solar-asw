@@ -1,9 +1,9 @@
-#include "Channel.h"
+#include "ChannelSpi.h"
 
 #ifndef CHANNEL_SPI_MASTER_H
 #define CHANNEL_SPI_MASTER_H
 
-class ChannelSpiMaster : public Channel
+class ChannelSpiMaster : public ChannelSpi
 {
 public:
     ChannelSpiMaster();
@@ -18,14 +18,11 @@ public:
     Channel::Error rx(char *data, int size, int *received);
     Channel::Error stop(void);
 
-    void setDeviceName(const char *name);
-
 protected:
     void dumpStatus(void);
+    int getMode(void);
 
 private:
-    int fd;
-    char deviceName[256];
     char receptionBuffer[512];
     int receivedDataSize;
 };

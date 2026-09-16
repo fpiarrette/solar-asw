@@ -24,6 +24,19 @@ ChannelSpiMaster::ChannelSpiMaster(void)
     receivedDataSize = 0;
 
     fd = -1;
+
+    /* CPOL (Clock Polarity): nivel del reloj cuando está inactivo. */
+    /* 0: reloj en reposo a nivel bajo. */
+    /* 1: reloj en reposo a nivel alto. */
+    /* CPHA (Clock Phase): en qué flanco se muestrean los datos. */
+    /* 0: se leen en el primer flanco. */
+    /* 1: se leen en el segundo flanco. */
+    clockPolarity = 0;
+    clockPhase = 0;
+    /* 8 bits */
+    bits = 8;
+    /* 1MHz */
+    speed = 1000000;
 }
 
 Channel::Error ChannelSpiMaster::init(void)
@@ -54,11 +67,6 @@ Channel::Error ChannelSpiMaster::init(void)
     L_NOTICE(LOG_PREFIX "device %s initialized: fd %d", deviceName, fd);
 
     return Channel::Error::E_OK;
-}
-
-void ChannelSpiMaster::setDeviceName(const char *name)
-{
-    strncpy(deviceName, name, sizeof(deviceName));
 }
 
 void ChannelSpiMaster::dumpStatus(void)
@@ -95,6 +103,37 @@ void ChannelSpiMaster::dumpStatus(void)
 
 Channel::Error ChannelSpiMaster::start(void)
 {
+    int mode;
+
+    if (fd < 0)
+    {
+        return Channel::Error::E_STA;
+    }
+
+    /* build PSI mode from clockPolarity and clockPhase */
+    mode = getMode();
+
+    if (ioctl(fd, SPI_IOC_WR_MODE, &mode) < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+
+        return Channel::Error::E_INT;
+    }
+
+    if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+
+        return Channel::Error::E_INT;
+    }
+
+    if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed) < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+
+        return Channel::Error::E_INT;
+    }
+
     /* dump SPI dev status */
     dumpStatus();
 
@@ -192,5 +231,26 @@ Channel::Error ChannelSpiMaster::stop(void)
         L_WARNING(LOG_PREFIX "incorrect state");
 
         return Channel::Error::E_STA;
+    }
+}
+
+int ChannelSpiMaster::getMode(void)
+{
+
+    if (clockPolarity == 0 && clockPhase == 0)
+    {
+        return SPI_MODE_0;
+    }
+    else if (clockPolarity == 0 && clockPhase != 0)
+    {
+        return SPI_MODE_1;
+    }
+    else if (clockPolarity != 0 && clockPhase == 0)
+    {
+        return SPI_MODE_2;
+    }
+    else
+    {
+        return SPI_MODE_3;
     }
 }
