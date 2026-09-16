@@ -8,10 +8,17 @@
 
 http_context_t TaskRest::context;
 
+RestReplier *TaskRest::replier;
+
 TaskRest::TaskRest()
 {
     /* default port value */
     port = 8888;
+}
+
+void TaskRest::setReplier(RestReplier *r)
+{
+    replier = r;
 }
 
 const char *TaskRest::getName(void)
@@ -66,11 +73,8 @@ enum MHD_Result TaskRest::requestHandlerSingle(
     size_t *uploadDataSize,
     void **con_cls)
 {
-    L_DEBUG("Process %s method %s", method, url);
 
-    const char *body = "{ \"id\": 123, \"message\": \"Hello World\" }";
-
-    MHD_Result ret = reply(connection, MHD_HTTP_OK, body, strlen(body));
+    MHD_Result ret = replier->process(connection, url, method, version);
 
     context.worked = 1;
 

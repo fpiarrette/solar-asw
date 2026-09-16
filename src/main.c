@@ -18,6 +18,8 @@
 #include "TaskRest.h"
 #include "TaskToModem.h"
 
+#include "RestReplier.h"
+
 #include <stdlib.h>
 
 static void configure_and_run(void);
@@ -89,6 +91,8 @@ static void configure_and_run(void)
     TaskIdle taskIdle;
     TaskKiller taskKiller;
     TaskRest taskRest;
+    RestReplier replier;
+    taskRest.setReplier(&replier);
 
     /* channels */
     ChannelSocketClient channelSocketClient;

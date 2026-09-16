@@ -5,6 +5,8 @@
 #include "Scheduller.h"
 #include "microhttpd.h"
 
+#include "RestReplier.h"
+
 typedef struct
 {
     char buffer[8 * 1024];
@@ -24,6 +26,7 @@ public:
     void prepare(void);
     Scheduller::Task::Result run(long int time);
     void stop(void);
+    static void setReplier(RestReplier *replier);
 
 protected:
     static MHD_Result reply(struct MHD_Connection *connection, int code, const char *body, size_t size);
@@ -59,6 +62,7 @@ private:
     struct MHD_Daemon *daemon;
     static http_context_t context;
     int port;
+    static RestReplier *replier;
 };
 
 #endif
