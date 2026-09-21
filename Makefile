@@ -135,8 +135,6 @@ clean:
 all: $(FILES)
 	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/$(BINARY_NAME)
 
-tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl test_rest
-
 test_spi: $(FILES_TEST_SPI)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi
 
