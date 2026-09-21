@@ -91,38 +91,35 @@ enum MHD_Result TaskRest::requestHandlerParts(
     size_t *uploadDataSize,
     void **con_cls)
 {
-    MHD_Result ret = MHD_YES;
-
-    if (con_cls == NULL)
+    if (*con_cls == NULL)
     {
+        memset(&context, 0, sizeof(context));
         *con_cls = &context;
         L_DEBUG("Context initialized->first call");
-    }
-
-    if (*uploadDataSize > 0)
-    {
-        L_DEBUG("upload data %d", *uploadDataSize);
-
-        http_context_t *c = (http_context_t *)*con_cls;
-
-        memcpy(&c->buffer[c->size], uploadData, *uploadDataSize);
-
-        c->size += *uploadDataSize;
-
-        *uploadDataSize = 0;
-
-        L_DEBUG("Current size %d", c->size);
+        context.worked = 1;
+        return MHD_YES;
     }
     else
     {
-        L_DEBUG("last call");
-
-        ret = replier->process(connection, url, method, version, context.buffer, context.size);
+        if (*uploadDataSize > 0)
+        {
+            L_DEBUG("upload data %d", *uploadDataSize);
+            http_context_t *c = (http_context_t *)*con_cls;
+            memcpy(&c->buffer[c->size], uploadData, *uploadDataSize);
+            c->size += *uploadDataSize;
+            *uploadDataSize = 0;
+            L_DEBUG("Current size %d", c->size);
+            context.worked = 1;
+            return MHD_YES;
+        }
+        else
+        {
+            L_DEBUG("last call");
+            MHD_Result ret = replier->process(connection, url, method, version, context.buffer, context.size);
+            context.worked = 1;
+            return ret;
+        }
     }
-
-    context.worked = 1;
-
-    return ret;
 }
 
 void TaskRest::stop(void)
@@ -149,6 +146,9 @@ enum MHD_Result TaskRest::requestHandler(
     size_t *uploadDataSize,
     void **con_cls)
 {
+    L_DEBUG("URL: '%s', method: '%s', upload data size %d", url, method, *uploadDataSize);
+    L_DEBUG("Context: %s", *con_cls == NULL ? "NULL" : "Non NULL");
+
     if (strcmp(MHD_HTTP_METHOD_GET, method) == 0)
     {
         return requestHandlerSingle(cls,
