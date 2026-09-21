@@ -23,3 +23,5 @@ CXXFLAGS = -mthumb -mfpu=neon-vfpv4 -mfloat-abi=hard -mcpu=cortex-a5 -D_TIME_BIT
 LDFLAGS =
 LDLIBS =
 
+# Include specific tests for XT ATTO LXL platform
+tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl test_rest
