@@ -56,47 +56,25 @@ enum MHD_Result RestReplier::processStatus(
     int size)
 {
 
-    const char *t = "{ \"alarms\": [%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d] }";
-    char b[256];
+    json_t *root = json_object();
 
-    /* get status */
-    /* build response */
-    sprintf(b, t,
-            Alarms::getInstance()->get(0),
-            Alarms::getInstance()->get(1),
-            Alarms::getInstance()->get(2),
-            Alarms::getInstance()->get(3),
-            Alarms::getInstance()->get(4),
-            Alarms::getInstance()->get(5),
-            Alarms::getInstance()->get(6),
-            Alarms::getInstance()->get(7),
-            Alarms::getInstance()->get(8),
-            Alarms::getInstance()->get(9),
-            Alarms::getInstance()->get(10),
-            Alarms::getInstance()->get(11),
-            Alarms::getInstance()->get(12),
-            Alarms::getInstance()->get(13),
-            Alarms::getInstance()->get(14),
-            Alarms::getInstance()->get(15),
-            Alarms::getInstance()->get(16),
-            Alarms::getInstance()->get(17),
-            Alarms::getInstance()->get(18),
-            Alarms::getInstance()->get(19),
-            Alarms::getInstance()->get(20),
-            Alarms::getInstance()->get(21),
-            Alarms::getInstance()->get(22),
-            Alarms::getInstance()->get(23),
-            Alarms::getInstance()->get(24),
-            Alarms::getInstance()->get(25),
-            Alarms::getInstance()->get(26),
-            Alarms::getInstance()->get(27),
-            Alarms::getInstance()->get(28),
-            Alarms::getInstance()->get(29),
-            Alarms::getInstance()->get(30),
-            Alarms::getInstance()->get(31));
+    json_t *alarms = json_array();
+
+    for (int n = 0; n < ALARMS_SIZE; n++)
+    {
+        json_array_append_new(alarms, json_integer(Alarms::getInstance()->get(n)));
+    }
+
+    json_object_set_new(root, "alarms", alarms);
+
+    char *json = json_dumps(root, JSON_INDENT(2));
 
     /* send response */
-    return reply(connection, MHD_HTTP_OK, b, strlen(b));
+    MHD_Result result = reply(connection, MHD_HTTP_OK, json, strlen(json));
+
+    json_decref(root);
+
+    return result;
 }
 
 enum MHD_Result RestReplier::processStatistics(
