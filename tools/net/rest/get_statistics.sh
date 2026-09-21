@@ -9,6 +9,6 @@ project_dir=$(readlink -f $script_dir/../../..)
 
 echo "getting statistics from $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
 
-curl -X GET http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/api/statistics
+curl -X GET http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/api/statistics --output -
 
 echo ""
