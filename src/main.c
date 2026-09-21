@@ -18,6 +18,8 @@
 #include "TaskRest.h"
 #include "TaskToModem.h"
 
+#include "RestReplier.h"
+
 #include <stdlib.h>
 
 static void configure_and_run(void);
@@ -88,7 +90,9 @@ static void configure_and_run(void)
     TaskHumanInterface taskHumanInterface;
     TaskIdle taskIdle;
     TaskKiller taskKiller;
-    /* TaskRest taskRest; */
+    TaskRest taskRest;
+    RestReplier replier;
+    taskRest.setReplier(&replier);
 
     /* channels */
     ChannelSocketClient channelSocketClient;
@@ -133,7 +137,7 @@ static void configure_and_run(void)
     taskKiller.setScheduller(&scheduller);
 
     /* manage REST interface */
-    /* scheduller.addTask(&taskRest, 16); */
+    scheduller.addTask(&taskRest, 16);
 
     /* manage human/GPIO interface */
     scheduller.addTask(&taskHumanInterface, 20);

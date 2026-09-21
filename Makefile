@@ -91,10 +91,12 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/LoggerStdout.cpp \
 	$(SRC_DIR)/LoggerSyslog.cpp \
 	$(SRC_DIR)/Config.cpp \
+	$(SRC_DIR)/RestReplier.cpp \
 	$(SRC_DIR)/TaskFromModem.cpp \
 	$(SRC_DIR)/TaskHumanInterface.cpp \
 	$(SRC_DIR)/TaskIdle.cpp \
 	$(SRC_DIR)/TaskKiller.cpp \
+	$(SRC_DIR)/TaskRest.cpp \
 	$(SRC_DIR)/TaskToModem.cpp
 
 FILES_TEST_SPI=$(SRC_DIR)/test_spi.c \
@@ -121,6 +123,9 @@ FILES_TEST_GPIO_IOCTL=$(SRC_DIR)/test_gpio_ioctl.c \
 FILES_TEST_SPI_IOCTL=$(SRC_DIR)/test_spi_ioctl.c \
 	$(SRC_DIR)/test_common.c
 
+FILES_TEST_REST=$(SRC_DIR)/test_rest.c \
+	$(SRC_DIR)/test_common.c
+
 .PHONY: clean
 
 clean:
@@ -130,7 +135,7 @@ clean:
 all: $(FILES)
 	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/$(BINARY_NAME)
 
-tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl
+tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl test_rest
 
 test_spi: $(FILES_TEST_SPI)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi
@@ -143,3 +148,6 @@ test_gpio: $(FILES_TEST_GPIO)
 
 test_gpio_ioctl: $(FILES_TEST_GPIO_IOCTL)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_GPIO_IOCTL) -I$(SRC_DIR) $(LDFLAGS) -o $(OUTPUT_DIR)/test_gpio_ioctl
+
+test_rest: $(FILES_TEST_REST)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_REST) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_rest
