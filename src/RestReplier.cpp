@@ -4,6 +4,7 @@
 #include "alarm_def.h"
 #include "Logger.h"
 
+#include <jansson.h>
 #include <stdio.h>
 
 #define LOG_PREFIX "REST replier "
@@ -106,16 +107,20 @@ enum MHD_Result RestReplier::processStatistics(
     char *requestBody,
     int size)
 {
-    const char *t = "{ \"uplink\": %d, \"downllink\": %d }";
-    char b[256];
+    json_t *root = json_object();
 
-    /* get statistics */
-    /* build response */
+    json_object_set_new(root, "uplink", json_integer(0));
+    json_object_set_new(root, "downllink", json_integer(0));
 
-    sprintf(b, t, 0, 0);
+    char *json = json_dumps(root, JSON_INDENT(2));
 
     /* send response */
-    return reply(connection, MHD_HTTP_OK, b, strlen(b));
+    MHD_Result result = reply(connection, MHD_HTTP_OK, json, strlen(json));
+
+    free(json);
+    json_decref(root);
+
+    return result;
 }
 
 enum MHD_Result RestReplier::processConfig(

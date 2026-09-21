@@ -38,7 +38,7 @@ include config/make/$(PLATFORM).mk
 # for any platform...
 CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
 CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
-LDLIBS += -lmicrohttpd
+LDLIBS += -lmicrohttpd -ljansson
 
 # Manage DEBUG options
 ifeq ($(DEBUG),1)
