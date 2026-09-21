@@ -11,9 +11,8 @@
 MHD_Result RestReplier::reply(struct MHD_Connection *connection, int code, const char *body, size_t size)
 {
     MHD_Response *response = MHD_create_response_from_buffer(size, (void *)body, MHD_RESPMEM_PERSISTENT);
-
+    MHD_add_response_header(response, "Content-Type", "application/json");
     MHD_Result ret = MHD_queue_response(connection, code, response);
-
     MHD_destroy_response(response);
 
     return ret;
