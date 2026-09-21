@@ -109,20 +109,40 @@ enum MHD_Result RestReplier::processConfig(
     char *requestBody,
     int size)
 {
-    const char *t = "{ \"result\": %d }";
-    char b[256];
 
-    /* parse request body */
-    /* apply configuration */
-    /* build response */
+    json_error_t error;
+    json_t *root = json_loads(requestBody, 0, &error);
+    if (!root)
+    {
+        L_ERROR("Error parsing JSON: %s\n", error.text);
+        replyError(connection, url, method, version, -1, "Invalid JSON argument");
+        return MHD_YES;
+    }
 
-    L_DEBUG("body '%s'", requestBody);
-    L_DEBUG("size '%d'", size);
+    json_t *mode = json_object_get(root, "mode");
+    json_t *speed = json_object_get(root, "speed");
 
-    sprintf(b, t, 0);
+    (void)mode;
 
+    if (json_is_integer(speed))
+    {
+        L_DEBUG("speed=%lld\n", (long long)json_integer_value(speed));
+    }
+
+    json_decref(root);
+
+    /* create response */
+    root = json_object();
+
+    json_object_set_new(root, "result", json_integer(0));
+    char *json = json_dumps(root, JSON_INDENT(2));
     /* send response */
-    return reply(connection, MHD_HTTP_OK, b, strlen(b));
+    MHD_Result result = reply(connection, MHD_HTTP_OK, json, strlen(json));
+
+    free(json);
+    json_decref(root);
+
+    return result;
 }
 
 enum MHD_Result RestReplier::processNotFound(
@@ -132,6 +152,23 @@ enum MHD_Result RestReplier::processNotFound(
     const char *version,
     char *requestBody,
     int size)
+{
+
+    const char *t = "{ \"error\": %d }";
+    char b[256];
+
+    sprintf(b, t, 404);
+
+    return reply(connection, MHD_HTTP_NOT_FOUND, b, strlen(b));
+}
+
+enum MHD_Result RestReplier::replyError(
+    struct MHD_Connection *connection,
+    const char *url,
+    const char *method,
+    const char *version,
+    int code,
+    const char *message)
 {
 
     const char *t = "{ \"error\": %d }";

@@ -50,6 +50,14 @@ protected:
         char *requestBody,
         int size);
 
+    enum MHD_Result replyError(
+        struct MHD_Connection *connection,
+        const char *url,
+        const char *method,
+        const char *version,
+        int code,
+        const char *message);
+
 private:
 };
 
