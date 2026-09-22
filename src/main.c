@@ -5,6 +5,7 @@
 #include "ChannelSocketClient.h"
 #include "ChannelSocketServer.h"
 #include "ChannelSpiMaster.h"
+#include "ChannelSpiSlave.h"
 
 #include "Gpio.h"
 
@@ -89,6 +90,7 @@ static void configure_and_run(void)
     ChannelSocketServer channelSocketServer;
     ChannelSocketServer channelSocketKillStop;
     ChannelSpiMaster channelSpiMaster;
+    ChannelSpiSlave channelSpiSlave;
     ChannelNull channelNull;
 
     /* all channels are configured independently of the mode, because HOST mode could use a convination of them */
@@ -98,7 +100,10 @@ static void configure_and_run(void)
     /* specific configuration for socket server */
     channelSocketServer.setPort(Config::getInstance()->getListeningPort());
     /* specific configuration for SPI */
-    /* TBC */
+    channelSpiMaster.setSpeed(Config::getInstance()->getSpiMasterSpeed());
+    channelSpiMaster.setClockPolarity(Config::getInstance()->getSpiMasterClockPolarity());
+    channelSpiMaster.setClockPhase(Config::getInstance()->getSpiMasterClockPhase());
+    channelSpiMaster.setBits(Config::getInstance()->getSpiMasterBits());
 
     if (Config::getInstance()->isFromModem())
     {
@@ -107,7 +112,7 @@ static void configure_and_run(void)
         taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
 
         /* wiring */
-        taskFromModem.setSource(&channelSpiMaster);
+        taskFromModem.setSource(&channelSpiSlave);
         taskFromModem.setSink(&channelSocketClient);
         scheduller.addTask(&taskFromModem, 2);
     }
