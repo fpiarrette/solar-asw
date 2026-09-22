@@ -29,6 +29,7 @@ public:
     int getListeningPort(void);
 
 protected:
+    void setDefaultValues(void);
 private:
     static Config instance;
     int logLevel;

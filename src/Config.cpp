@@ -46,31 +46,26 @@ Config Config::instance;
         CONFIG_OPTION_MODE_FROM_MODEM CONFIG_OPTION_DEST_IP_ADDRESS ":" CONFIG_OPTION_DEST_PORT ":" CONFIG_OPTION_LISTENING_PORT ":"
 
 /* Command line help line */
-#define HELP_COMMAND                                                                                    \
-    "[-" CONFIG_OPTION_MODE_TO_MODEM "] "                                                               \
-    "[-" CONFIG_OPTION_MODE_FROM_MODEM "] "                                                             \
-    "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_TIME_DELIVERY_LIMIT) "}] "          \
-    "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT) "}] "          \
-    "[-" CONFIG_OPTION_DEST_IP_ADDRESS " {" CONFIG_DEFAULT_DEST_IP_ADDRESS "}] "                        \
-    "[-" CONFIG_OPTION_DEST_PORT " {" xstr(CONFIG_DEFAULT_DEST_PORT) "}] "                              \
-    "[-" CONFIG_OPTION_LISTENING_PORT " {" xstr(CONFIG_DEFAULT_LISTENING_PORT) "}] "                    \
-    "[-" CONFIG_OPTION_LOG_LEVEL " {" xstr(CONFIG_DEFAULT_LOG_LEVEL) "}] "                              \
-    "[-" CONFIG_OPTION_LOG_SYSLOG "] "                                                                  \
-    "[-" CONFIG_OPTION_LOG_STDOUT "] "                                                                  \
-    "[-" CONFIG_OPTION_HELP "]\n"
+#define HELP_COMMAND                                                                                                                                                                                                                                                                                                                                                                                                          \
+    "[-" CONFIG_OPTION_MODE_TO_MODEM "] "                                                                                                                                                                                                                                                                                                                                                                                     \
+    "[-" CONFIG_OPTION_MODE_FROM_MODEM "] "                                                                                                                                                                                                                                                                                                                                                                                   \
+    "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_TIME_DELIVERY_LIMIT) "}] "                                                                                                                                                                                                                                                                                                                                \
+                                                                                         "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT) "}] "                                                                                                                                                                                                                                           \
+                                                                                                                                                                              "[-" CONFIG_OPTION_DEST_IP_ADDRESS " {" CONFIG_DEFAULT_DEST_IP_ADDRESS "}] "                                                                                                                                                                    \
+                                                                                                                                                                              "[-" CONFIG_OPTION_DEST_PORT " {" xstr(CONFIG_DEFAULT_DEST_PORT) "}] "                                                                                                                                                                          \
+                                                                                                                                                                                                                                               "[-" CONFIG_OPTION_LISTENING_PORT " {" xstr(CONFIG_DEFAULT_LISTENING_PORT) "}] "                                                                                               \
+                                                                                                                                                                                                                                                                                                                          "[-" CONFIG_OPTION_LOG_LEVEL " {" xstr(CONFIG_DEFAULT_LOG_LEVEL) "}] "                              \
+                                                                                                                                                                                                                                                                                                                                                                                           "[-" CONFIG_OPTION_LOG_SYSLOG "] " \
+                                                                                                                                                                                                                                                                                                                                                                                           "[-" CONFIG_OPTION_LOG_STDOUT "] " \
+                                                                                                                                                                                                                                                                                                                                                                                           "[-" CONFIG_OPTION_HELP "]\n"
 
 Config *Config::getInstance(void)
 {
     return &instance;
 }
 
-Config::Error Config::init(int argc, char *argv[])
+void Config::setDefaultValues(void)
 {
-    Config::Error returnValue;
-    int c;
-
-    returnValue = Config::Error::E_OK;
-
     /* give default values */
     logLevel = CONFIG_DEFAULT_LOG_LEVEL;
     useSyslog = CONFIG_DEFAULT_LOG_SYSLOG;
@@ -87,7 +82,19 @@ Config::Error Config::init(int argc, char *argv[])
     strncpy(destinationIpAddress, CONFIG_DEFAULT_DEST_IP_ADDRESS, sizeof(destinationIpAddress));
     destinationPort = CONFIG_DEFAULT_DEST_PORT;
     listeningPort = CONFIG_DEFAULT_LISTENING_PORT;
+}
 
+Config::Error Config::init(int argc, char *argv[])
+{
+    Config::Error returnValue;
+    int c;
+
+    returnValue = Config::Error::E_OK;
+
+    /* set default values */
+    setDefaultValues();
+
+    /* process command line arguments */
     while ((c = getopt(argc, argv, GETOPT_LINE)) != -1)
     {
         switch (c)
