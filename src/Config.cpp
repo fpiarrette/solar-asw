@@ -40,24 +40,38 @@ Config Config::instance;
 #define CONFIG_DEFAULT_DEST_PORT 9500
 #define CONFIG_DEFAULT_LISTENING_PORT 9000
 
+#define CONFIG_DEFAULT_SPI_MASTER_SPEED 1000000
+#define CONFIG_DEFAULT_SPI_MASTER_CLOCK_POL 0
+#define CONFIG_DEFAULT_SPI_MASTER_CLOCK_PHASE 0
+#define CONFIG_DEFAULT_SPI_MASTER_BITS 8
+
 /* GETOPT configuration line */
-#define GETOPT_LINE CONFIG_OPTION_HELP CONFIG_OPTION_LOG_LEVEL ":" CONFIG_OPTION_LOG_SYSLOG                                          \
-    CONFIG_OPTION_LOG_STDOUT CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" CONFIG_OPTION_MODE_TO_MODEM \
-        CONFIG_OPTION_MODE_FROM_MODEM CONFIG_OPTION_DEST_IP_ADDRESS ":" CONFIG_OPTION_DEST_PORT ":" CONFIG_OPTION_LISTENING_PORT ":"
+#define GETOPT_LINE \
+    CONFIG_OPTION_HELP \
+    CONFIG_OPTION_LOG_LEVEL ":" \
+    CONFIG_OPTION_LOG_SYSLOG \
+    CONFIG_OPTION_LOG_STDOUT \
+    CONFIG_OPTION_TIME_DELIVERY_LIMIT ":" \
+    CONFIG_OPTION_SIZE_DELIVERY_LIMIT ":" \
+    CONFIG_OPTION_MODE_TO_MODEM \
+    CONFIG_OPTION_MODE_FROM_MODEM \
+    CONFIG_OPTION_DEST_IP_ADDRESS ":" \
+    CONFIG_OPTION_DEST_PORT ":" \
+    CONFIG_OPTION_LISTENING_PORT ":"
 
 /* Command line help line */
-#define HELP_COMMAND                                                                                                                                                                                                                                                                                                                                                                                                          \
-    "[-" CONFIG_OPTION_MODE_TO_MODEM "] "                                                                                                                                                                                                                                                                                                                                                                                     \
-    "[-" CONFIG_OPTION_MODE_FROM_MODEM "] "                                                                                                                                                                                                                                                                                                                                                                                   \
-    "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_TIME_DELIVERY_LIMIT) "}] "                                                                                                                                                                                                                                                                                                                                \
-                                                                                         "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT) "}] "                                                                                                                                                                                                                                           \
-                                                                                                                                                                              "[-" CONFIG_OPTION_DEST_IP_ADDRESS " {" CONFIG_DEFAULT_DEST_IP_ADDRESS "}] "                                                                                                                                                                    \
-                                                                                                                                                                              "[-" CONFIG_OPTION_DEST_PORT " {" xstr(CONFIG_DEFAULT_DEST_PORT) "}] "                                                                                                                                                                          \
-                                                                                                                                                                                                                                               "[-" CONFIG_OPTION_LISTENING_PORT " {" xstr(CONFIG_DEFAULT_LISTENING_PORT) "}] "                                                                                               \
-                                                                                                                                                                                                                                                                                                                          "[-" CONFIG_OPTION_LOG_LEVEL " {" xstr(CONFIG_DEFAULT_LOG_LEVEL) "}] "                              \
-                                                                                                                                                                                                                                                                                                                                                                                           "[-" CONFIG_OPTION_LOG_SYSLOG "] " \
-                                                                                                                                                                                                                                                                                                                                                                                           "[-" CONFIG_OPTION_LOG_STDOUT "] " \
-                                                                                                                                                                                                                                                                                                                                                                                           "[-" CONFIG_OPTION_HELP "]\n"
+#define HELP_COMMAND                                                                            \
+    "[-" CONFIG_OPTION_MODE_TO_MODEM "] "                                                       \
+    "[-" CONFIG_OPTION_MODE_FROM_MODEM "] "                                                     \
+    "[-" CONFIG_OPTION_TIME_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_TIME_DELIVERY_LIMIT) "}] "  \
+    "[-" CONFIG_OPTION_SIZE_DELIVERY_LIMIT " {" xstr(CONFIG_DEFAULT_SIZE_DELIVERY_LIMIT) "}] "  \
+    "[-" CONFIG_OPTION_DEST_IP_ADDRESS " {" CONFIG_DEFAULT_DEST_IP_ADDRESS "}] "                \
+    "[-" CONFIG_OPTION_DEST_PORT " {" xstr(CONFIG_DEFAULT_DEST_PORT) "}] "                      \
+    "[-" CONFIG_OPTION_LISTENING_PORT " {" xstr(CONFIG_DEFAULT_LISTENING_PORT) "}] "            \
+    "[-" CONFIG_OPTION_LOG_LEVEL " {" xstr(CONFIG_DEFAULT_LOG_LEVEL) "}] "                      \
+    "[-" CONFIG_OPTION_LOG_SYSLOG "] "                                                          \
+    "[-" CONFIG_OPTION_LOG_STDOUT "] "                                                          \
+    "[-" CONFIG_OPTION_HELP "]\n"
 
 Config *Config::getInstance(void)
 {
@@ -82,6 +96,11 @@ void Config::setDefaultValues(void)
     strncpy(destinationIpAddress, CONFIG_DEFAULT_DEST_IP_ADDRESS, sizeof(destinationIpAddress));
     destinationPort = CONFIG_DEFAULT_DEST_PORT;
     listeningPort = CONFIG_DEFAULT_LISTENING_PORT;
+    /* SPI master */
+    spiMasterSpeed = CONFIG_DEFAULT_SPI_MASTER_SPEED;
+    spiMasterClockPolarity = CONFIG_DEFAULT_SPI_MASTER_CLOCK_POL;
+    spiMasterClockPhase = CONFIG_DEFAULT_SPI_MASTER_CLOCK_PHASE;
+    spiMasterBits = CONFIG_DEFAULT_SPI_MASTER_BITS;
 }
 
 Config::Error Config::init(int argc, char *argv[])
@@ -237,6 +256,26 @@ int Config::getDestinationPort(void)
 int Config::getListeningPort(void)
 {
     return listeningPort;
+}
+
+unsigned int Config::getSpiMasterSpeed(void)
+{
+    return spiMasterSpeed;
+}
+
+unsigned char Config::getSpiMasterClockPolarity(void)
+{
+    return spiMasterClockPolarity;
+}
+
+unsigned char Config::getSpiMasterClockPhase(void)
+{
+    return spiMasterClockPhase;
+}
+
+unsigned char Config::getSpiMasterBits(void)
+{
+    return spiMasterBits;
 }
 
 void Config::help(int argc, char *argv[])
