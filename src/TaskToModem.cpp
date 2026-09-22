@@ -13,11 +13,6 @@ const char *TaskToModem::getName(void)
 
 void TaskToModem::prepare(void)
 {
-    /* expendedTime = 0; */
-
-    source->init();
-    sink->init();
-
     source->start();
     sink->start();
 

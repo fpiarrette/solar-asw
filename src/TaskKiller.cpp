@@ -15,7 +15,6 @@ const char *TaskKiller::getName(void)
 
 void TaskKiller::prepare(void)
 {
-    source->init();
     source->start();
 
     L_NOTICE(LOG_PREFIX "prepared");
@@ -35,7 +34,7 @@ Scheduller::Task::Result TaskKiller::run(long int time)
     {
         /* trim string */
         buffer[strcspn(buffer, "\r\n")] = '\0';
-    
+
         if ((strcmp("stop", buffer) == 0) || (strcmp("STOP", buffer) == 0))
         {
             Alarms::getInstance()->set(ALARM_DEF_STOP);

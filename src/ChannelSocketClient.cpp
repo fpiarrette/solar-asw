@@ -10,8 +10,10 @@
 
 #define LOG_PREFIX "Channel TCP client "
 
-Channel::Error ChannelSocketClient::init(void)
+Channel::Error ChannelSocketClient::start(void)
 {
+    Channel::Error r;
+
     /* client socket is created */
     fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -22,13 +24,6 @@ Channel::Error ChannelSocketClient::init(void)
     }
 
     L_NOTICE(LOG_PREFIX "client socket file descriptor %d", fd);
-
-    return Channel::Error::E_OK;
-}
-
-Channel::Error ChannelSocketClient::start(void)
-{
-    Channel::Error r;
 
     L_NOTICE(LOG_PREFIX "trying to connect to %s:%d...", ipAddress, port);
 
@@ -76,7 +71,8 @@ Channel::Error ChannelSocketClient::rx(char *data, int size, int *received)
 
 Channel::Error ChannelSocketClient::stop(void)
 {
-    if (fd > 0) {
+    if (fd > 0)
+    {
         Channel::Error e = secureStop(fd);
         fd = -1;
         L_NOTICE(LOG_PREFIX "sttoped");

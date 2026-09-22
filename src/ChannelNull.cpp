@@ -4,12 +4,6 @@
 
 #define LOG_PREFIX "Null channel "
 
-Channel::Error ChannelNull::init(void)
-{
-    L_NOTICE(LOG_PREFIX "init");
-    return Channel::Error::E_OK;
-}
-
 Channel::Error ChannelNull::start(void)
 {
     L_NOTICE(LOG_PREFIX "start");

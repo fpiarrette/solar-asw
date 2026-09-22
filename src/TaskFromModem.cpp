@@ -15,9 +15,6 @@ void TaskFromModem::prepare(void)
 {
     /* expendedTime = 0; */
 
-    source->init();
-    sink->init();
-
     source->start();
     sink->start();
 
