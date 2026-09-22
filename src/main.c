@@ -41,17 +41,7 @@ int main(int argc, char *argv[])
 
         L_INFO("Starting...");
 
-#ifdef DEBUG
-        L_DEBUG("Debug version");
-#else
-        L_NOTICE("Release version");
-#endif
-
-#if PLATFORM_ID == PLATFORM_HOST
-        L_NOTICE("Platform: host");
-#else
-        L_NOTICE("Platform: target");
-#endif
+        L_NOTICE(Platform::getInstance()->getName());
 
         if (Config::getInstance()->isShowHelp())
         {
