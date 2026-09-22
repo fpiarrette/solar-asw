@@ -1,7 +1,7 @@
 #include "Platform.h"
 
 #include "Gpio.h"
-#include "platform_def.h"
+#include "setup.h"
 #include "Logger.h"
 
 #define LOG_PREFIX "Platform xt_atto_lxl"
