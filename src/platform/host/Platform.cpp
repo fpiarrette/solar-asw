@@ -29,3 +29,8 @@ Gpio *Platform::getGpio(void)
 {
     return &gpio;
 }
+
+const char *Platform::getName(void)
+{
+    return "Platform host (" BUILD_TYPE ")";
+}

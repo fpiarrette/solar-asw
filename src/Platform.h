@@ -4,6 +4,12 @@
 
 #include "Gpio.h"
 
+#ifdef DEBUG
+#define BUILD_TYPE "Debug version"
+#else
+#define BUILD_TYPE "Release version"
+#endif
+
 class Platform
 {
 public:
@@ -11,6 +17,7 @@ public:
     void init(void);
     void shutdown(void);
     Gpio *getGpio(void);
+    const char *getName(void);
 
 protected:
     Platform();
