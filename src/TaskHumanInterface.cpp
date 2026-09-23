@@ -32,12 +32,12 @@ Scheduller::Task::Result TaskHumanInterface::run(long int time)
 
     if (Alarms::getInstance()->get(ALARM_DEF_ERROR))
     {
-        Platform::getInstance()->getGpio()->set(SETUP_GPIO_PORT, SETUP_GPIO_LINE_ERROR, 1);
+        Platform::getInstance()->getGpio()->set(SETUP_GPIO_ERROR_PORT, SETUP_GPIO_ERROR_LINE, 1);
     }
 
     if (Alarms::getInstance()->get(ALARM_DEF_WARNING))
     {
-        Platform::getInstance()->getGpio()->set(SETUP_GPIO_PORT, SETUP_GPIO_LINE_WARNING, 1);
+        Platform::getInstance()->getGpio()->set(SETUP_GPIO_WARNING_PORT, SETUP_GPIO_WARNING_LINE, 1);
     }
 
     L_DEBUG("GPIO error notified");
