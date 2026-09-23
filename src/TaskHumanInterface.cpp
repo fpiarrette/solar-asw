@@ -1,7 +1,6 @@
 #include "TaskHumanInterface.h"
 
 #include "Alarms.h"
-#include "alarm_def.h"
 #include "Logger.h"
 #include "Platform.h"
 #include "setup.h"
@@ -21,7 +20,7 @@ void TaskHumanInterface::prepare(void)
 int TaskHumanInterface::need(long int time)
 {
     int needsToBeExecuted;
-    needsToBeExecuted = Alarms::getInstance()->get(ALARM_DEF_ERROR) || Alarms::getInstance()->get(ALARM_DEF_WARNING);
+    needsToBeExecuted = Alarms::getInstance()->get(SETUP_ALARM_ERROR) || Alarms::getInstance()->get(SETUP_ALARM_WARNING);
     return needsToBeExecuted;
 }
 
@@ -30,12 +29,12 @@ Scheduller::Task::Result TaskHumanInterface::run(long int time)
     if (!need(time))
         return Scheduller::Task::Result::IDLE;
 
-    if (Alarms::getInstance()->get(ALARM_DEF_ERROR))
+    if (Alarms::getInstance()->get(SETUP_ALARM_ERROR))
     {
         Platform::getInstance()->getGpio()->set(SETUP_GPIO_ERROR_PORT, SETUP_GPIO_ERROR_LINE, 1);
     }
 
-    if (Alarms::getInstance()->get(ALARM_DEF_WARNING))
+    if (Alarms::getInstance()->get(SETUP_ALARM_WARNING))
     {
         Platform::getInstance()->getGpio()->set(SETUP_GPIO_WARNING_PORT, SETUP_GPIO_WARNING_LINE, 1);
     }

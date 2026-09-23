@@ -1,7 +1,6 @@
 #include "TaskRest.h"
 
 #include "Alarms.h"
-#include "alarm_def.h"
 #include "Logger.h"
 
 #define LOG_PREFIX "REST task "

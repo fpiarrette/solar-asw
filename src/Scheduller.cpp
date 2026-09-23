@@ -1,8 +1,8 @@
 #include "Scheduller.h"
 
 #include "Alarms.h"
-#include "alarm_def.h"
 #include "Logger.h"
+#include "setup.h"
 #include "Signals.h"
 #include "utils.h"
 
@@ -90,22 +90,22 @@ void Scheduller::run(void)
             utils_sleep(100);
         }
 
-        if (Alarms::getInstance()->get(ALARM_DEF_STOP))
+        if (Alarms::getInstance()->get(SETUP_ALARM_STOP))
         {
             paused = 1;
-            Alarms::getInstance()->clear(ALARM_DEF_STOP);
+            Alarms::getInstance()->clear(SETUP_ALARM_STOP);
         }
 
-        if (Alarms::getInstance()->get(ALARM_DEF_KILL))
+        if (Alarms::getInstance()->get(SETUP_ALARM_KILL))
         {
             terminated = 1;
-            Alarms::getInstance()->clear(ALARM_DEF_KILL);
+            Alarms::getInstance()->clear(SETUP_ALARM_KILL);
         }
 
-        if (Alarms::getInstance()->get(ALARM_DEF_RESUME))
+        if (Alarms::getInstance()->get(SETUP_ALARM_RESUME))
         {
             paused = 0;
-            Alarms::getInstance()->clear(ALARM_DEF_RESUME);
+            Alarms::getInstance()->clear(SETUP_ALARM_RESUME);
         }
     }
 
@@ -129,19 +129,19 @@ void Scheduller::publishTimeAlarms(long int time)
 
     if (t != previousTenthSecondCounter)
     {
-        Alarms::getInstance()->set(ALARM_DEF_TENTH_SECOND);
+        Alarms::getInstance()->set(SETUP_ALARM_TENTH_SECOND);
         previousTenthSecondCounter = t;
     }
 
     if (s != previousSecondCounter)
     {
-        Alarms::getInstance()->set(ALARM_DEF_SECOND);
+        Alarms::getInstance()->set(SETUP_ALARM_SECOND);
         previousSecondCounter = s;
     }
 
     if (h != previousHundredMiliSeconds)
     {
-        Alarms::getInstance()->set(ALARM_DEF_HUNDRED_MS);
+        Alarms::getInstance()->set(SETUP_ALARM_HUNDRED_MS);
         previousHundredMiliSeconds = h;
     }
 }

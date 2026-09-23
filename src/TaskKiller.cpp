@@ -1,8 +1,8 @@
 #include "TaskKiller.h"
 
-#include "alarm_def.h"
 #include "Alarms.h"
 #include "Logger.h"
+#include "setup.h"
 
 #include <string.h>
 
@@ -37,17 +37,17 @@ Scheduller::Task::Result TaskKiller::run(long int time)
 
         if ((strcmp("stop", buffer) == 0) || (strcmp("STOP", buffer) == 0))
         {
-            Alarms::getInstance()->set(ALARM_DEF_STOP);
+            Alarms::getInstance()->set(SETUP_ALARM_STOP);
         }
 
         if ((strcmp("kill", buffer) == 0) || (strcmp("KILL", buffer) == 0))
         {
-            Alarms::getInstance()->set(ALARM_DEF_KILL);
+            Alarms::getInstance()->set(SETUP_ALARM_KILL);
         }
 
         if ((strcmp("resume", buffer) == 0) || (strcmp("RESUME", buffer) == 0))
         {
-            Alarms::getInstance()->set(ALARM_DEF_RESUME);
+            Alarms::getInstance()->set(SETUP_ALARM_RESUME);
         }
 
         return Scheduller::Task::Result::WORKED;
