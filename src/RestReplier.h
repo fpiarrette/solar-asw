@@ -43,6 +43,14 @@ protected:
         char *requestBody,
         int size);
 
+    enum MHD_Result processOutput(
+        struct MHD_Connection *connection,
+        const char *url,
+        const char *method,
+        const char *version,
+        char *requestBody,
+        int size);
+
 private:
 };
 

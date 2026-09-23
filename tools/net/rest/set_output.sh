@@ -15,9 +15,11 @@ project_dir=$(readlink -f $script_dir/../../..)
 
 echo "setting config to $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
 
-IP=0
-PORT=0
+IP=$1
+PORT=$2
 
-curl -i -X PATCH http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/api/output -H "Content-Type: application/json" -d '{"ip":${IP}, "port":${PORT}}' --output -
+BODY='{"ip":"'${IP}'","port":'${PORT}'}'
+
+curl -i -X PATCH http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/api/output -H "Content-Type: application/json" -d ${BODY} --output -
 
 echo ""

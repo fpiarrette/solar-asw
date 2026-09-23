@@ -47,6 +47,10 @@ enum MHD_Result RestReplier::process(
     {
         return processInput(connection, url, method, version, requestBody, size);
     }
+    else if (strcmp("/api/output", url) == 0)
+    {
+        return processOutput(connection, url, method, version, requestBody, size);
+    }
     else
     {
         return replyEmpty(connection, MHD_HTTP_NOT_FOUND);
@@ -150,6 +154,65 @@ enum MHD_Result RestReplier::processInput(
     }
 
     L_DEBUG("using channel=%lld\n", v);
+
+    json_decref(root);
+
+    /* send response */
+    MHD_Result result = replyEmpty(connection, MHD_HTTP_NO_CONTENT);
+
+    return result;
+}
+
+enum MHD_Result RestReplier::processOutput(
+    struct MHD_Connection *connection,
+    const char *url,
+    const char *method,
+    const char *version,
+    char *requestBody,
+    int size)
+{
+
+    json_error_t error;
+    json_t *root = json_loads(requestBody, 0, &error);
+    if (!root)
+    {
+        L_ERROR("Error parsing JSON: %s\n", error.text);
+        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
+    }
+
+    json_t *ip = json_object_get(root, "ip");
+    if (!ip)
+    {
+        L_ERROR("Error parsing JSON: ip node is not present");
+        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
+    }
+
+    const char *i = json_string_value(ip);
+    if (!i)
+    {
+        L_ERROR("Error parsing JSON: ip node is not a string");
+        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
+    }
+
+    json_t *port = json_object_get(root, "port");
+    if (!port)
+    {
+        L_ERROR("Error parsing JSON: port node is not present");
+        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
+    }
+
+    if (!json_is_integer(port))
+    {
+        L_ERROR("Error parsing JSON: port node is not integer");
+        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
+    }
+
+    json_int_t p = json_integer_value(port);
+
+    /* publish Alarm to notify that configured channer shall be used */
+    Alarms::getInstance()->set(SETUP_ALARM_NEW_OUTPUT);
+
+    L_DEBUG("using %s:%lld", i, p);
 
     json_decref(root);
 
