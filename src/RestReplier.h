@@ -35,7 +35,7 @@ protected:
         char *requestBody,
         int size);
 
-    enum MHD_Result processConfig(
+    enum MHD_Result processInput(
         struct MHD_Connection *connection,
         const char *url,
         const char *method,
