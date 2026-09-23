@@ -2,8 +2,6 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-#include "Alarms.h"
-
 /* **************************************************************************************** */
 /* custom GPIOs                                                                             */
 /* **************************************************************************************** */
@@ -20,21 +18,20 @@
 /* **************************************************************************************** */
 /* custom alamrs                                                                            */
 /* **************************************************************************************** */
-#define SETUP_ALARM_TENTH_SECOND (ALARM_DEF_10)
-#define SETUP_ALARM_SECOND (ALARM_DEF_11)
-#define SETUP_ALARM_HUNDRED_MS (ALARM_DEF_12)
+#define SETUP_ALARM_TENTH_SECOND (10)
+#define SETUP_ALARM_SECOND (11)
+#define SETUP_ALARM_HUNDRED_MS (12)
 
-#define SETUP_ALARM_ERROR (ALARM_DEF_20)
-#define SETUP_ALARM_WARNING (ALARM_DEF_21)
+#define SETUP_ALARM_INPUT_CHANNEL_0 (17)
+#define SETUP_ALARM_INPUT_CHANNEL_1 (18)
 
-#define SETUP_ALARM_KILL (ALARM_DEF_27)
-#define SETUP_ALARM_STOP (ALARM_DEF_28)
-#define SETUP_ALARM_RESUME (ALARM_DEF_29)
+#define SETUP_ALARM_NEW_OUTPUT (19)
 
-#define SETUP_ALARM_INPUT_CHANNEL_0 (ALARM_DEF_17)
-#define SETUP_ALARM_INPUT_CHANNEL_1 (ALARM_DEF_18)
+#define SETUP_ALARM_ERROR (20)
+#define SETUP_ALARM_WARNING (21)
 
-
-#define SETUP_ALARM_NEW_OUTPUT (ALARM_DEF_19)
+#define SETUP_ALARM_KILL (27)
+#define SETUP_ALARM_STOP (28)
+#define SETUP_ALARM_RESUME (29)
 
 #endif
