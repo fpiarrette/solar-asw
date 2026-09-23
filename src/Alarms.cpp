@@ -30,3 +30,13 @@ void Alarms::clearAll(void)
 {
     memset(alarms, 0, sizeof(alarms));
 }
+
+void *Alarms::getCookie(int alarmId)
+{
+    return &cookies[alarmId];
+}
+
+void Alarms::setCookie(int alarmId, void *c)
+{
+    memcpy(&cookies[alarmId], c, sizeof(Cookie));
+}
