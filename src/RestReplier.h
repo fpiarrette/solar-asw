@@ -16,6 +16,7 @@ public:
         int size);
 
     MHD_Result reply(struct MHD_Connection *connection, int code, const char *body, size_t size);
+    MHD_Result replyEmpty(struct MHD_Connection *connection, int code);
 
 protected:
     enum MHD_Result processStatus(
@@ -41,22 +42,6 @@ protected:
         const char *version,
         char *requestBody,
         int size);
-
-    enum MHD_Result processNotFound(
-        struct MHD_Connection *connection,
-        const char *url,
-        const char *method,
-        const char *version,
-        char *requestBody,
-        int size);
-
-    enum MHD_Result replyError(
-        struct MHD_Connection *connection,
-        const char *url,
-        const char *method,
-        const char *version,
-        int code,
-        const char *message);
 
 private:
 };
