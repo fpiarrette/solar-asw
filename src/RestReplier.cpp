@@ -1,8 +1,8 @@
 #include "RestReplier.h"
 
 #include "Alarms.h"
-#include "alarm_def.h"
 #include "Logger.h"
+#include "setup.h"
 
 #include <jansson.h>
 #include <stdio.h>
@@ -43,9 +43,9 @@ enum MHD_Result RestReplier::process(
     {
         return processStatistics(connection, url, method, version, requestBody, size);
     }
-    else if (strcmp("/api/config", url) == 0)
+    else if (strcmp("/api/input", url) == 0)
     {
-        return processConfig(connection, url, method, version, requestBody, size);
+        return processInput(connection, url, method, version, requestBody, size);
     }
     else
     {
@@ -107,7 +107,7 @@ enum MHD_Result RestReplier::processStatistics(
     return result;
 }
 
-enum MHD_Result RestReplier::processConfig(
+enum MHD_Result RestReplier::processInput(
     struct MHD_Connection *connection,
     const char *url,
     const char *method,
@@ -124,15 +124,32 @@ enum MHD_Result RestReplier::processConfig(
         return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
     }
 
-    json_t *mode = json_object_get(root, "mode");
-    json_t *speed = json_object_get(root, "speed");
-
-    (void)mode;
-
-    if (json_is_integer(speed))
+    json_t *channel = json_object_get(root, "channel");
+    if (!channel)
     {
-        L_DEBUG("speed=%lld\n", (long long)json_integer_value(speed));
+        L_ERROR("Error parsing JSON: channel node is not present");
+        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
     }
+
+    if (!json_is_integer(channel))
+    {
+        L_ERROR("Error parsing JSON: channel node is not integer");
+        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
+    }
+
+    json_int_t v = json_integer_value(channel);
+
+    /* publish Alarm to notify that configured channer shall be used */
+    if (v == 0)
+    {
+        Alarms::getInstance()->set(SETUP_ALARM_INPUT_CHANNEL_0);
+    }
+    else
+    {
+        Alarms::getInstance()->set(SETUP_ALARM_INPUT_CHANNEL_1);
+    }
+
+    L_DEBUG("using channel=%lld\n", v);
 
     json_decref(root);
 
