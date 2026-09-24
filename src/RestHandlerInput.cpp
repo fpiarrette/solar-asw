@@ -19,31 +19,31 @@ enum MHD_Result RestHandlerInput::handle(
 {
 
     json_error_t error;
-    json_t *root = json_loads(requestBody, 0, &error);
-    if (!root)
+    json_t *rootNode = json_loads(requestBody, 0, &error);
+    if (!rootNode)
     {
         L_ERROR("Error parsing JSON: %s\n", error.text);
         return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
     }
 
-    json_t *channel = json_object_get(root, "channel");
-    if (!channel)
+    json_t *portNode = json_object_get(rootNode, "port");
+    if (!portNode)
     {
         L_ERROR("Error parsing JSON: channel node is not present");
         return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
     }
 
-    if (!json_is_integer(channel))
+    if (!json_is_integer(portNode))
     {
-        L_ERROR("Error parsing JSON: channel node is not integer");
+        L_ERROR("Error parsing JSON: port node is not integer");
         return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
     }
 
-    json_int_t v = json_integer_value(channel);
+    json_int_t v = json_integer_value(portNode);
 
     int reconf = reconfigureInput((int)v);
 
-    json_decref(root);
+    json_decref(rootNode);
 
     /* send response */
     MHD_Result result = replyEmpty(connection, reconf == 0 ? MHD_HTTP_NO_CONTENT : MHD_HTTP_INTERNAL_SERVER_ERROR);
@@ -51,11 +51,11 @@ enum MHD_Result RestHandlerInput::handle(
     return result;
 }
 
-int RestHandlerInput::reconfigureInput(int channel)
+int RestHandlerInput::reconfigureInput(int port)
 {
     Channel::Error r;
 
-    L_DEBUG("using channel %d", channel);
+    L_DEBUG("using port %d", port);
 
     r = inputChannel->stop();
 
@@ -66,7 +66,7 @@ int RestHandlerInput::reconfigureInput(int channel)
         return -1;
     }
 
-    r = inputChannel->setPort(channel);
+    r = inputChannel->setPort(port);
 
     L_DEBUG("setting port: %d", r);
 
