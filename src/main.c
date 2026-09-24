@@ -83,7 +83,10 @@ static void configure_and_run(void)
     TaskKiller taskKiller;
     TaskRest taskRest;
     RestReplier replier;
-    taskRest.setReplier(&replier);
+    taskRest.addReplier("/api/input", &replier);
+    taskRest.addReplier("/api/output", &replier);
+    taskRest.addReplier("/api/status", &replier);
+    taskRest.addReplier("/api/statistics", &replier);
 
     /* channels */
     ChannelSocketClient channelSocketClient;
