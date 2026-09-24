@@ -7,7 +7,7 @@
 
 http_context_t TaskRest::context;
 
-std::unordered_map<std::string, RestReplier *> TaskRest::repliers;
+std::unordered_map<std::string, RestHandler *> TaskRest::handlers;
 
 TaskRest::TaskRest()
 {
@@ -15,9 +15,9 @@ TaskRest::TaskRest()
     port = 8888;
 }
 
-void TaskRest::addReplier(const char *uri, RestReplier *r)
+void TaskRest::addHandler(const char *uri, RestHandler *h)
 {
-    repliers[uri] = r;
+    handlers[uri] = h;
 }
 
 const char *TaskRest::getName(void)
@@ -72,14 +72,14 @@ enum MHD_Result TaskRest::requestHandlerSingle(
     size_t *uploadDataSize,
     void **con_cls)
 {
-    RestReplier *replier;
-    MHD_Result result;
+    RestHandler *h;
+    MHD_Result r;
 
-    replier = repliers[url];
+    h = handlers[url];
 
-    if (replier != NULL)
+    if (h != NULL)
     {
-        result = replier->process(connection, url, method, version, 0, 0);
+        r = h->handle(connection, url, method, version, 0, 0);
     }
     else
     {
@@ -88,7 +88,7 @@ enum MHD_Result TaskRest::requestHandlerSingle(
 
     context.worked = 1;
 
-    return result;
+    return r;
 }
 
 enum MHD_Result TaskRest::requestHandlerParts(
@@ -125,21 +125,21 @@ enum MHD_Result TaskRest::requestHandlerParts(
         else
         {
             L_DEBUG("last call");
-            RestReplier *replier;
-            MHD_Result result;
+            RestHandler *h;
+            MHD_Result r;
 
-            replier = repliers[url];
+            h = handlers[url];
 
-            if (replier != NULL)
+            if (h != NULL)
             {
-                result = replier->process(connection, url, method, version, context.buffer, context.size);
+                r = h->handle(connection, url, method, version, context.buffer, context.size);
             }
             else
             {
                 /* FIXME */
             }
             context.worked = 1;
-            return result;
+            return r;
         }
     }
 }

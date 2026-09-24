@@ -91,7 +91,11 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/LoggerStdout.cpp \
 	$(SRC_DIR)/LoggerSyslog.cpp \
 	$(SRC_DIR)/Config.cpp \
-	$(SRC_DIR)/RestReplier.cpp \
+	$(SRC_DIR)/RestHandler.cpp \
+	$(SRC_DIR)/RestHandlerInput.cpp \
+	$(SRC_DIR)/RestHandlerOutput.cpp \
+	$(SRC_DIR)/RestHandlerStatistics.cpp \
+	$(SRC_DIR)/RestHandlerStatus.cpp \
 	$(SRC_DIR)/TaskFromModem.cpp \
 	$(SRC_DIR)/TaskHumanInterface.cpp \
 	$(SRC_DIR)/TaskIdle.cpp \

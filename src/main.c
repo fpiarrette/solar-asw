@@ -19,7 +19,10 @@
 #include "TaskRest.h"
 #include "TaskToModem.h"
 
-#include "RestReplier.h"
+#include "RestHandlerInput.h"
+#include "RestHandlerOutput.h"
+#include "RestHandlerStatistics.h"
+#include "RestHandlerStatus.h"
 
 #include <stdlib.h>
 
@@ -82,11 +85,14 @@ static void configure_and_run(void)
     TaskIdle taskIdle;
     TaskKiller taskKiller;
     TaskRest taskRest;
-    RestReplier replier;
-    taskRest.addReplier("/api/input", &replier);
-    taskRest.addReplier("/api/output", &replier);
-    taskRest.addReplier("/api/status", &replier);
-    taskRest.addReplier("/api/statistics", &replier);
+    RestHandlerInput restHandlerInput;
+    RestHandlerOutput restHandlerOutput;
+    RestHandlerStatistics restHandlerStatistics;
+    RestHandlerStatus restHandlerStatus;
+    taskRest.addHandler("/api/input", &restHandlerInput);
+    taskRest.addHandler("/api/output", &restHandlerOutput);
+    taskRest.addHandler("/api/status", &restHandlerStatus);
+    taskRest.addHandler("/api/statistics", &restHandlerStatistics);
 
     /* channels */
     ChannelSocketClient channelSocketClient;

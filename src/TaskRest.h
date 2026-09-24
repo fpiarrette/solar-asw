@@ -5,7 +5,7 @@
 #include "Scheduller.h"
 #include "microhttpd.h"
 
-#include "RestReplier.h"
+#include "RestHandler.h"
 
 #include <iostream>
 #include <string>
@@ -30,7 +30,7 @@ public:
     void prepare(void);
     Scheduller::Task::Result run(long int time);
     void stop(void);
-    void addReplier(const char *uri, RestReplier *r);
+    void addHandler(const char *uri, RestHandler *h);
 
 protected:
     static enum MHD_Result requestHandler(
@@ -65,7 +65,7 @@ private:
     struct MHD_Daemon *daemon;
     static http_context_t context;
     int port;
-    static std::unordered_map<std::string, RestReplier *> repliers;
+    static std::unordered_map<std::string, RestHandler *> handlers;
 };
 
 #endif
