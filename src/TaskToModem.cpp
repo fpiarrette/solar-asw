@@ -35,16 +35,16 @@ Scheduller::Task::Result TaskToModem::run(long int time)
     if (!need(time))
         return Scheduller::Task::Result::IDLE;
 
-    storage.push(bufferRx, bufferRxSize);
+    circular.push(bufferRx, bufferRxSize);
 
-    r = storage.peek(b, sizeof(b));
+    r = circular.peek(b, sizeof(b));
 
     sink->tx(b, r, &t);
 
     if (t > 0)
     {
         /* only transmitted data is consumed */
-        storage.consume(t);
+        circular.consume(t);
     }
 
     return Scheduller::Task::Result::WORKED;

@@ -26,7 +26,7 @@ protected:
 private:
     Channel *source;
     Channel *sink;
-    CircularBuffer<char, 1024> storage;
+    CircularBuffer<char, 1024> circular;
     char bufferRx[512];
     int bufferRxSize;
 };
