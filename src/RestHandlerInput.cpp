@@ -41,23 +41,53 @@ enum MHD_Result RestHandlerInput::handle(
 
     json_int_t v = json_integer_value(channel);
 
-    /* publish Alarm to notify that configured channer shall be used */
-    if (v == 0)
-    {
-        Alarms::getInstance()->set(SETUP_ALARM_INPUT_CHANNEL_0);
-    }
-    else
-    {
-        Alarms::getInstance()->set(SETUP_ALARM_INPUT_CHANNEL_1);
-    }
-
-    L_DEBUG("using channel=%lld\n", v);
+    int reconf = reconfigureInput((int)v);
 
     json_decref(root);
 
     /* send response */
-    MHD_Result result = replyEmpty(connection, MHD_HTTP_NO_CONTENT);
+    MHD_Result result = replyEmpty(connection, reconf == 0 ? MHD_HTTP_NO_CONTENT : MHD_HTTP_INTERNAL_SERVER_ERROR);
 
     return result;
 }
 
+int RestHandlerInput::reconfigureInput(int channel)
+{
+    Channel::Error r;
+
+    L_DEBUG("using channel %d", channel);
+
+    r = inputChannel->stop();
+
+    L_DEBUG("stopping: %d", r);
+
+    if ((r != Channel::Error::E_OK) && (r != Channel::Error::E_STA))
+    {
+        return -1;
+    }
+
+    r = inputChannel->setPort(channel);
+
+    L_DEBUG("setting port: %d", r);
+
+    if (r != Channel::Error::E_OK)
+    {
+        return -1;
+    }
+
+    r = inputChannel->start();
+
+    L_DEBUG("starting: %d", r);
+
+    if (r != Channel::Error::E_OK)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+void RestHandlerInput::setInput(ChannelSocketServer *i)
+{
+    inputChannel = i;
+}
