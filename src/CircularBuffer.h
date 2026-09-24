@@ -62,6 +62,13 @@ public:
         return count;
     }
 
+    void clear()
+    {
+        head_ = 0;
+        tail_ = 0;
+        size_ = 0;
+    }
+
     bool empty() const
     {
         return size_ == 0;
