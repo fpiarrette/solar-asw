@@ -6,6 +6,7 @@
 #include "microhttpd.h"
 
 #include "RestHandler.h"
+#include "CircularBuffer.h"
 
 #include <iostream>
 #include <string>
@@ -13,8 +14,7 @@
 
 typedef struct
 {
-    char buffer[8 * 1024];
-    size_t size;
+    CircularBuffer<char, 8 * 1024> circular;
     int worked;
 } http_context_t;
 

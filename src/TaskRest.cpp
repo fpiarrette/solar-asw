@@ -103,7 +103,7 @@ enum MHD_Result TaskRest::requestHandlerParts(
 {
     if (*con_cls == NULL)
     {
-        memset(&context, 0, sizeof(context));
+        context.circular.clear();
         *con_cls = &context;
         context.worked = 1;
         return MHD_YES;
@@ -113,8 +113,7 @@ enum MHD_Result TaskRest::requestHandlerParts(
         if (*uploadDataSize > 0)
         {
             http_context_t *c = (http_context_t *)*con_cls;
-            memcpy(&c->buffer[c->size], uploadData, *uploadDataSize);
-            c->size += *uploadDataSize;
+            c->circular.push(uploadData, *uploadDataSize);
             *uploadDataSize = 0;
             context.worked = 1;
             return MHD_YES;
@@ -128,7 +127,10 @@ enum MHD_Result TaskRest::requestHandlerParts(
 
             if (h != NULL)
             {
-                r = h->handle(connection, url, method, version, context.buffer, context.size);
+                char b[2048];
+                int d = context.circular.peek(b, sizeof(b));
+                r = h->handle(connection, url, method, version, b, d);
+                context.circular.consume(d);
             }
             else
             {
