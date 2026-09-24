@@ -18,14 +18,6 @@ void send_n_receive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
 
     spi->setDeviceName(device_name);
 
-    result = spi->init();
-
-    if (result != Channel::Error::E_OK)
-    {
-        L_ERROR("initialization");
-        return;
-    }
-
     result = spi->start();
 
     if (result != Channel::Error::E_OK)
