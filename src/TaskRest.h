@@ -7,6 +7,10 @@
 
 #include "RestReplier.h"
 
+#include <iostream>
+#include <string>
+#include <unordered_map>
+
 typedef struct
 {
     char buffer[8 * 1024];
@@ -26,7 +30,7 @@ public:
     void prepare(void);
     Scheduller::Task::Result run(long int time);
     void stop(void);
-    static void setReplier(RestReplier *replier);
+    void addReplier(const char *uri, RestReplier *r);
 
 protected:
     static enum MHD_Result requestHandler(
@@ -61,7 +65,7 @@ private:
     struct MHD_Daemon *daemon;
     static http_context_t context;
     int port;
-    static RestReplier *replier;
+    static std::unordered_map<std::string, RestReplier *> repliers;
 };
 
 #endif
