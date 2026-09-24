@@ -93,6 +93,7 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/Config.cpp \
 	$(SRC_DIR)/RestHandler.cpp \
 	$(SRC_DIR)/RestHandlerInput.cpp \
+	$(SRC_DIR)/RestHandlerMux.cpp \
 	$(SRC_DIR)/RestHandlerOutput.cpp \
 	$(SRC_DIR)/RestHandlerStatistics.cpp \
 	$(SRC_DIR)/RestHandlerStatus.cpp \
