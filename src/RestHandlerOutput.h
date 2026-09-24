@@ -4,6 +4,8 @@
 
 #include "RestHandler.h"
 
+#include "ChannelSocketClient.h"
+
 class RestHandlerOutput : public RestHandler
 {
 public:
@@ -15,8 +17,12 @@ public:
         char *requestBody,
         int size);
 
+    void setOutput(ChannelSocketClient *outputChannel);
+
 protected:
+    int reconfigureOutput(const char *ipString, int port);
 private:
+    ChannelSocketClient *outputChannel;
 };
 
 #endif

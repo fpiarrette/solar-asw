@@ -55,26 +55,64 @@ enum MHD_Result RestHandlerOutput::handle(
 
     json_int_t portInteger = json_integer_value(portNode);
 
-    /* publish Alarm to notify that configured channer shall be used */
-    int buffer[5];
+    /* configure channel socket client */
 
-    if (sscanf(ipString, "%d.%d.%d.%d", &buffer[0], &buffer[1], &buffer[2], &buffer[3]) != 4)
-    {
-        L_ERROR("Error parsing JSON: IP string value is wrong");
-        return replyEmpty(connection, MHD_HTTP_BAD_REQUEST);
-    }
-
-    buffer[4] = (int)portInteger;
-
-    Alarms::getInstance()->set(SETUP_ALARM_NEW_OUTPUT);
-    Alarms::getInstance()->setCookie(SETUP_ALARM_NEW_OUTPUT, buffer);
-
-    L_DEBUG("using %d.%d.%d.%d:%d", buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
+    int reconf = reconfigureOutput(ipString, (int)portInteger);
 
     json_decref(rootNode);
 
     /* send response */
-    MHD_Result result = replyEmpty(connection, MHD_HTTP_NO_CONTENT);
+    MHD_Result result = replyEmpty(connection, reconf == 0 ? MHD_HTTP_NO_CONTENT : MHD_HTTP_INTERNAL_SERVER_ERROR);
 
     return result;
+}
+
+int RestHandlerOutput::reconfigureOutput(const char *ipString, int port)
+{
+    Channel::Error r;
+
+    L_DEBUG("using %s:%d", ipString, port);
+
+    r = outputChannel->stop();
+
+    L_DEBUG("stopping: %d", r);
+
+    if ((r != Channel::Error::E_OK) && (r != Channel::Error::E_STA))
+    {
+        return -1;
+    }
+
+    r = outputChannel->setIpAddress(ipString);
+
+    L_DEBUG("setting ip: %d", r);
+
+    if (r != Channel::Error::E_OK)
+    {
+        return -1;
+    }
+
+    r = outputChannel->setPort(port);
+
+    L_DEBUG("setting port: %d", r);
+
+    if (r != Channel::Error::E_OK)
+    {
+        return -1;
+    }
+
+    r = outputChannel->start();
+
+    L_DEBUG("starting: %d", r);
+
+    if (r != Channel::Error::E_OK)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+void RestHandlerOutput::setOutput(ChannelSocketClient *o)
+{
+    outputChannel = o;
 }
