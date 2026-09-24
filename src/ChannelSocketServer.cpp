@@ -10,8 +10,12 @@
 
 #define LOG_PREFIX "Channel TCP server "
 
-Channel::Error ChannelSocketServer::init(void)
+Channel::Error ChannelSocketServer::start(void)
 {
+    Channel::Error r;
+
+    L_NOTICE(LOG_PREFIX "starting");
+
     /* protocol AF_NET -> IPv4, SOCK_STREAM -> TCP socket */
     fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -35,15 +39,6 @@ Channel::Error ChannelSocketServer::init(void)
     }
 
     L_NOTICE(LOG_PREFIX "bound to %d", port);
-
-    return Channel::Error::E_OK;
-}
-
-Channel::Error ChannelSocketServer::start(void)
-{
-    Channel::Error r;
-
-    L_NOTICE(LOG_PREFIX "starting");
 
     if (listen(fd, 5) < 0)
     {
@@ -126,12 +121,14 @@ Channel::Error ChannelSocketServer::stop(void)
     Channel::Error r1 = Channel::Error::E_OK;
     Channel::Error r2 = Channel::Error::E_OK;
 
-    if (clientSocket > 0) {
+    if (clientSocket > 0)
+    {
         r1 = secureStop(clientSocket);
         clientSocket = -1;
     }
 
-    if (fd > 0) {
+    if (fd > 0)
+    {
         r2 = secureStop(fd);
         fd = -1;
     }

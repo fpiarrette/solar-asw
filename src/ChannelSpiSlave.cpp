@@ -26,7 +26,7 @@ ChannelSpiSlave::ChannelSpiSlave(void)
     fd = -1;
 }
 
-Channel::Error ChannelSpiSlave::init(void)
+Channel::Error ChannelSpiSlave::start(void)
 {
     if (fd > 0)
     {
@@ -54,11 +54,6 @@ Channel::Error ChannelSpiSlave::init(void)
 
     L_NOTICE(LOG_PREFIX "device %s initialized: fd %d", deviceName, fd);
 
-    return Channel::Error::E_OK;
-}
-
-Channel::Error ChannelSpiSlave::start(void)
-{
     L_NOTICE(LOG_PREFIX "started");
 
     return Channel::Error::E_OK;

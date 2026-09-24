@@ -39,36 +39,6 @@ ChannelSpiMaster::ChannelSpiMaster(void)
     speed = 1000000;
 }
 
-Channel::Error ChannelSpiMaster::init(void)
-{
-    if (fd > 0)
-    {
-        L_ERROR("incorrect state");
-
-        return Channel::Error::E_STA;
-    }
-
-    if (strlen(deviceName) == 0)
-    {
-        L_ERROR("device name not configured");
-
-        return Channel::Error::E_STA;
-    }
-
-    fd = open(deviceName, O_RDWR);
-
-    if (fd < 0)
-    {
-        LOGGER_DEBUG_ERRNO;
-
-        return Channel::Error::E_INT;
-    }
-
-    L_NOTICE(LOG_PREFIX "device %s initialized: fd %d", deviceName, fd);
-
-    return Channel::Error::E_OK;
-}
-
 void ChannelSpiMaster::dumpStatus(void)
 {
     __u8 lsb, bits;
@@ -104,6 +74,31 @@ void ChannelSpiMaster::dumpStatus(void)
 Channel::Error ChannelSpiMaster::start(void)
 {
     int mode;
+
+    if (fd > 0)
+    {
+        L_ERROR("incorrect state");
+
+        return Channel::Error::E_STA;
+    }
+
+    if (strlen(deviceName) == 0)
+    {
+        L_ERROR("device name not configured");
+
+        return Channel::Error::E_STA;
+    }
+
+    fd = open(deviceName, O_RDWR);
+
+    if (fd < 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+
+        return Channel::Error::E_INT;
+    }
+
+    L_NOTICE(LOG_PREFIX "device %s initialized: fd %d", deviceName, fd);
 
     if (fd < 0)
     {

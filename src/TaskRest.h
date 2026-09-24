@@ -5,7 +5,11 @@
 #include "Scheduller.h"
 #include "microhttpd.h"
 
-#include "RestReplier.h"
+#include "RestHandler.h"
+
+#include <iostream>
+#include <string>
+#include <unordered_map>
 
 typedef struct
 {
@@ -26,7 +30,7 @@ public:
     void prepare(void);
     Scheduller::Task::Result run(long int time);
     void stop(void);
-    static void setReplier(RestReplier *replier);
+    void addHandler(const char *uri, RestHandler *h);
 
 protected:
     static enum MHD_Result requestHandler(
@@ -61,7 +65,7 @@ private:
     struct MHD_Daemon *daemon;
     static http_context_t context;
     int port;
-    static RestReplier *replier;
+    static std::unordered_map<std::string, RestHandler *> handlers;
 };
 
 #endif

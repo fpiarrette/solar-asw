@@ -10,8 +10,16 @@
 
 #define LOG_PREFIX "Channel TCP client "
 
-Channel::Error ChannelSocketClient::init(void)
+Channel::Error ChannelSocketClient::start(void)
 {
+    Channel::Error r;
+
+    if (fd > 0)
+    {
+        L_WARNING(LOG_PREFIX "already started!");
+        return Channel::Error::E_STA;
+    }
+
     /* client socket is created */
     fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -22,13 +30,6 @@ Channel::Error ChannelSocketClient::init(void)
     }
 
     L_NOTICE(LOG_PREFIX "client socket file descriptor %d", fd);
-
-    return Channel::Error::E_OK;
-}
-
-Channel::Error ChannelSocketClient::start(void)
-{
-    Channel::Error r;
 
     L_NOTICE(LOG_PREFIX "trying to connect to %s:%d...", ipAddress, port);
 
@@ -41,6 +42,11 @@ Channel::Error ChannelSocketClient::start(void)
     if (connect(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0)
     {
         LOGGER_DEBUG_ERRNO;
+
+        L_DEBUG("stopping because it was not possible to connect");
+
+        /* silent stop */
+        stop();
 
         return Channel::Error::E_TRY;
     }
@@ -76,10 +82,11 @@ Channel::Error ChannelSocketClient::rx(char *data, int size, int *received)
 
 Channel::Error ChannelSocketClient::stop(void)
 {
-    if (fd > 0) {
+    if (fd > 0)
+    {
         Channel::Error e = secureStop(fd);
         fd = -1;
-        L_NOTICE(LOG_PREFIX "sttoped");
+        L_NOTICE(LOG_PREFIX "stopped");
         return e;
     }
     else

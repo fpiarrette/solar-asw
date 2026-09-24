@@ -1,14 +1,13 @@
 #include "TaskRest.h"
 
-#include "Alarms.h"
-#include "alarm_def.h"
 #include "Logger.h"
+#include "RestHandler.h"
 
 #define LOG_PREFIX "REST task "
 
 http_context_t TaskRest::context;
 
-RestReplier *TaskRest::replier;
+std::unordered_map<std::string, RestHandler *> TaskRest::handlers;
 
 TaskRest::TaskRest()
 {
@@ -16,9 +15,9 @@ TaskRest::TaskRest()
     port = 8888;
 }
 
-void TaskRest::setReplier(RestReplier *r)
+void TaskRest::addHandler(const char *uri, RestHandler *h)
 {
-    replier = r;
+    handlers[uri] = h;
 }
 
 const char *TaskRest::getName(void)
@@ -73,12 +72,23 @@ enum MHD_Result TaskRest::requestHandlerSingle(
     size_t *uploadDataSize,
     void **con_cls)
 {
+    RestHandler *h;
+    MHD_Result r;
 
-    MHD_Result ret = replier->process(connection, url, method, version, 0, 0);
+    h = handlers[url];
+
+    if (h != NULL)
+    {
+        r = h->handle(connection, url, method, version, 0, 0);
+    }
+    else
+    {
+        RestHandler::replyEmpty(connection, MHD_HTTP_NOT_FOUND);
+    }
 
     context.worked = 1;
 
-    return ret;
+    return r;
 }
 
 enum MHD_Result TaskRest::requestHandlerParts(
@@ -95,7 +105,6 @@ enum MHD_Result TaskRest::requestHandlerParts(
     {
         memset(&context, 0, sizeof(context));
         *con_cls = &context;
-        L_DEBUG("Context initialized->first call");
         context.worked = 1;
         return MHD_YES;
     }
@@ -103,21 +112,30 @@ enum MHD_Result TaskRest::requestHandlerParts(
     {
         if (*uploadDataSize > 0)
         {
-            L_DEBUG("upload data %d", *uploadDataSize);
             http_context_t *c = (http_context_t *)*con_cls;
             memcpy(&c->buffer[c->size], uploadData, *uploadDataSize);
             c->size += *uploadDataSize;
             *uploadDataSize = 0;
-            L_DEBUG("Current size %d", c->size);
             context.worked = 1;
             return MHD_YES;
         }
         else
         {
-            L_DEBUG("last call");
-            MHD_Result ret = replier->process(connection, url, method, version, context.buffer, context.size);
+            RestHandler *h;
+            MHD_Result r;
+
+            h = handlers[url];
+
+            if (h != NULL)
+            {
+                r = h->handle(connection, url, method, version, context.buffer, context.size);
+            }
+            else
+            {
+                RestHandler::replyEmpty(connection, MHD_HTTP_NOT_FOUND);
+            }
             context.worked = 1;
-            return ret;
+            return r;
         }
     }
 }
@@ -147,7 +165,6 @@ enum MHD_Result TaskRest::requestHandler(
     void **con_cls)
 {
     L_DEBUG("URL: '%s', method: '%s', upload data size %d", url, method, *uploadDataSize);
-    L_DEBUG("Context: %s", *con_cls == NULL ? "NULL" : "Non NULL");
 
     if (strcmp(MHD_HTTP_METHOD_GET, method) == 0)
     {

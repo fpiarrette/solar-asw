@@ -5,7 +5,8 @@
 class Channel
 {
 public:
-    enum Error {
+    enum Error
+    {
         E_OK = 0,
         E_TRY = -1,
         E_ARG = -2,
@@ -13,7 +14,6 @@ public:
         E_INT = 4
     };
 
-    virtual Error init(void) = 0;
     virtual Error start(void) = 0;
     virtual Error tx(char *data, int size, int *transmitted) = 0;
     virtual Error rx(char *data, int size, int *received) = 0;

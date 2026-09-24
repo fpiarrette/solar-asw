@@ -62,12 +62,7 @@ shift $((OPTIND-1))
 # include test software only for target platform
 if [ "$test" -eq "1" ]
 then
-  if [ "$PLATFORM_ID" -eq "$PLATFORM_TARGET" ]
-  then
-    cmd="$cmd tests"
-  else
-    echo "Test can not be compiled for host"
-  fi
+  cmd="$cmd tests"
 fi
 
 # info

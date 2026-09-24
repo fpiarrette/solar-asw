@@ -1,8 +1,8 @@
 #include "TaskIdle.h"
 
 #include "Alarms.h"
-#include "alarm_def.h"
 #include "Logger.h"
+#include "setup.h"
 
 #define LOG_PREFIX "Idle task "
 
@@ -18,7 +18,7 @@ void TaskIdle::prepare(void)
 
 int TaskIdle::need(long int time)
 {
-    return Alarms::getInstance()->get(ALARM_DEF_SECOND);
+    return Alarms::getInstance()->get(SETUP_ALARM_SECOND);
 }
 
 Scheduller::Task::Result TaskIdle::run(long int time)
@@ -28,7 +28,7 @@ Scheduller::Task::Result TaskIdle::run(long int time)
     if (!need(time))
         return Scheduller::Task::Result::IDLE;
 
-    Alarms::getInstance()->clear(ALARM_DEF_SECOND);
+    Alarms::getInstance()->clear(SETUP_ALARM_SECOND);
 
     if (time == 0)
     {

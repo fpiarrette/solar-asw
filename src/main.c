@@ -5,6 +5,7 @@
 #include "ChannelSocketClient.h"
 #include "ChannelSocketServer.h"
 #include "ChannelSpiMaster.h"
+#include "ChannelSpiSlave.h"
 
 #include "Gpio.h"
 
@@ -18,7 +19,11 @@
 #include "TaskRest.h"
 #include "TaskToModem.h"
 
-#include "RestReplier.h"
+#include "RestHandlerInput.h"
+#include "RestHandlerMux.h"
+#include "RestHandlerOutput.h"
+#include "RestHandlerStatistics.h"
+#include "RestHandlerStatus.h"
 
 #include <stdlib.h>
 
@@ -41,17 +46,7 @@ int main(int argc, char *argv[])
 
         L_INFO("Starting...");
 
-#ifdef DEBUG
-        L_DEBUG("Debug version");
-#else
-        L_NOTICE("Release version");
-#endif
-
-#if PLATFORM_ID == PLATFORM_HOST
-        L_NOTICE("Platform: host");
-#else
-        L_NOTICE("Platform: target");
-#endif
+        L_NOTICE(Platform::getInstance()->getName());
 
         if (Config::getInstance()->isShowHelp())
         {
@@ -82,6 +77,14 @@ static void configure_and_run(void)
     /* Platform implementation fixed at compilation time */
     Platform::getInstance()->init();
 
+    /* channels */
+    ChannelSocketClient channelSocketClient;
+    ChannelSocketServer channelSocketServer;
+    ChannelSocketServer channelSocketKillStop;
+    ChannelSpiMaster channelSpiMaster;
+    ChannelSpiSlave channelSpiSlave;
+    ChannelNull channelNull;
+
     Scheduller scheduller;
 
     /* tasks */
@@ -91,15 +94,19 @@ static void configure_and_run(void)
     TaskIdle taskIdle;
     TaskKiller taskKiller;
     TaskRest taskRest;
-    RestReplier replier;
-    taskRest.setReplier(&replier);
+    RestHandlerInput restHandlerInput;
+    RestHandlerMux restHandlerMux;
+    RestHandlerOutput restHandlerOutput;
+    RestHandlerStatistics restHandlerStatistics;
+    RestHandlerStatus restHandlerStatus;
+    taskRest.addHandler("/api/input", &restHandlerInput);
+    taskRest.addHandler("/api/mux", &restHandlerMux);
+    taskRest.addHandler("/api/output", &restHandlerOutput);
+    taskRest.addHandler("/api/status", &restHandlerStatus);
+    taskRest.addHandler("/api/statistics", &restHandlerStatistics);
 
-    /* channels */
-    ChannelSocketClient channelSocketClient;
-    ChannelSocketServer channelSocketServer;
-    ChannelSocketServer channelSocketKillStop;
-    ChannelSpiMaster channelSpiMaster;
-    ChannelNull channelNull;
+    restHandlerInput.setInput(&channelSocketServer);
+    restHandlerOutput.setOutput(&channelSocketClient);
 
     /* all channels are configured independently of the mode, because HOST mode could use a convination of them */
     /* specific configuration for socket client */
@@ -108,7 +115,10 @@ static void configure_and_run(void)
     /* specific configuration for socket server */
     channelSocketServer.setPort(Config::getInstance()->getListeningPort());
     /* specific configuration for SPI */
-    /* TBC */
+    channelSpiMaster.setSpeed(Config::getInstance()->getSpiMasterSpeed());
+    channelSpiMaster.setClockPolarity(Config::getInstance()->getSpiMasterClockPolarity());
+    channelSpiMaster.setClockPhase(Config::getInstance()->getSpiMasterClockPhase());
+    channelSpiMaster.setBits(Config::getInstance()->getSpiMasterBits());
 
     if (Config::getInstance()->isFromModem())
     {
@@ -117,7 +127,7 @@ static void configure_and_run(void)
         taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
 
         /* wiring */
-        taskFromModem.setSource(&channelSpiMaster);
+        taskFromModem.setSource(&channelSpiSlave);
         taskFromModem.setSink(&channelSocketClient);
         scheduller.addTask(&taskFromModem, 2);
     }

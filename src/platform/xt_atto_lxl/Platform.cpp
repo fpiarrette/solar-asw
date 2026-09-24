@@ -1,7 +1,7 @@
 #include "Platform.h"
 
 #include "Gpio.h"
-#include "platform_def.h"
+#include "setup.h"
 #include "Logger.h"
 
 #define LOG_PREFIX "Platform xt_atto_lxl"
@@ -29,4 +29,9 @@ void Platform::shutdown(void)
 Gpio *Platform::getGpio(void)
 {
     return &gpio;
+}
+
+const char *Platform::getName(void)
+{
+    return "Platform XT ATTO LXL (" BUILD_TYPE ")";
 }

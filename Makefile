@@ -37,8 +37,8 @@ include config/make/$(PLATFORM).mk
 
 # for any platform...
 CFLAGS += -Wfatal-errors -Wall -std=c99 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
-CXXFLAGS += -Wfatal-errors -Wall -std=c++11 -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
-LDLIBS += -lmicrohttpd
+CXXFLAGS += -Wfatal-errors -Wall -DPLATFORM=$(PLATFORM) -DPLATFORM_ID=$(PLATFORM_ID) -DPLATFORM_HOST=$(PLATFORM_HOST) -DPLATFORM_TARGET=$(PLATFORM_TARGET)
+LDLIBS += -lmicrohttpd -ljansson
 
 # Manage DEBUG options
 ifeq ($(DEBUG),1)
@@ -91,7 +91,12 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/LoggerStdout.cpp \
 	$(SRC_DIR)/LoggerSyslog.cpp \
 	$(SRC_DIR)/Config.cpp \
-	$(SRC_DIR)/RestReplier.cpp \
+	$(SRC_DIR)/RestHandler.cpp \
+	$(SRC_DIR)/RestHandlerInput.cpp \
+	$(SRC_DIR)/RestHandlerMux.cpp \
+	$(SRC_DIR)/RestHandlerOutput.cpp \
+	$(SRC_DIR)/RestHandlerStatistics.cpp \
+	$(SRC_DIR)/RestHandlerStatus.cpp \
 	$(SRC_DIR)/TaskFromModem.cpp \
 	$(SRC_DIR)/TaskHumanInterface.cpp \
 	$(SRC_DIR)/TaskIdle.cpp \
@@ -134,8 +139,6 @@ clean:
 
 all: $(FILES)
 	$(CXX) $(CXXFLAGS) $(FILES) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/$(BINARY_NAME)
-
-tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl test_rest
 
 test_spi: $(FILES_TEST_SPI)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_SPI) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_spi
