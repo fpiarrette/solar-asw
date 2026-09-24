@@ -20,6 +20,7 @@
 #include "TaskToModem.h"
 
 #include "RestHandlerInput.h"
+#include "RestHandlerMux.h"
 #include "RestHandlerOutput.h"
 #include "RestHandlerStatistics.h"
 #include "RestHandlerStatus.h"
@@ -94,14 +95,17 @@ static void configure_and_run(void)
     TaskKiller taskKiller;
     TaskRest taskRest;
     RestHandlerInput restHandlerInput;
+    RestHandlerMux restHandlerMux;
     RestHandlerOutput restHandlerOutput;
     RestHandlerStatistics restHandlerStatistics;
     RestHandlerStatus restHandlerStatus;
     taskRest.addHandler("/api/input", &restHandlerInput);
+    taskRest.addHandler("/api/mux", &restHandlerMux);
     taskRest.addHandler("/api/output", &restHandlerOutput);
     taskRest.addHandler("/api/status", &restHandlerStatus);
     taskRest.addHandler("/api/statistics", &restHandlerStatistics);
 
+    restHandlerInput.setInput(&channelSocketServer);
     restHandlerOutput.setOutput(&channelSocketClient);
 
     /* all channels are configured independently of the mode, because HOST mode could use a convination of them */
