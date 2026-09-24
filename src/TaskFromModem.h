@@ -35,7 +35,7 @@ private:
     long int timeBarrier;
     int sizeLimit;
     int timeDeliveryLimit;
-    CircularBuffer<char, 512> bufferStorage;
+    CircularBuffer<char, 512> circular;
 };
 
 #endif

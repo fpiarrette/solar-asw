@@ -41,10 +41,10 @@ Scheduller::Task::Result TaskFromModem::run(long int time)
         return Scheduller::Task::IDLE;
 
     /* update write pointer*/
-    bufferStorage.push(bufferRx, bufferRxSize);
+    circular.push(bufferRx, bufferRxSize);
 
     /* send packet in case amount of bytes are sufficient */
-    if ((int)bufferStorage.size() > sizeLimit)
+    if ((int)circular.size() > sizeLimit)
     {
         L_DEBUG("sent because of size limit");
 
@@ -66,14 +66,14 @@ void TaskFromModem::forwardToSink(long int time)
     int r;
     char b[2 * 1024];
 
-    r = bufferStorage.peek(b, sizeof(b));
+    r = circular.peek(b, sizeof(b));
 
     sink->tx(b, r, &t);
 
     if (t > 0)
     {
         /* only transmitted data is consumed */
-        bufferStorage.consume(t);
+        circular.consume(t);
     }
 
     timeBarrier = time + timeDeliveryLimit;
