@@ -76,6 +76,14 @@ static void configure_and_run(void)
     /* Platform implementation fixed at compilation time */
     Platform::getInstance()->init();
 
+    /* channels */
+    ChannelSocketClient channelSocketClient;
+    ChannelSocketServer channelSocketServer;
+    ChannelSocketServer channelSocketKillStop;
+    ChannelSpiMaster channelSpiMaster;
+    ChannelSpiSlave channelSpiSlave;
+    ChannelNull channelNull;
+
     Scheduller scheduller;
 
     /* tasks */
@@ -94,13 +102,7 @@ static void configure_and_run(void)
     taskRest.addHandler("/api/status", &restHandlerStatus);
     taskRest.addHandler("/api/statistics", &restHandlerStatistics);
 
-    /* channels */
-    ChannelSocketClient channelSocketClient;
-    ChannelSocketServer channelSocketServer;
-    ChannelSocketServer channelSocketKillStop;
-    ChannelSpiMaster channelSpiMaster;
-    ChannelSpiSlave channelSpiSlave;
-    ChannelNull channelNull;
+    restHandlerOutput.setOutput(&channelSocketClient);
 
     /* all channels are configured independently of the mode, because HOST mode could use a convination of them */
     /* specific configuration for socket client */
