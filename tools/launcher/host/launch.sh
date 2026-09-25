@@ -24,6 +24,9 @@ while getopts "h?i" opt; do
       ;;
     i)
       FLAGS="${FLAGS} -i"
+      # For GDB debug inside container
+      FLAGS="${FLAGS} --cap-add=SYS_PTRACE"
+      FLAGS="${FLAGS} --security-opt=seccomp=unconfined"
       CMD="bash"
       ;;
   esac
