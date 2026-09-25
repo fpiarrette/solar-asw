@@ -9,6 +9,11 @@
 class TaskFromModem : public Scheduller::Task
 {
 public:
+    TaskFromModem()
+        : fifo(2048)
+    {
+    }
+
     ~TaskFromModem()
     {
         stop();
@@ -33,7 +38,7 @@ private:
     long int timeBarrier;
     int sizeLimit;
     int timeDeliveryLimit;
-    Fifo<char, 2048> fifo;
+    Fifo<char> fifo;
 };
 
 #endif

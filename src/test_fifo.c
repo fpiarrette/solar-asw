@@ -20,7 +20,7 @@
 
 int main(int argc, char *argv[])
 {
-    Fifo<char, 8> b;
+    Fifo<char> b(8);
     char d;
 
     std::cout << "empty: " << b.empty() << std::endl;

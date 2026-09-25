@@ -59,7 +59,7 @@ private:
     struct MHD_Daemon *daemon;
     int port;
     static std::unordered_map<std::string, RestHandler *> handlers;
-    static Fifo<char, 8 * 1024> fifo;
+    static Fifo<char> fifo;
     static int worked;
 };
 

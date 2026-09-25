@@ -6,17 +6,32 @@
 #include <string>
 #include <sstream>
 
-template <typename T, std::size_t N>
+template <typename T>
 class Fifo
 {
 public:
+    explicit Fifo(std::size_t capacity)
+        : data_(new T[capacity]),
+          capacity_(capacity)
+    {
+    }
+
+    ~Fifo()
+    {
+        delete[] data_;
+    }
+
+    Fifo(const Fifo &) = delete;
+    Fifo &operator=(const Fifo &) = delete;
+
     bool push(const T &value)
     {
         if (full())
             return false;
 
         data_[head_] = value;
-        head_ = (head_ + 1) % N;
+        head_ = (head_ + 1) % capacity_;
+
         ++size_;
 
         return true;
@@ -29,12 +44,22 @@ public:
         while (pushed < count && !full())
         {
             data_[head_] = values[pushed];
-            head_ = (head_ + 1) % N;
+            head_ = (head_ + 1) % capacity_;
             ++size_;
             ++pushed;
         }
 
         return pushed;
+    }
+
+    bool peek(T &value) const
+    {
+        if (empty())
+            return false;
+
+        value = data_[tail_];
+
+        return true;
     }
 
     std::size_t peek(T *values, std::size_t count) const
@@ -47,7 +72,7 @@ public:
         for (std::size_t i = 0; i < count; ++i)
         {
             values[i] = data_[pos];
-            pos = (pos + 1) % N;
+            pos = (pos + 1) % capacity_;
         }
 
         return count;
@@ -58,7 +83,7 @@ public:
         if (count > size_)
             count = size_;
 
-        tail_ = (tail_ + count) % N;
+        tail_ = (tail_ + count) % capacity_;
         size_ -= count;
 
         return count;
@@ -71,7 +96,7 @@ public:
 
     bool full() const
     {
-        return size_ == N;
+        return size_ == capacity_;
     }
 
     std::size_t size() const
@@ -81,12 +106,12 @@ public:
 
     std::size_t available() const
     {
-        return N - size_;
+        return capacity_ - size_;
     }
 
     constexpr std::size_t capacity() const
     {
-        return N;
+        return capacity_;
     }
 
     void clear()
@@ -100,9 +125,12 @@ public:
     {
         if (empty())
             return false;
+
         value = data_[tail_];
-        tail_ = (tail_ + 1) % N;
+        tail_ = (tail_ + 1) % capacity_;
+
         --size_;
+
         return true;
     }
 
@@ -112,7 +140,7 @@ public:
         while (popped < count && !empty())
         {
             values[popped] = data_[tail_];
-            tail_ = (tail_ + 1) % N;
+            tail_ = (tail_ + 1) % capacity_;
             --size_;
             ++popped;
         }
@@ -120,7 +148,9 @@ public:
     }
 
 private:
-    std::array<T, N> data_;
+    T *data_;
+    std::size_t capacity_;
+
     std::size_t head_ = 0;
     std::size_t tail_ = 0;
     std::size_t size_ = 0;

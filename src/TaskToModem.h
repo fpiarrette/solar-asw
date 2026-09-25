@@ -9,6 +9,11 @@
 class TaskToModem : public Scheduller::Task
 {
 public:
+    TaskToModem()
+        : fifo(2 * 1024)
+    {
+    }
+
     ~TaskToModem()
     {
         stop();
@@ -26,7 +31,7 @@ protected:
 private:
     Channel *source;
     Channel *sink;
-    Fifo<char, 1024> fifo;
+    Fifo<char> fifo;
 };
 
 #endif

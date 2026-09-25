@@ -5,7 +5,7 @@
 
 #define LOG_PREFIX "REST task "
 
-Fifo<char, 8 * 1024> TaskRest::fifo;
+Fifo<char> TaskRest::fifo(8 * 1024);
 int TaskRest::worked;
 
 std::unordered_map<std::string, RestHandler *> TaskRest::handlers;
