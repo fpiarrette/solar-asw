@@ -5,7 +5,7 @@ OPTIND=1
 
 # Docker flags
 WORKSPACE_DIR=/ws
-CMD="$WORKSPACE_DIR/$OUTPUT_DIR/$BINARY_NAME -l 1 -u"
+CMD="$WORKSPACE_DIR/$OUTPUT_DIR/$BINARY_NAME -l 1 -d"
 FLAGS="-t --network host"
 
 # this script shall not be executed direclty, is intendeed to be called from main/parent script
