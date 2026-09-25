@@ -95,7 +95,7 @@ Channel::Error ChannelSocket::secureTx(int f, char *data, int size, int *transmi
 
     if (r == size)
     {
-        /* block fully sent */
+        *transmitted = r;
         return Channel::Error::E_OK;
     }
     else if (r >= 0 && r < size)
