@@ -5,7 +5,8 @@
 
 #define LOG_PREFIX "REST task "
 
-http_context_t TaskRest::context;
+Fifo<char, 8 * 1024> TaskRest::fifo;
+int TaskRest::worked;
 
 std::unordered_map<std::string, RestHandler *> TaskRest::handlers;
 
@@ -52,11 +53,11 @@ void TaskRest::prepare(void)
 
 Scheduller::Task::Result TaskRest::run(long int time)
 {
-    context.worked = 0;
+    worked = 0;
 
     MHD_run(daemon);
 
-    if (context.worked)
+    if (worked)
         return Scheduller::Task::Result::WORKED;
     else
         return Scheduller::Task::Result::IDLE;
@@ -86,7 +87,7 @@ enum MHD_Result TaskRest::requestHandlerSingle(
         RestHandler::replyEmpty(connection, MHD_HTTP_NOT_FOUND);
     }
 
-    context.worked = 1;
+    worked = 1;
 
     return r;
 }
@@ -103,20 +104,17 @@ enum MHD_Result TaskRest::requestHandlerParts(
 {
     if (*con_cls == NULL)
     {
-        memset(&context, 0, sizeof(context));
-        *con_cls = &context;
-        context.worked = 1;
+        *con_cls = &worked;
+        worked = 1;
         return MHD_YES;
     }
     else
     {
         if (*uploadDataSize > 0)
         {
-            http_context_t *c = (http_context_t *)*con_cls;
-            memcpy(&c->buffer[c->size], uploadData, *uploadDataSize);
-            c->size += *uploadDataSize;
+            fifo.push(uploadData, *uploadDataSize);
             *uploadDataSize = 0;
-            context.worked = 1;
+            worked = 1;
             return MHD_YES;
         }
         else
@@ -128,13 +126,15 @@ enum MHD_Result TaskRest::requestHandlerParts(
 
             if (h != NULL)
             {
-                r = h->handle(connection, url, method, version, context.buffer, context.size);
+                char b[fifo.size()];
+                fifo.pop(b, sizeof(b));
+                r = h->handle(connection, url, method, version, b, sizeof(b));
             }
             else
             {
                 RestHandler::replyEmpty(connection, MHD_HTTP_NOT_FOUND);
             }
-            context.worked = 1;
+            worked = 1;
             return r;
         }
     }
