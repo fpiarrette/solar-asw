@@ -112,6 +112,7 @@ Channel::Error ChannelSocketServer::rx(char *data, int size, int *received)
     }
     else
     {
+        *received = 0;
         return checkClientConnection();
     }
 }
