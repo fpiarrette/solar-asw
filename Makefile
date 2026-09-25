@@ -81,7 +81,6 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/ChannelSocket.cpp \
 	$(SRC_DIR)/ChannelSocketServer.cpp \
 	$(SRC_DIR)/ChannelSocketClient.cpp \
-	$(SRC_DIR)/CircularBuffer.cpp \
 	$(SRC_DIR)/platform/$(PLATFORM)/Gpio.cpp \
 	$(SRC_DIR)/platform/$(PLATFORM)/Platform.cpp \
 	$(SRC_DIR)/Signals.cpp \
