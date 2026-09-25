@@ -23,6 +23,11 @@ int main(int argc, char *argv[])
     Fifo<char, 8> b;
     char d;
 
+    std::cout << "empty: " << b.empty() << std::endl;
+    std::cout << "full: " << b.full() << std::endl;
+    std::cout << "size: " << b.size() << std::endl;
+    std::cout << "available: " << b.available() << std::endl;
+
     PRINT(b);
 
     b.push(10);
@@ -38,6 +43,39 @@ int main(int argc, char *argv[])
     b.push(d);
 
     PRINT(b);
+
+    b.push(40);
+    b.push(50);
+    b.push(60);
+    b.push(70);
+    b.push(80);
+
+    std::cout << "empty: " << b.empty() << std::endl;
+    std::cout << "full: " << b.full() << std::endl;
+    std::cout << "size: " << b.size() << std::endl;
+    std::cout << "available: " << b.available() << std::endl;
+
+    PRINT(b);
+
+    b.clear();
+
+    PRINT(b);
+
+    std::cout << "empty: " << b.empty() << std::endl;
+    std::cout << "full: " << b.full() << std::endl;
+    std::cout << "size: " << b.size() << std::endl;
+    std::cout << "available: " << b.available() << std::endl;
+
+    b.push(1);
+    b.push(2);
+    b.push(3);
+
+    PRINT(b);
+
+    std::cout << "empty: " << b.empty() << std::endl;
+    std::cout << "full: " << b.full() << std::endl;
+    std::cout << "size: " << b.size() << std::endl;
+    std::cout << "available: " << b.available() << std::endl;
 
     return EXIT_SUCCESS;
 }
