@@ -3,7 +3,7 @@
 #define TASK_TO_MODEM_H
 
 #include "Channel.h"
-#include "CircularBuffer.h"
+#include "Fifo.h"
 #include "Scheduller.h"
 
 class TaskToModem : public Scheduller::Task
@@ -26,9 +26,7 @@ protected:
 private:
     Channel *source;
     Channel *sink;
-    CircularBuffer storage;
-    char bufferRx[512];
-    int bufferRxSize;
+    Fifo<char, 1024> fifo;
 };
 
 #endif

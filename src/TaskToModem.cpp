@@ -22,9 +22,15 @@ void TaskToModem::prepare(void)
 int TaskToModem::need(long int time)
 {
     /* try to receive data */
-    source->rx(bufferRx, sizeof(bufferRx), &bufferRxSize);
+    char b[512];
+    int s = 0;
 
-    return bufferRxSize > 0;
+    source->rx(b, sizeof(b), &s);
+
+    if (s > 0)
+        fifo.push(b, s);
+
+    return s > 0;
 }
 
 Scheduller::Task::Result TaskToModem::run(long int time)
@@ -32,20 +38,27 @@ Scheduller::Task::Result TaskToModem::run(long int time)
     int t, r;
     char b[2 * 1024];
 
-    if (!need(time))
+    /* check input */
+    need(time);
+
+    if (fifo.empty())
         return Scheduller::Task::Result::IDLE;
 
-    storage.write(bufferRx, bufferRxSize);
+    L_DEBUG("fifo size %d: ", fifo.size());
 
-    storage.read(b, sizeof(b), &r);
+    r = fifo.peek(b, sizeof(b));
 
     sink->tx(b, r, &t);
 
-    if (t < r)
+    L_DEBUG("tx %d: ", t);
+
+    if (t > 0)
     {
         /* in case data sent is less than read */
         /* return data to buffer -> adjust read pointer */
-        storage.rewind(r - t);
+        fifo.consume(t);
+        L_DEBUG("consumed %d: ", t);
+        L_DEBUG("fifo size %d: ", fifo.size());
     }
 
     return Scheduller::Task::Result::WORKED;
