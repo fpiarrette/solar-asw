@@ -92,11 +92,11 @@ Channel::Error ChannelSocketServer::checkClientConnection(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSocketServer::tx(char *data, int size, int *transmitted)
+Channel::Error ChannelSocketServer::tx(Fifo<char> &f)
 {
     if (clientSocket > 0)
     {
-        return secureTx(clientSocket, data, size, transmitted);
+        return secureTx(clientSocket, f);
     }
     else
     {
@@ -104,11 +104,11 @@ Channel::Error ChannelSocketServer::tx(char *data, int size, int *transmitted)
     }
 }
 
-Channel::Error ChannelSocketServer::rx(char *data, int size, int *received)
+Channel::Error ChannelSocketServer::rx(Fifo<char> &f)
 {
     if (clientSocket > 0)
     {
-        return secureRx(clientSocket, data, size, received);
+        return secureRx(clientSocket, f);
     }
     else
     {

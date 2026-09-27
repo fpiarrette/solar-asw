@@ -81,7 +81,6 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/ChannelSocket.cpp \
 	$(SRC_DIR)/ChannelSocketServer.cpp \
 	$(SRC_DIR)/ChannelSocketClient.cpp \
-	$(SRC_DIR)/CircularBuffer.cpp \
 	$(SRC_DIR)/platform/$(PLATFORM)/Gpio.cpp \
 	$(SRC_DIR)/platform/$(PLATFORM)/Platform.cpp \
 	$(SRC_DIR)/Signals.cpp \
@@ -131,6 +130,8 @@ FILES_TEST_SPI_IOCTL=$(SRC_DIR)/test_spi_ioctl.c \
 FILES_TEST_REST=$(SRC_DIR)/test_rest.c \
 	$(SRC_DIR)/test_common.c
 
+FILES_TEST_FIFO=$(SRC_DIR)/test_fifo.c
+
 .PHONY: clean
 
 clean:
@@ -154,3 +155,6 @@ test_gpio_ioctl: $(FILES_TEST_GPIO_IOCTL)
 
 test_rest: $(FILES_TEST_REST)
 	$(CXX) $(CXXFLAGS) $(FILES_TEST_REST) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_rest
+
+test_fifo: $(FILES_TEST_FIFO)
+	$(CXX) $(CXXFLAGS) $(FILES_TEST_FIFO) -I$(SRC_DIR) $(LDFLAGS) $(LDLIBS) -o $(OUTPUT_DIR)/test_fifo

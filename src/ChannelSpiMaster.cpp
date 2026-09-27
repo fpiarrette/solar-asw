@@ -18,10 +18,9 @@
 #define LOG_PREFIX "Channel SPI master "
 
 ChannelSpiMaster::ChannelSpiMaster(void)
+    : reception(2048)
 {
     memset(deviceName, 0, sizeof(deviceName));
-    memset(receptionBuffer, 0, sizeof(receptionBuffer));
-    receivedDataSize = 0;
 
     fd = -1;
 
@@ -137,26 +136,27 @@ Channel::Error ChannelSpiMaster::start(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSpiMaster::tx(char *data, int size, int *tranmitted)
+Channel::Error ChannelSpiMaster::tx(Fifo<char> &f)
 {
     struct spi_ioc_transfer transfer;
     int dataToTransmit;
 
-    receivedDataSize = 0;
-    *tranmitted = 0;
-
-    if ((unsigned int)size > sizeof(receptionBuffer))
+    if (f.size() > reception.available())
     {
-        dataToTransmit = sizeof(receptionBuffer);
+        dataToTransmit = reception.available();
     }
     else
     {
-        dataToTransmit = size;
+        dataToTransmit = f.size();
     }
 
+    char tx_buf[dataToTransmit];
+    char rx_buf[dataToTransmit];
+    f.peek(tx_buf, dataToTransmit);
+
     memset(&transfer, 0, sizeof(transfer));
-    transfer.tx_buf = (unsigned long long)data;
-    transfer.rx_buf = (unsigned long long)receptionBuffer;
+    transfer.tx_buf = (unsigned long long)tx_buf;
+    transfer.rx_buf = (unsigned long long)rx_buf;
     /* same amount of data for tx and rx */
     transfer.len = dataToTransmit;
 
@@ -166,48 +166,48 @@ Channel::Error ChannelSpiMaster::tx(char *data, int size, int *tranmitted)
         return Channel::Error::E_INT;
     }
 
-    /* data comes in at same rate than data goes out */
-    receivedDataSize = dataToTransmit;
-
-    /* ioctl do not fail, so is addumed that data is transmited */
-    *tranmitted = dataToTransmit;
-
-    if (dataToTransmit < size)
+    if (dataToTransmit < (int)f.size())
     {
+        f.consume(dataToTransmit);
+        reception.push(rx_buf, dataToTransmit);
         /* in case transmitter data is less than original size */
         return Channel::Error::E_TRY;
     }
     else
     {
+        f.consume(dataToTransmit);
+        reception.push(rx_buf, dataToTransmit);
         /* in case than whole data is fully sent */
         return Channel::Error::E_OK;
     }
 }
 
-Channel::Error ChannelSpiMaster::rx(char *data, int size, int *received)
+Channel::Error ChannelSpiMaster::rx(Fifo<char> &f)
 {
+    int dataToCopy;
 
-    if (receivedDataSize > 0)
+    if (reception.size() > 0)
     {
-        if (size > receivedDataSize)
+        if (f.available() < reception.size())
         {
-            size = receivedDataSize;
+            dataToCopy = f.available();
+        }
+        else
+        {
+            dataToCopy = reception.size();
         }
 
-        memcpy(data, receptionBuffer, size);
+        char b[dataToCopy];
+        reception.pop(b, dataToCopy);
+        f.push(b, dataToCopy);
 
-        receivedDataSize -= size;
-
-        *received = size;
-
-        if (receivedDataSize > 0)
+        if (!reception.empty())
             return Channel::Error::E_TRY;
         else
             return Channel::Error::E_OK;
     }
     else
     {
-        *received = 0;
         return Channel::Error::E_OK;
     }
 }

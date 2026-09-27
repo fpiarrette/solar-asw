@@ -59,12 +59,12 @@ Channel::Error ChannelSpiSlave::start(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSpiSlave::tx(char *data, int size, int *tranmitted)
+Channel::Error ChannelSpiSlave::tx(Fifo<char> &f)
 {
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelSpiSlave::rx(char *data, int size, int *received)
+Channel::Error ChannelSpiSlave::rx(Fifo<char> &f)
 {
     return Channel::Error::E_OK;
 }

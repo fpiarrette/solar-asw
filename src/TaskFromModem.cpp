@@ -18,33 +18,23 @@ void TaskFromModem::prepare(void)
     source->start();
     sink->start();
 
-    bufferRxSize = 0;
     timeBarrier = 0;
 
     timeDeliveryLimit = 1000;
 
-    L_NOTICE(LOG_PREFIX "prepared, time limit %d ms, size limit %d bytes", timeDeliveryLimit, bufferRxSize);
-}
-
-int TaskFromModem::need(long int time)
-{
-    /* try to receive */
-    source->rx(bufferRx, sizeof(bufferRx), &bufferRxSize);
-
-    /* return 1 only in case data is received */
-    return bufferRxSize > 0;
+    L_NOTICE(LOG_PREFIX "prepared, time limit %d ms, size limit %d bytes", timeDeliveryLimit, sizeLimit);
 }
 
 Scheduller::Task::Result TaskFromModem::run(long int time)
 {
-    if (!need(time))
+    /* try to receive */
+    source->rx(fifo);
+
+    if (fifo.empty())
         return Scheduller::Task::IDLE;
 
-    /* update write pointer*/
-    bufferStorage.write(bufferRx, bufferRxSize);
-
     /* send packet in case amount of bytes are sufficient */
-    if (bufferStorage.getAvailable() > sizeLimit)
+    if ((int)fifo.size() > sizeLimit)
     {
         L_DEBUG("sent because of size limit");
 
@@ -62,19 +52,7 @@ Scheduller::Task::Result TaskFromModem::run(long int time)
 
 void TaskFromModem::forwardToSink(long int time)
 {
-    int t;
-    int r;
-    char b[2 * 1024];
-
-    bufferStorage.read(b, sizeof(b), &r);
-    sink->tx(b, r, &t);
-
-    if (t < r)
-    {
-        /* in case data sent is less than read */
-        /* return data to buffer -> adjust read pointer */
-        bufferStorage.rewind(r - t);
-    }
+    sink->tx(fifo);
 
     timeBarrier = time + timeDeliveryLimit;
 }

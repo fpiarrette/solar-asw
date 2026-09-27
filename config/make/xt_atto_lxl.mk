@@ -24,4 +24,4 @@ LDFLAGS =
 LDLIBS = -lstdc++
 
 # Include specific tests for XT ATTO LXL platform
-tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl test_rest
+tests: test_spi test_spi_ioctl test_gpio test_gpio_ioctl test_rest test_fifo

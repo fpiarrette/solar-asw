@@ -2,21 +2,15 @@
 #ifndef TASK_REST_H
 #define TASK_REST_H
 
+#include "Fifo.h"
 #include "Scheduller.h"
-#include "microhttpd.h"
-
 #include "RestHandler.h"
+
+#include "microhttpd.h"
 
 #include <iostream>
 #include <string>
 #include <unordered_map>
-
-typedef struct
-{
-    char buffer[8 * 1024];
-    size_t size;
-    int worked;
-} http_context_t;
 
 class TaskRest : public Scheduller::Task
 {
@@ -63,9 +57,10 @@ protected:
 
 private:
     struct MHD_Daemon *daemon;
-    static http_context_t context;
     int port;
     static std::unordered_map<std::string, RestHandler *> handlers;
+    static Fifo<char> fifo;
+    static int worked;
 };
 
 #endif

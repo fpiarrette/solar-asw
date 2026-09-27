@@ -2,6 +2,8 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
+#include "Fifo.h"
+
 class Channel
 {
 public:
@@ -15,8 +17,8 @@ public:
     };
 
     virtual Error start(void) = 0;
-    virtual Error tx(char *data, int size, int *transmitted) = 0;
-    virtual Error rx(char *data, int size, int *received) = 0;
+    virtual Error tx(Fifo<char> &f) = 0;
+    virtual Error rx(Fifo<char> &f) = 0;
     virtual Error stop(void) = 0;
 
 protected:
