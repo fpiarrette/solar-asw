@@ -14,8 +14,8 @@ public:
     }
 
     Channel::Error start(void);
-    Channel::Error tx(char *data, int size, int *transmitted);
-    Channel::Error rx(char *data, int size, int *received);
+    Channel::Error tx(Fifo<char> &f);
+    Channel::Error rx(Fifo<char> &f);
     Channel::Error stop(void);
 
 protected:
@@ -23,8 +23,7 @@ protected:
     int getMode(void);
 
 private:
-    char receptionBuffer[512];
-    int receivedDataSize;
+    Fifo<char> reception;
 };
 
 #endif

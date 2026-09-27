@@ -22,16 +22,16 @@ void TaskKiller::prepare(void)
 
 Scheduller::Task::Result TaskKiller::run(long int time)
 {
-    char buffer[16];
-    int size;
-
-    memset(buffer, 0, sizeof(buffer));
+    Fifo<char> fifo(256);
 
     /* try to receive data */
-    source->rx(buffer, sizeof(buffer) - 1, &size);
+    source->rx(fifo);
 
-    if (size > 0)
+    if (fifo.size() > 0)
     {
+        char buffer[fifo.size()];
+        fifo.pop(buffer, sizeof(buffer));
+
         /* trim string */
         buffer[strcspn(buffer, "\r\n")] = '\0';
 

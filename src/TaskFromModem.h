@@ -20,7 +20,6 @@ public:
     }
     const char *getName(void);
     void prepare(void);
-    int need(long int time);
     Scheduller::Task::Result run(long int time);
     void stop(void);
 

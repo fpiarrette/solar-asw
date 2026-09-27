@@ -10,18 +10,17 @@ Channel::Error ChannelNull::start(void)
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelNull::tx(char *data, int size, int *transmitted)
+Channel::Error ChannelNull::tx(Fifo<char> &f)
 {
-    L_DEBUG("tx: %d", size);
+    L_DEBUG("tx: %d", f.size());
     /* simulate that data is transmitted */
-    *transmitted = size;
+    f.consume(f.size());
     return Channel::Error::E_OK;
 }
 
-Channel::Error ChannelNull::rx(char *data, int size, int *received)
+Channel::Error ChannelNull::rx(Fifo<char> &f)
 {
     /* simulate that there is not input data */
-    *received = 0;
     return Channel::Error::E_OK;
 }
 

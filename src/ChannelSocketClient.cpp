@@ -64,18 +64,18 @@ Channel::Error ChannelSocketClient::start(void)
     }
 }
 
-Channel::Error ChannelSocketClient::tx(char *data, int size, int *transmitted)
+Channel::Error ChannelSocketClient::tx(Fifo<char> &f)
 {
     if (fd > 0)
-        return secureTx(fd, data, size, transmitted);
+        return secureTx(fd, f);
     else
         return Channel::Error::E_STA;
 }
 
-Channel::Error ChannelSocketClient::rx(char *data, int size, int *received)
+Channel::Error ChannelSocketClient::rx(Fifo<char> &f)
 {
     if (fd > 0)
-        return secureRx(fd, data, size, received);
+        return secureRx(fd, f);
     else
         return Channel::Error::E_STA;
 }

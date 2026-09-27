@@ -19,47 +19,19 @@ void TaskToModem::prepare(void)
     L_NOTICE(LOG_PREFIX "prepared");
 }
 
-int TaskToModem::need(long int time)
-{
-    /* try to receive data */
-    char b[512];
-    int s = 0;
-
-    source->rx(b, sizeof(b), &s);
-
-    if (s > 0)
-        fifo.push(b, s);
-
-    return s > 0;
-}
-
 Scheduller::Task::Result TaskToModem::run(long int time)
 {
-    int t, r;
-    char b[2 * 1024];
-
     /* check input */
-    need(time);
+    source->rx(fifo);
 
     if (fifo.empty())
         return Scheduller::Task::Result::IDLE;
 
     L_DEBUG("fifo size %d: ", fifo.size());
 
-    r = fifo.peek(b, sizeof(b));
+    sink->tx(fifo);
 
-    sink->tx(b, r, &t);
-
-    L_DEBUG("tx %d: ", t);
-
-    if (t > 0)
-    {
-        /* in case data sent is less than read */
-        /* return data to buffer -> adjust read pointer */
-        fifo.consume(t);
-        L_DEBUG("consumed %d: ", t);
-        L_DEBUG("fifo size %d: ", fifo.size());
-    }
+    L_DEBUG("fifo size %d: ", fifo.size());
 
     return Scheduller::Task::Result::WORKED;
 }
