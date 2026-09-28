@@ -40,6 +40,7 @@ Config Config::instance;
 #define CONFIG_DEFAULT_DEST_PORT 9500
 #define CONFIG_DEFAULT_LISTENING_PORT 9000
 
+#define CONFIG_DEFAULT_SPI_MASTER_NAME "/dev/spidev0.0"
 #define CONFIG_DEFAULT_SPI_MASTER_SPEED 1000000
 #define CONFIG_DEFAULT_SPI_MASTER_CLOCK_POL 0
 #define CONFIG_DEFAULT_SPI_MASTER_CLOCK_PHASE 0
@@ -97,6 +98,7 @@ void Config::setDefaultValues(void)
     destinationPort = CONFIG_DEFAULT_DEST_PORT;
     listeningPort = CONFIG_DEFAULT_LISTENING_PORT;
     /* SPI master */
+    strncpy(spiMasterDeviceName, CONFIG_DEFAULT_SPI_MASTER_NAME, sizeof(spiMasterDeviceName));
     spiMasterSpeed = CONFIG_DEFAULT_SPI_MASTER_SPEED;
     spiMasterClockPolarity = CONFIG_DEFAULT_SPI_MASTER_CLOCK_POL;
     spiMasterClockPhase = CONFIG_DEFAULT_SPI_MASTER_CLOCK_PHASE;
@@ -294,4 +296,9 @@ void Config::help(int argc, char *argv[])
     printf("\t-" CONFIG_OPTION_LOG_SYSLOG ": set logger to use syslog\n");
     printf("\t-" CONFIG_OPTION_LOG_STDOUT ": set logger to use stdout\n");
     printf("\t-" CONFIG_OPTION_HELP ": show help\n");
+}
+
+const char *Config::getSpiMasterName(void)
+{
+    return spiMasterDeviceName;
 }

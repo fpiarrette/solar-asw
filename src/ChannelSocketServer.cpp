@@ -133,7 +133,7 @@ Channel::Error ChannelSocketServer::stop(void)
         fd = -1;
     }
 
-    L_NOTICE(LOG_PREFIX "sttoped");
+    L_NOTICE(LOG_PREFIX "stopped");
 
     return r1 == Channel::Error::E_OK && r2 == Channel::Error::E_OK ? Channel::Error::E_OK : Channel::Error::E_INT;
 }

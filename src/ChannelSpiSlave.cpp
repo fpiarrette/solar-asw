@@ -80,7 +80,7 @@ Channel::Error ChannelSpiSlave::stop(void)
     }
     else
     {
-        L_WARNING(LOG_PREFIX "incorrect state");
+        L_DEBUG("channel stopped again");
 
         return Channel::Error::E_STA;
     }

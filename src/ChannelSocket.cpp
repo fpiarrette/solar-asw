@@ -56,21 +56,21 @@ Channel::Error ChannelSocket::secureRx(int f, Fifo<char> &fifo)
 
 Channel::Error ChannelSocket::secureStop(int f)
 {
-    int r;
+    int r1, r2;
 
     if (f < 0)
     {
         return Channel::Error::E_ARG;
     }
 
-    r = shutdown(f, SHUT_RDWR);
+    r1 = shutdown(f, SHUT_RDWR);
 
-    if (r != 0)
+    if (r1 != 0)
     {
         if (errno == ENOTCONN)
         {
             /* not really an error */
-            r = 0;
+            r1 = 0;
         }
         else
         {
@@ -78,9 +78,14 @@ Channel::Error ChannelSocket::secureStop(int f)
         }
     }
 
-    close(f);
+    r2 = close(f);
 
-    return r != 0 ? Channel::Error::E_INT : Channel::Error::E_OK;
+    if (r2 != 0)
+    {
+        LOGGER_DEBUG_ERRNO;
+    }
+
+    return (r1 == 0) && (r2 == 0) ? Channel::Error::E_OK : Channel::Error::E_INT;
 }
 
 Channel::Error ChannelSocket::secureTx(int f, Fifo<char> &fifo)

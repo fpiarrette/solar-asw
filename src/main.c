@@ -115,6 +115,7 @@ static void configure_and_run(void)
     /* specific configuration for socket server */
     channelSocketServer.setPort(Config::getInstance()->getListeningPort());
     /* specific configuration for SPI */
+    channelSpiMaster.setDeviceName(Config::getInstance()->getSpiMasterName());
     channelSpiMaster.setSpeed(Config::getInstance()->getSpiMasterSpeed());
     channelSpiMaster.setClockPolarity(Config::getInstance()->getSpiMasterClockPolarity());
     channelSpiMaster.setClockPhase(Config::getInstance()->getSpiMasterClockPhase());
