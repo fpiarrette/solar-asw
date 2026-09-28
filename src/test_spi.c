@@ -32,7 +32,11 @@ void send_n_receive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
         return;
     }
 
-    result = spi->tx(data_tx, size, &transmitted);
+    Fifo<char> fifo(256);
+
+    fifo.push(data_tx, size);
+
+    result = spi->tx(fifo);
 
     if (result != Channel::Error::E_OK)
     {
@@ -40,9 +44,15 @@ void send_n_receive(ChannelSpiMaster *spi, char *device_name, char *hex_string)
         return;
     }
 
+    transmitted = size - fifo.size();
+
     L_NOTICE("transmitted %d bytes, result %d", transmitted, result);
 
-    result = spi->rx(data_rx, sizeof(data_rx), &received);
+    fifo.clear();
+
+    result = spi->rx(fifo);
+
+    received = fifo.pop(data_rx, sizeof(data_rx));
 
     if (result != Channel::Error::E_OK)
     {
