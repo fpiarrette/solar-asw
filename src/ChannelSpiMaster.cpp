@@ -214,16 +214,27 @@ Channel::Error ChannelSpiMaster::rx(Fifo<char> &f)
 
 Channel::Error ChannelSpiMaster::stop(void)
 {
+    int r;
+
     if (fd > 0)
     {
-        close(fd);
+        r = close(fd);
         fd = -1;
-        L_NOTICE(LOG_PREFIX "stopped");
-        return Channel::Error::E_OK;
+
+        if (r == 0)
+        {
+            L_NOTICE(LOG_PREFIX "stopped");
+            return Channel::Error::E_OK;
+        }
+        else
+        {
+            LOGGER_DEBUG_ERRNO;
+            return Channel::Error::E_INT;
+        }
     }
     else
     {
-        L_WARNING(LOG_PREFIX "incorrect state");
+        L_DEBUG("channel stopped again");
 
         return Channel::Error::E_STA;
     }
