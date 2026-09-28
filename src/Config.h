@@ -27,6 +27,7 @@ public:
     const char * getDestinationIpAddress(void);
     int getDestinationPort(void);
     int getListeningPort(void);
+    const char *getSpiMasterName(void);
     unsigned int getSpiMasterSpeed(void);
     unsigned char getSpiMasterClockPolarity(void);
     unsigned char getSpiMasterClockPhase(void);
@@ -48,6 +49,7 @@ private:
     char destinationIpAddress[4 * 3 + 3 * 1 + 1];
     int destinationPort;
     int listeningPort;
+    char spiMasterDeviceName[128];
     unsigned int spiMasterSpeed;
     unsigned char spiMasterClockPolarity;
     unsigned char spiMasterClockPhase;
