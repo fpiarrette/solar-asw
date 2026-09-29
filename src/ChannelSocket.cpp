@@ -25,17 +25,17 @@ Channel::Error ChannelSocket::setNonBlock(int f)
 
 Channel::Error ChannelSocket::secureRx(int f, Fifo<char> &fifo)
 {
-    int t;
+    int r;
     char b[fifo.capacity()];
 
-    t = recv(f, b, sizeof(b), 0);
-    if (t > 0)
+    r = recv(f, b, sizeof(b), 0);
+    if (r > 0)
     {
-        L_DEBUG("received %d", t);
-        fifo.push(b, t);
+        L_DEBUG("received %d", r);
+        fifo.push(b, r);
         return Channel::Error::E_OK;
     }
-    else if (t == 0)
+    else if (r == 0)
     {
         return Channel::Error::E_OK;
     }
