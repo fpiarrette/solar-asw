@@ -7,6 +7,6 @@ project_dir=$(readlink -f $script_dir/../..)
 # general environment validation
 . $project_dir/config/validate.sh
 
-echo "TCP server $SOLAR_TARGET_IP_ADDRESS:9500"
+echo "TCP server $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_OUTPUT_PORT"
 
-nc -l $SOLAR_TARGET_IP_ADDRESS 9500
+nc -l $SOLAR_TARGET_IP_ADDRESS $SOLAR_TARGET_OUTPUT_PORT
