@@ -18,12 +18,14 @@
 #include "TaskIdle.h"
 #include "TaskKiller.h"
 #include "TaskRest.h"
+#include "TaskStatistics.h"
 #include "TaskToModem.h"
 
 #include "RestHandlerInput.h"
 #include "RestHandlerMux.h"
 #include "RestHandlerOutput.h"
-#include "RestHandlerStatistics.h"
+#include "RestHandlerStatisticsFromModem.h"
+#include "RestHandlerStatisticsToModem.h"
 #include "RestHandlerStatus.h"
 
 #include <stdlib.h>
@@ -104,16 +106,20 @@ static void configure_and_run(void)
     TaskIdle taskIdle;
     TaskKiller taskKiller;
     TaskRest taskRest;
+    TaskStatistics taskStatistics;
+
     RestHandlerInput restHandlerInput;
     RestHandlerMux restHandlerMux;
     RestHandlerOutput restHandlerOutput;
-    RestHandlerStatistics restHandlerStatistics;
+    RestHandlerStatisticsFromModem restHandlerStatisticsFromModem;
+    RestHandlerStatisticsToModem restHandlerStatisticsToModem;
     RestHandlerStatus restHandlerStatus;
     taskRest.addHandler("/api/input", &restHandlerInput);
     taskRest.addHandler("/api/mux", &restHandlerMux);
     taskRest.addHandler("/api/output", &restHandlerOutput);
     taskRest.addHandler("/api/status", &restHandlerStatus);
-    taskRest.addHandler("/api/statistics", &restHandlerStatistics);
+    taskRest.addHandler("/api/stat/down", &restHandlerStatisticsFromModem);
+    taskRest.addHandler("/api/stat/up", &restHandlerStatisticsToModem);
 
     restHandlerInput.setInput(&channelSocketServer);
     restHandlerOutput.setOutput(&channelSocketClient);
@@ -157,6 +163,8 @@ static void configure_and_run(void)
 
     /* manage graceful kill stop flags */
     scheduller.addTask(&taskKiller, 26);
+
+    scheduller.addTask(&taskStatistics, 30);
 
     scheduller.addTask(&taskIdle, 31);
     taskIdle.setScheduller(&scheduller);
