@@ -1,10 +1,10 @@
 
-#ifndef REST_HANDLER_STATISTICS_H
-#define REST_HANDLER_STATISTICS_H
+#ifndef REST_HANDLER_STATISTICS_FROM_MODEM_H
+#define REST_HANDLER_STATISTICS_FROM_MODEM_H
 
 #include "RestHandler.h"
 
-class RestHandlerStatistics : public RestHandler
+class RestHandlerStatisticsFromModem : public RestHandler
 {
 public:
     enum MHD_Result handle(
