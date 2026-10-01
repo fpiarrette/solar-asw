@@ -127,6 +127,10 @@ void Scheduller::publishTimeAlarms(long int time)
     s = time / 1000;
     h = time / 100;
 
+    Alarms::getInstance()->clear(SETUP_ALARM_TENTH_SECOND);
+    Alarms::getInstance()->clear(SETUP_ALARM_SECOND);
+    Alarms::getInstance()->clear(SETUP_ALARM_HUNDRED_MS);
+
     if (t != previousTenthSecondCounter)
     {
         Alarms::getInstance()->set(SETUP_ALARM_TENTH_SECOND);
