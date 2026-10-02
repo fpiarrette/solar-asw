@@ -12,19 +12,25 @@ Channel::Error ChannelMeter::start(void)
 
 Channel::Error ChannelMeter::tx(Fifo<char> &f)
 {
-    size_t b = f.size();
+    size_t before = f.size();
     Channel::Error r = target_.tx(f);
-    size_t a = f.size();
-    meterTx.addDiff(b - a);
+    size_t after = f.size();
+    /* in case of transmition is expected that size after transmition were smaller than before */
+    size_t d = before - after;
+    if (d > 0)
+        meterTx.addDiff(d);
     return r;
 }
 
 Channel::Error ChannelMeter::rx(Fifo<char> &f)
 {
-    size_t b = f.size();
+    size_t before = f.size();
     Channel::Error r = target_.rx(f);
-    size_t a = f.size();
-    meterRx.addDiff(b - a);
+    size_t after = f.size();
+    /* in case of reception is expected that size after reception were bigger than before */
+    size_t d = after - before;
+    if (d > 0)
+        meterRx.addDiff(d);
     return r;
 }
 
