@@ -6,6 +6,10 @@
 class ChannelSocket : public Channel
 {
 public:
+    ChannelSocket()
+    {
+        fd = -1;
+    }
     Channel::Error setPort(int p);
 
 protected:
