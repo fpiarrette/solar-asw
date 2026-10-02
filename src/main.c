@@ -1,6 +1,7 @@
 #include "Config.h"
 #include "Logger.h"
 
+#include "ChannelMeter.h"
 #include "ChannelNull.h"
 #include "ChannelSocketClient.h"
 #include "ChannelSocketServer.h"
@@ -79,7 +80,9 @@ static void configure_and_run(void)
 
     /* channels */
     ChannelSocketClient channelSocketClient;
+    ChannelMeter channelSocketClientMeter(channelSocketClient);
     ChannelSocketServer channelSocketServer;
+    ChannelMeter channelSocketServerMeter(channelSocketServer);
     ChannelSocketServer channelSocketKillStop;
     ChannelSpiMaster channelSpiMaster;
     ChannelSpiSlave channelSpiSlave;
@@ -90,11 +93,11 @@ static void configure_and_run(void)
     /* tasks */
 #if PLATFORM_ID == PLATFORM_HOST
     L_WARNING("In host platform SPI channel is replaced by socket client and server channels");
-    TaskFromModem taskFromModem(channelSocketServer, channelSocketClient);
-    TaskToModem taskToModem(channelSocketServer, channelSocketClient);
+    TaskFromModem taskFromModem(channelSocketServerMeter, channelSocketClientMeter);
+    TaskToModem taskToModem(channelSocketServerMeter, channelSocketClientMeter);
 #else
-    TaskFromModem taskFromModem(channelSpiSlave, channelSocketClient);
-    TaskToModem taskToModem(channelSocketServer, channelSpiMaster);
+    TaskFromModem taskFromModem(channelSpiSlave, channelSocketClientMeter);
+    TaskToModem taskToModem(channelSocketServerMeter, channelSpiMaster);
 #endif
 
     TaskHumanInterface taskHumanInterface;

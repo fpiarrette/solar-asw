@@ -74,6 +74,7 @@ endif
 FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/Alarms.cpp \
 	$(SRC_DIR)/utils.c \
+	$(SRC_DIR)/ChannelMeter.cpp \
 	$(SRC_DIR)/ChannelNull.cpp \
 	$(SRC_DIR)/ChannelSpi.cpp \
 	$(SRC_DIR)/ChannelSpiMaster.cpp \
