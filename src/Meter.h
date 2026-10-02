@@ -7,6 +7,12 @@
 class Meter
 {
 public:
+    Meter()
+    {
+        accumulated = 0;
+        differencital = 0;
+    }
+
     size_t getDifferential(void)
     {
         accumulated += differencital;
