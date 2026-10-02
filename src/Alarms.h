@@ -26,7 +26,7 @@ public:
         int space[ALARMS_COCKIE_SIZE];
     };
 
-    void *getCookie(int alarmId);
+    void getCookie(int alarmId, void *b, size_t s);
 
 protected:
 private:
