@@ -88,8 +88,15 @@ static void configure_and_run(void)
     Scheduller scheduller;
 
     /* tasks */
-    TaskFromModem taskFromModem;
-    TaskToModem taskToModem;
+#if PLATFORM_ID == PLATFORM_HOST
+    L_WARNING("In host platform SPI channel is replaced by socket client and server channels");
+    TaskFromModem taskFromModem(channelSocketServer, channelSocketClient);
+    TaskToModem taskToModem(channelSocketServer, channelSocketClient);
+#else
+    TaskFromModem taskFromModem(channelSpiSlave, channelSocketClient);
+    TaskToModem taskToModem(channelSocketServer, channelSpiMaster);
+#endif
+
     TaskHumanInterface taskHumanInterface;
     TaskIdle taskIdle;
     TaskKiller taskKiller;
@@ -121,24 +128,16 @@ static void configure_and_run(void)
     channelSpiMaster.setClockPhase(Config::getInstance()->getSpiMasterClockPhase());
     channelSpiMaster.setBits(Config::getInstance()->getSpiMasterBits());
 
+    /* specific task configuration */
+    taskFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
+    taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
+
     if (Config::getInstance()->isFromModem())
     {
-        /* specific task configuration */
-        taskFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
-        taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
-
-        /* wiring */
-        taskFromModem.setSource(&channelSpiSlave);
-        taskFromModem.setSink(&channelSocketClient);
         scheduller.addTask(&taskFromModem, 2);
     }
     else
     {
-        /* specific task configuration */
-
-        /* wiring */
-        taskToModem.setSource(&channelSocketServer);
-        taskToModem.setSink(&channelSpiMaster);
         scheduller.addTask(&taskToModem, 2);
     }
 
@@ -158,23 +157,6 @@ static void configure_and_run(void)
 
     scheduller.addTask(&taskIdle, 31);
     taskIdle.setScheduller(&scheduller);
-
-#if PLATFORM_ID == PLATFORM_HOST
-
-    L_WARNING("In host platform SPI channel is replaced by socket client and server channels");
-
-    /* This compile time option allows to overwrite proper context and configure the process with a test context just for host platform and debug purpose */
-    if (Config::getInstance()->isFromModem())
-    {
-        /* specific task configuration */
-        taskFromModem.setSource(&channelSocketServer);
-    }
-    else
-    {
-        /* specific task configuration */
-        taskToModem.setSink(&channelSocketClient);
-    }
-#endif
 
     /* execute all schedulled tasks */
     scheduller.run();

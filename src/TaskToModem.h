@@ -9,8 +9,8 @@
 class TaskToModem : public Scheduller::Task
 {
 public:
-    TaskToModem()
-        : fifo(2 * 1024)
+    TaskToModem(Channel &source_, Channel &sink_)
+        : source(source_), sink(sink_), fifo(2 * 1024)
     {
     }
 
@@ -23,13 +23,10 @@ public:
     Scheduller::Task::Result run(long int time);
     void stop(void);
 
-    void setSource(Channel *source);
-    void setSink(Channel *sink);
-
 protected:
 private:
-    Channel *source;
-    Channel *sink;
+    Channel &source;
+    Channel &sink;
     Fifo<char> fifo;
 };
 
