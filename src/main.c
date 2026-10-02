@@ -106,7 +106,7 @@ static void configure_and_run(void)
     TaskIdle taskIdle;
     TaskKiller taskKiller;
     TaskRest taskRest;
-    TaskStatistics taskStatistics;
+    TaskStatistics taskStatistics(channelSocketClientMeter, channelSocketServerMeter);
 
     RestHandlerInput restHandlerInput;
     RestHandlerMux restHandlerMux;
