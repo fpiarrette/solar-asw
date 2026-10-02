@@ -26,11 +26,22 @@ int TaskStatistics::need(long int time)
 
 Scheduller::Task::Result TaskStatistics::run(long int time)
 {
-    if (!need(time))
-        return Scheduller::Task::Result::IDLE;
+    Scheduller::Task::Result r;
 
-    L_DEBUG("From modem: %d", fromModem.getMeterRx()->getAccumulated());
-    L_DEBUG("To modem: %d", toModem.getMeterRx()->getAccumulated());
+    r = Scheduller::Task::Result::IDLE;
+
+    if (Alarms::getInstance()->get(SETUP_ALARM_TENTH_SECOND))
+    {
+        /* Just print */
+        L_DEBUG("From modem: %d", fromModem.getMeterRx()->getAccumulated());
+        L_DEBUG("To modem: %d", toModem.getMeterRx()->getAccumulated());
+    }
+
+    if (Alarms::getInstance()->get(SETUP_ALARM_SECOND))
+    {
+        /* DO THE JOB!!!! */
+        r = Scheduller::Task::Result::WORKED;
+    }
 
 #if 0
     size_t a;
@@ -45,7 +56,7 @@ Scheduller::Task::Result TaskStatistics::run(long int time)
 
 #endif
 
-    return Scheduller::Task::Result::WORKED;
+    return r;
 }
 
 void TaskStatistics::stop(void)
