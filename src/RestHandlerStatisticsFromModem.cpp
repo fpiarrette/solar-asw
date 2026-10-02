@@ -21,9 +21,10 @@ enum MHD_Result RestHandlerStatisticsFromModem::handle(
 
     if (Alarms::getInstance()->get(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED))
     {
-        size_t *a = (size_t *)Alarms::getInstance()->getCookie(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED);
+        size_t a;
+        Alarms::getInstance()->getCookie(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED, &a, sizeof(size_t));
         Alarms::getInstance()->clear(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED);
-        json_object_set_new(root, "accumulated", json_integer(*a));
+        json_object_set_new(root, "accumulated", json_integer(a));
     }
     else
     {
