@@ -39,22 +39,15 @@ Scheduller::Task::Result TaskStatistics::run(long int time)
 
     if (Alarms::getInstance()->get(SETUP_ALARM_SECOND))
     {
-        /* DO THE JOB!!!! */
+        size_t a;
+
+        a = toModem.getMeterRx()->getAccumulated();
+        Alarms::getInstance()->set(SETUP_ALARM_TO_MODEM_METER_ACCUMULATED, &a, sizeof(size_t));
+        a = fromModem.getMeterRx()->getAccumulated();
+        Alarms::getInstance()->set(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED, &a, sizeof(size_t));
+
         r = Scheduller::Task::Result::WORKED;
     }
-
-#if 0
-    size_t a;
-
-    Alarms::getInstance()->set(SETUP_ALARM_TO_MODEM_METER_ACCUMULATED);
-    a = toModem->getMeterRx()->getAccumulated();
-    Alarms::getInstance()->setCookie(SETUP_ALARM_TO_MODEM_METER_ACCUMULATED, &a);
-
-    Alarms::getInstance()->set(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED);
-    a = fromModem->getMeterRx()->getAccumulated();
-    Alarms::getInstance()->setCookie(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED, &a);
-
-#endif
 
     return r;
 }
