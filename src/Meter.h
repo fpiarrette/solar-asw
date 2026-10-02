@@ -13,16 +13,20 @@ public:
         differencital = 0;
     }
 
-    size_t getDifferential(void)
+    void processDifferential(void)
     {
         accumulated += differencital;
-        size_t d = differencital;
         differencital = 0;
-        return d;
+    }
+
+    size_t getDifferential(void)
+    {
+        return differencital;
     }
 
     size_t getAccumulated(void)
     {
+        processDifferential();
         return accumulated;
     }
 
