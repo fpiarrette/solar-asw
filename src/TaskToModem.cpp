@@ -38,18 +38,6 @@ Scheduller::Task::Result TaskToModem::run(long int time)
 
 void TaskToModem::stop(void)
 {
-    if (source != NULL)
-    {
-        source->stop();
-        source = NULL;
-    }
-
-    if (sink != NULL)
-    {
-        sink->stop();
-        sink = NULL;
-    }
-
     L_NOTICE(LOG_PREFIX "stopped");
 }
 

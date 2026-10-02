@@ -59,18 +59,6 @@ void TaskFromModem::forwardToSink(long int time)
 
 void TaskFromModem::stop(void)
 {
-    if (source != NULL)
-    {
-        source->stop();
-        source = NULL;
-    }
-
-    if (sink != NULL)
-    {
-        sink->stop();
-        sink = NULL;
-    }
-
     L_NOTICE(LOG_PREFIX "stopped");
 }
 
