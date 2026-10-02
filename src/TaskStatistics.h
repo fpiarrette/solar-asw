@@ -9,6 +9,10 @@
 class TaskStatistics : public Scheduller::Task
 {
 public:
+    TaskStatistics(ChannelMeter &toModem_, ChannelMeter &fromModem_)
+        : toModem(toModem_), fromModem(fromModem_)
+    {
+    }
     ~TaskStatistics()
     {
         stop();
@@ -19,13 +23,10 @@ public:
     Scheduller::Task::Result run(long int time);
     void stop(void);
 
-    void setToModem(ChannelMeter *c);
-    void setFromModem(ChannelMeter *c);
-
 protected:
 private:
-    ChannelMeter *toModem;
-    ChannelMeter *fromModem;
+    ChannelMeter &toModem;
+    ChannelMeter &fromModem;
 };
 
 #endif

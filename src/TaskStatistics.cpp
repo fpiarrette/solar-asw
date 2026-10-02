@@ -29,6 +29,10 @@ Scheduller::Task::Result TaskStatistics::run(long int time)
     if (!need(time))
         return Scheduller::Task::Result::IDLE;
 
+    L_DEBUG("From modem: %d", fromModem.getMeterRx()->getAccumulated());
+    L_DEBUG("To modem: %d", toModem.getMeterRx()->getAccumulated());
+
+#if 0
     size_t a;
 
     Alarms::getInstance()->set(SETUP_ALARM_TO_MODEM_METER_ACCUMULATED);
@@ -39,20 +43,12 @@ Scheduller::Task::Result TaskStatistics::run(long int time)
     a = fromModem->getMeterRx()->getAccumulated();
     Alarms::getInstance()->setCookie(SETUP_ALARM_FROM_MODEM_METER_ACCUMULATED, &a);
 
+#endif
+
     return Scheduller::Task::Result::WORKED;
 }
 
 void TaskStatistics::stop(void)
 {
     L_NOTICE(LOG_PREFIX "stopped");
-}
-
-void TaskStatistics::setToModem(ChannelMeter *c)
-{
-    toModem = c;
-}
-
-void TaskStatistics::setFromModem(ChannelMeter *c)
-{
-    fromModem = c;
 }
