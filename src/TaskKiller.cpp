@@ -37,17 +37,17 @@ Scheduller::Task::Result TaskKiller::run(long int time)
 
         if ((strcmp("stop", buffer) == 0) || (strcmp("STOP", buffer) == 0))
         {
-            Alarms::getInstance()->set(SETUP_ALARM_STOP);
+            Alarms::getInstance()->set(SETUP_ALARM_STOP, NULL, 0);
         }
 
         if ((strcmp("kill", buffer) == 0) || (strcmp("KILL", buffer) == 0))
         {
-            Alarms::getInstance()->set(SETUP_ALARM_KILL);
+            Alarms::getInstance()->set(SETUP_ALARM_KILL, NULL, 0);
         }
 
         if ((strcmp("resume", buffer) == 0) || (strcmp("RESUME", buffer) == 0))
         {
-            Alarms::getInstance()->set(SETUP_ALARM_RESUME);
+            Alarms::getInstance()->set(SETUP_ALARM_RESUME, NULL, 0);
         }
 
         return Scheduller::Task::Result::WORKED;

@@ -7,8 +7,8 @@ project_dir=$(readlink -f $script_dir/../../..)
 # general environment validation
 . $project_dir/config/validate.sh
 
-echo "getting statistics from $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
+echo "getting uplink statistics from $SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT"
 
-curl -i -X GET http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/api/statistics --output -
+curl -i -X GET http://$SOLAR_TARGET_IP_ADDRESS:$SOLAR_TARGET_REST_PORT/api/stat/up --output -
 
 echo ""

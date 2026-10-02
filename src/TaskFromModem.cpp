@@ -15,8 +15,8 @@ void TaskFromModem::prepare(void)
 {
     /* expendedTime = 0; */
 
-    source->start();
-    sink->start();
+    source.start();
+    sink.start();
 
     timeBarrier = 0;
 
@@ -28,7 +28,7 @@ void TaskFromModem::prepare(void)
 Scheduller::Task::Result TaskFromModem::run(long int time)
 {
     /* try to receive */
-    source->rx(fifo);
+    source.rx(fifo);
 
     if (fifo.empty())
         return Scheduller::Task::IDLE;
@@ -52,25 +52,13 @@ Scheduller::Task::Result TaskFromModem::run(long int time)
 
 void TaskFromModem::forwardToSink(long int time)
 {
-    sink->tx(fifo);
+    sink.tx(fifo);
 
     timeBarrier = time + timeDeliveryLimit;
 }
 
 void TaskFromModem::stop(void)
 {
-    if (source != NULL)
-    {
-        source->stop();
-        source = NULL;
-    }
-
-    if (sink != NULL)
-    {
-        sink->stop();
-        sink = NULL;
-    }
-
     L_NOTICE(LOG_PREFIX "stopped");
 }
 
@@ -82,14 +70,4 @@ void TaskFromModem::setTimeDeliveryLimit(int value)
 void TaskFromModem::setSizeLimit(int value)
 {
     sizeLimit = value;
-}
-
-void TaskFromModem::setSource(Channel *s)
-{
-    source = s;
-}
-
-void TaskFromModem::setSink(Channel *s)
-{
-    sink = s;
 }

@@ -1,6 +1,7 @@
 #include "Config.h"
 #include "Logger.h"
 
+#include "ChannelMeter.h"
 #include "ChannelNull.h"
 #include "ChannelSocketClient.h"
 #include "ChannelSocketServer.h"
@@ -17,12 +18,14 @@
 #include "TaskIdle.h"
 #include "TaskKiller.h"
 #include "TaskRest.h"
+#include "TaskStatistics.h"
 #include "TaskToModem.h"
 
 #include "RestHandlerInput.h"
 #include "RestHandlerMux.h"
 #include "RestHandlerOutput.h"
-#include "RestHandlerStatistics.h"
+#include "RestHandlerStatisticsFromModem.h"
+#include "RestHandlerStatisticsToModem.h"
 #include "RestHandlerStatus.h"
 
 #include <stdlib.h>
@@ -79,7 +82,9 @@ static void configure_and_run(void)
 
     /* channels */
     ChannelSocketClient channelSocketClient;
+    ChannelMeter channelSocketClientMeter(channelSocketClient);
     ChannelSocketServer channelSocketServer;
+    ChannelMeter channelSocketServerMeter(channelSocketServer);
     ChannelSocketServer channelSocketKillStop;
     ChannelSpiMaster channelSpiMaster;
     ChannelSpiSlave channelSpiSlave;
@@ -88,22 +93,33 @@ static void configure_and_run(void)
     Scheduller scheduller;
 
     /* tasks */
-    TaskFromModem taskFromModem;
-    TaskToModem taskToModem;
+#if PLATFORM_ID == PLATFORM_HOST
+    L_WARNING("In host platform SPI channel is replaced by socket client and server channels");
+    TaskFromModem taskFromModem(channelSocketServerMeter, channelSocketClientMeter);
+    TaskToModem taskToModem(channelSocketServerMeter, channelSocketClientMeter);
+#else
+    TaskFromModem taskFromModem(channelSpiSlave, channelSocketClientMeter);
+    TaskToModem taskToModem(channelSocketServerMeter, channelSpiMaster);
+#endif
+
     TaskHumanInterface taskHumanInterface;
     TaskIdle taskIdle;
     TaskKiller taskKiller;
     TaskRest taskRest;
+    TaskStatistics taskStatistics(channelSocketClientMeter, channelSocketServerMeter);
+
     RestHandlerInput restHandlerInput;
     RestHandlerMux restHandlerMux;
     RestHandlerOutput restHandlerOutput;
-    RestHandlerStatistics restHandlerStatistics;
+    RestHandlerStatisticsFromModem restHandlerStatisticsFromModem;
+    RestHandlerStatisticsToModem restHandlerStatisticsToModem;
     RestHandlerStatus restHandlerStatus;
     taskRest.addHandler("/api/input", &restHandlerInput);
     taskRest.addHandler("/api/mux", &restHandlerMux);
     taskRest.addHandler("/api/output", &restHandlerOutput);
     taskRest.addHandler("/api/status", &restHandlerStatus);
-    taskRest.addHandler("/api/statistics", &restHandlerStatistics);
+    taskRest.addHandler("/api/stat/down", &restHandlerStatisticsFromModem);
+    taskRest.addHandler("/api/stat/up", &restHandlerStatisticsToModem);
 
     restHandlerInput.setInput(&channelSocketServer);
     restHandlerOutput.setOutput(&channelSocketClient);
@@ -121,24 +137,16 @@ static void configure_and_run(void)
     channelSpiMaster.setClockPhase(Config::getInstance()->getSpiMasterClockPhase());
     channelSpiMaster.setBits(Config::getInstance()->getSpiMasterBits());
 
+    /* specific task configuration */
+    taskFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
+    taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
+
     if (Config::getInstance()->isFromModem())
     {
-        /* specific task configuration */
-        taskFromModem.setTimeDeliveryLimit(Config::getInstance()->getTimeDeliveryLimit());
-        taskFromModem.setSizeLimit(Config::getInstance()->getBufferSizeLimit());
-
-        /* wiring */
-        taskFromModem.setSource(&channelSpiSlave);
-        taskFromModem.setSink(&channelSocketClient);
         scheduller.addTask(&taskFromModem, 2);
     }
     else
     {
-        /* specific task configuration */
-
-        /* wiring */
-        taskToModem.setSource(&channelSocketServer);
-        taskToModem.setSink(&channelSpiMaster);
         scheduller.addTask(&taskToModem, 2);
     }
 
@@ -156,25 +164,10 @@ static void configure_and_run(void)
     /* manage graceful kill stop flags */
     scheduller.addTask(&taskKiller, 26);
 
+    scheduller.addTask(&taskStatistics, 30);
+
     scheduller.addTask(&taskIdle, 31);
     taskIdle.setScheduller(&scheduller);
-
-#if PLATFORM_ID == PLATFORM_HOST
-
-    L_WARNING("In host platform SPI channel is replaced by socket client and server channels");
-
-    /* This compile time option allows to overwrite proper context and configure the process with a test context just for host platform and debug purpose */
-    if (Config::getInstance()->isFromModem())
-    {
-        /* specific task configuration */
-        taskFromModem.setSource(&channelSocketServer);
-    }
-    else
-    {
-        /* specific task configuration */
-        taskToModem.setSink(&channelSocketClient);
-    }
-#endif
 
     /* execute all schedulled tasks */
     scheduller.run();

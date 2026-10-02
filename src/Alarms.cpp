@@ -16,9 +16,17 @@ int Alarms::get(int alarmId)
     return alarms[alarmId];
 }
 
-void Alarms::set(int alarmId)
+void Alarms::set(int alarmId, void *cookie, size_t size)
 {
     alarms[alarmId] = 1;
+
+    if (cookie != NULL && size > 0)
+    {
+        size_t s;
+        s = size < sizeof(Cookie)? size : sizeof(Cookie);
+        /* maximum copied is Cookie size */
+        memcpy(&cookies[alarmId], cookie, s);
+    }
 }
 
 void Alarms::clear(int alarmId)
@@ -31,12 +39,7 @@ void Alarms::clearAll(void)
     memset(alarms, 0, sizeof(alarms));
 }
 
-void *Alarms::getCookie(int alarmId)
+void Alarms::getCookie(int alarmId, void *b, size_t s)
 {
-    return &cookies[alarmId];
-}
-
-void Alarms::setCookie(int alarmId, void *c)
-{
-    memcpy(&cookies[alarmId], c, sizeof(Cookie));
+    memcpy(b, &cookies[alarmId], s);
 }

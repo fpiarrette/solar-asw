@@ -74,6 +74,7 @@ endif
 FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/Alarms.cpp \
 	$(SRC_DIR)/utils.c \
+	$(SRC_DIR)/ChannelMeter.cpp \
 	$(SRC_DIR)/ChannelNull.cpp \
 	$(SRC_DIR)/ChannelSpi.cpp \
 	$(SRC_DIR)/ChannelSpiMaster.cpp \
@@ -94,13 +95,15 @@ FILES=$(SRC_DIR)/main.c \
 	$(SRC_DIR)/RestHandlerInput.cpp \
 	$(SRC_DIR)/RestHandlerMux.cpp \
 	$(SRC_DIR)/RestHandlerOutput.cpp \
-	$(SRC_DIR)/RestHandlerStatistics.cpp \
+	$(SRC_DIR)/RestHandlerStatisticsFromModem.cpp \
+	$(SRC_DIR)/RestHandlerStatisticsToModem.cpp \
 	$(SRC_DIR)/RestHandlerStatus.cpp \
 	$(SRC_DIR)/TaskFromModem.cpp \
 	$(SRC_DIR)/TaskHumanInterface.cpp \
 	$(SRC_DIR)/TaskIdle.cpp \
 	$(SRC_DIR)/TaskKiller.cpp \
 	$(SRC_DIR)/TaskRest.cpp \
+	$(SRC_DIR)/TaskStatistics.cpp \
 	$(SRC_DIR)/TaskToModem.cpp
 
 FILES_TEST_SPI=$(SRC_DIR)/test_spi.c \

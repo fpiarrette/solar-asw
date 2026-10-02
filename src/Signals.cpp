@@ -34,15 +34,15 @@ void Signals::handler(int signal)
     {
     case SIGINT:
         Signals::getInstance()->terminated = 1;
-        Alarms::getInstance()->set(SETUP_ALARM_KILL);
+        Alarms::getInstance()->set(SETUP_ALARM_KILL, NULL, 0);
         break;
     case SIGTSTP:
         Signals::getInstance()->stopped = 1;
-        Alarms::getInstance()->set(SETUP_ALARM_STOP);
+        Alarms::getInstance()->set(SETUP_ALARM_STOP, NULL, 0);
         break;
     case SIGCONT:
         Signals::getInstance()->stopped = 0;
-        Alarms::getInstance()->set(SETUP_ALARM_RESUME);
+        Alarms::getInstance()->set(SETUP_ALARM_RESUME, NULL, 0);
         break;
     default:
         break;

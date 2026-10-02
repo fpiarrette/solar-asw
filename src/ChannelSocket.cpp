@@ -25,17 +25,17 @@ Channel::Error ChannelSocket::setNonBlock(int f)
 
 Channel::Error ChannelSocket::secureRx(int f, Fifo<char> &fifo)
 {
-    int t;
+    int r;
     char b[fifo.capacity()];
 
-    t = recv(f, b, sizeof(b), 0);
-    if (t > 0)
+    r = recv(f, b, sizeof(b), 0);
+    if (r > 0)
     {
-        L_DEBUG("received %d", t);
-        fifo.push(b, t);
+        L_DEBUG("received %d", r);
+        fifo.push(b, r);
         return Channel::Error::E_OK;
     }
-    else if (t == 0)
+    else if (r == 0)
     {
         return Channel::Error::E_OK;
     }
@@ -90,26 +90,26 @@ Channel::Error ChannelSocket::secureStop(int f)
 
 Channel::Error ChannelSocket::secureTx(int f, Fifo<char> &fifo)
 {
-    int r;
+    int t;
     char b[fifo.size()];
 
     fifo.peek(b, sizeof(b));
 
-    r = send(f, b, sizeof(b), 0);
+    t = send(f, b, sizeof(b), 0);
 
-    L_DEBUG("sent %d from %d", r, fifo.size());
+    L_DEBUG("sent %d from %d", t, fifo.size());
 
-    if (r == (int)sizeof(b))
+    if (t == (int)sizeof(b))
     {
-        fifo.consume(r);
+        fifo.consume(t);
         return Channel::Error::E_OK;
     }
-    else if (r >= 0 && r < (int)sizeof(b))
+    else if (t >= 0 && t < (int)sizeof(b))
     {
-        fifo.consume(r);
+        fifo.consume(t);
         return Channel::Error::E_TRY;
     }
-    else if (r < 0)
+    else if (t < 0)
     {
         if (errno == EAGAIN || errno == EWOULDBLOCK)
         {
