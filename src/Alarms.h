@@ -6,13 +6,15 @@
 /* each alarm count with a coockie space of 8 integers */
 #define ALARMS_COCKIE_SIZE (8)
 
+#include <stdlib.h>
+
 class Alarms
 {
 public:
     static Alarms *getInstance(void);
 
     int get(int alarmId);
-    void set(int alarmId);
+    void set(int alarmId, void *cookie, size_t size);
     void clear(int alarmId);
     void clearAll(void);
 
@@ -25,7 +27,6 @@ public:
     };
 
     void *getCookie(int alarmId);
-    void setCookie(int alarmId, void *c);
 
 protected:
 private:

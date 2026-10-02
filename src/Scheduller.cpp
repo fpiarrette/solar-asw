@@ -133,19 +133,19 @@ void Scheduller::publishTimeAlarms(long int time)
 
     if (t != previousTenthSecondCounter)
     {
-        Alarms::getInstance()->set(SETUP_ALARM_TENTH_SECOND);
+        Alarms::getInstance()->set(SETUP_ALARM_TENTH_SECOND, NULL, 0);
         previousTenthSecondCounter = t;
     }
 
     if (s != previousSecondCounter)
     {
-        Alarms::getInstance()->set(SETUP_ALARM_SECOND);
+        Alarms::getInstance()->set(SETUP_ALARM_SECOND, NULL, 0);
         previousSecondCounter = s;
     }
 
     if (h != previousHundredMiliSeconds)
     {
-        Alarms::getInstance()->set(SETUP_ALARM_HUNDRED_MS);
+        Alarms::getInstance()->set(SETUP_ALARM_HUNDRED_MS, NULL, 0);
         previousHundredMiliSeconds = h;
     }
 }
