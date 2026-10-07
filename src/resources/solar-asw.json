@@ -1,0 +1,25 @@
+{
+    /* mode: from modem or to modem */
+    /* mode 1: uplink -> to modem */
+    /* mode 2: downlink -> from modem */
+    "mode": 1,
+
+    /* logger */
+    "log_level": 2,
+    "use_syslog": 1,
+    // "use_stdout": 0,
+    
+    /* from modem config */
+    "time_delivery_limit": 1000,
+    "buffer_size_limit": 1000,
+    "destination_ip_address": "127.0.0.1",
+    "destination_port": 9500,
+
+    /* to modem */
+    "listening_port": 9000,
+    "spi_master_device_name": "/dev/spidev0.0",
+    "spi_master_speed": 1000000,
+    "spi_master_clock_polarity": 1,
+    "spi_master_clock_phase": 1,
+    "spi_master_bits": 8
+}
