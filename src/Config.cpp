@@ -4,6 +4,7 @@
 #include "utils.h"
 
 #include <getopt.h>
+#include <jansson.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -25,6 +26,8 @@ Config Config::instance;
 
 #define CONFIG_OPTION_LISTENING_PORT "e"
 
+#define CONFIG_OPTION_CONFIG_FILE "c"
+
 #define CONFIG_OPTION_HELP "h"
 
 /* Configuration default values */
@@ -39,6 +42,7 @@ Config Config::instance;
 #define CONFIG_DEFAULT_DEST_IP_ADDRESS "127.0.0.1"
 #define CONFIG_DEFAULT_DEST_PORT 9500
 #define CONFIG_DEFAULT_LISTENING_PORT 9000
+#define CONFIG_DEFAULT_CONFIG_FILE "solar-asw.json"
 
 #define CONFIG_DEFAULT_SPI_MASTER_NAME "/dev/spidev0.0"
 #define CONFIG_DEFAULT_SPI_MASTER_SPEED 1000000
@@ -58,7 +62,8 @@ Config Config::instance;
     CONFIG_OPTION_MODE_FROM_MODEM \
     CONFIG_OPTION_DEST_IP_ADDRESS ":" \
     CONFIG_OPTION_DEST_PORT ":" \
-    CONFIG_OPTION_LISTENING_PORT ":"
+    CONFIG_OPTION_LISTENING_PORT ":" \
+    CONFIG_OPTION_CONFIG_FILE ":"
 
 /* Command line help line */
 #define HELP_COMMAND                                                                            \
@@ -72,6 +77,7 @@ Config Config::instance;
     "[-" CONFIG_OPTION_LOG_LEVEL " {" xstr(CONFIG_DEFAULT_LOG_LEVEL) "}] "                      \
     "[-" CONFIG_OPTION_LOG_SYSLOG "] "                                                          \
     "[-" CONFIG_OPTION_LOG_STDOUT "] "                                                          \
+    "[-" CONFIG_OPTION_CONFIG_FILE " {" CONFIG_DEFAULT_CONFIG_FILE "}] "                        \
     "[-" CONFIG_OPTION_HELP "]\n"
 
 Config *Config::getInstance(void)
@@ -103,6 +109,8 @@ void Config::setDefaultValues(void)
     spiMasterClockPolarity = CONFIG_DEFAULT_SPI_MASTER_CLOCK_POL;
     spiMasterClockPhase = CONFIG_DEFAULT_SPI_MASTER_CLOCK_PHASE;
     spiMasterBits = CONFIG_DEFAULT_SPI_MASTER_BITS;
+    /* configuration file */
+    strncpy(configurationFile, CONFIG_DEFAULT_CONFIG_FILE, sizeof(configurationFile));
 }
 
 Config::Error Config::init(int argc, char *argv[])
@@ -189,6 +197,13 @@ Config::Error Config::init(int argc, char *argv[])
             toModem = 0;
             fromModem = 1;
             break;
+        case CONFIG_OPTION_CONFIG_FILE[0]:
+            strncpy(configurationFile, optarg, sizeof(configurationFile));
+            if (strlen(optarg) != strlen(configurationFile))
+            {
+                returnValue = Config::Error::E_ARG;
+            }
+            break;
         case '?':
         case ':':
             returnValue = Config::Error::E_ARG;
@@ -202,7 +217,117 @@ Config::Error Config::init(int argc, char *argv[])
         }
     }
 
+    /* set custom value from JSON config file */
+    setCustomValues();
+
     return returnValue;
+}
+
+Config::Error Config::getCharValue(json_t *parent, const char *nodeName, char *variable)
+{
+    json_t *node = json_object_get(parent, nodeName);
+
+    if (!node)
+    {
+        return Config::Error::E_TRY;
+    }
+
+    strcpy(variable, json_string_value(node));
+
+    return Config::Error::E_OK;
+}
+
+Config::Error Config::getIntValue(json_t *parent, const char *nodeName, int *variable)
+{
+    json_t *node = json_object_get(parent, nodeName);
+
+    if (!node)
+    {
+        return Config::Error::E_TRY;
+    }
+
+    if (!json_is_integer(node))
+    {
+        return Config::Error::E_ARG;
+    }
+
+    *variable = json_integer_value(node);
+
+    return Config::Error::E_OK;
+}
+
+Config::Error Config::getUnsignedIntValue(json_t *parent, const char *nodeName, unsigned int *variable)
+{
+    json_t *node = json_object_get(parent, nodeName);
+
+    if (!node)
+    {
+        return Config::Error::E_TRY;
+    }
+
+    if (!json_is_integer(node))
+    {
+        return Config::Error::E_ARG;
+    }
+
+    *variable = json_integer_value(node);
+
+    return Config::Error::E_OK;
+}
+
+Config::Error Config::setCustomValues(void)
+{
+    json_error_t error;
+    Config::Error result;
+    int mode;
+
+    json_t *root = json_load_file(configurationFile, 0, &error);
+
+    if (!root)
+    {
+        fprintf(stderr, "Error parsing %s: %s (line %d, column %d)", configurationFile, error.text, error.line, error.column);
+
+        return Config::Error::E_ARG;
+    }
+
+    result = getIntValue(root, "mode", &mode);
+    if (result == Config::Error::E_OK)
+        switch (mode)
+        {
+        case 1:
+            toModem = 1;
+            fromModem = 0;
+            break;
+        case 2:
+            toModem = 0;
+            fromModem = 1;
+            break;
+        default:
+            fprintf(stderr, "Invalid mode value: %d", mode);
+        }
+
+    /* logger */
+    result = getIntValue(root, "log_level", &logLevel);
+    result = getIntValue(root, "use_syslog", &useSyslog);
+    result = getIntValue(root, "use_stdout", &useStdout);
+
+    /* from modem */
+    result = getIntValue(root, "time_delivery_limit", &timeDeliveryLimit);
+    result = getIntValue(root, "buffer_size_limit", &bufferSizeLimit);
+    result = getCharValue(root, "destination_ip_address", destinationIpAddress);
+    result = getIntValue(root, "destination_port", &destinationPort);
+
+    /* to modem */
+    result = getIntValue(root, "listening_port", &listeningPort);
+    result = getCharValue(root, "spi_master_device_name", spiMasterDeviceName);
+    result = getUnsignedIntValue(root, "spi_master_speed", &spiMasterSpeed);
+    result = getUnsignedIntValue(root, "spi_master_clock_polarity", &spiMasterClockPolarity);
+    result = getUnsignedIntValue(root, "spi_master_clock_phase", &spiMasterClockPhase);
+    result = getUnsignedIntValue(root, "spi_master_bits", &spiMasterBits);
+
+    json_decref(root);
+
+    return Config::Error::E_OK;
 }
 
 int Config::isUseStdout(void)

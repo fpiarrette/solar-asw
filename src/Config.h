@@ -2,6 +2,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <jansson.h>
+
 class Config
 {
 public:
@@ -35,6 +37,10 @@ public:
 
 protected:
     void setDefaultValues(void);
+    Config::Error setCustomValues(void);
+    Config::Error getIntValue(json_t *parent, const char *nodeName, int *variable);
+    Config::Error getUnsignedIntValue(json_t *parent, const char *nodeName, unsigned int *variable);
+    Config::Error getCharValue(json_t *parent, const char *nodeName, char *variable);
 private:
     static Config instance;
     int logLevel;
@@ -51,9 +57,10 @@ private:
     int listeningPort;
     char spiMasterDeviceName[128];
     unsigned int spiMasterSpeed;
-    unsigned char spiMasterClockPolarity;
-    unsigned char spiMasterClockPhase;
-    unsigned char spiMasterBits;
+    unsigned int spiMasterClockPolarity;
+    unsigned int spiMasterClockPhase;
+    unsigned int spiMasterBits;
+    char configurationFile[128];
 };
 
 #endif
